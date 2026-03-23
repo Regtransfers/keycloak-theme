@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<!--
+  Regtransfers Keycloak Theme — Email Preview
+  Simulates how each transactional email looks in an email client.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regtransfers – Email Preview</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top toolbar ──────────────────────────────────── */
+    .toolbar {
+      background: #111;
+      border-bottom: 2px solid #F5C100;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .toolbar-logo {
+      height: 32px;
+      display: block;
+    }
+    .toolbar-title {
+      font-size: 13px;
+      color: #888;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .toolbar-badge {
+      background: #F5C100;
+      color: #1a3060;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── Layout: sidebar + pane ───────────────────────── */
+    .layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      height: calc(100vh - 54px);
+    }
+
+    /* ── Inbox sidebar ────────────────────────────────── */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: #1e1e1e;
+      border-right: 1px solid #2e2e2e;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 14px 16px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #666;
+      border-bottom: 1px solid #2a2a2a;
+      flex-shrink: 0;
+    }
+    .email-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #2a2a2a;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .email-item:hover { background: #282828; }
+    .email-item.active {
+      background: #242424;
+      border-left: 3px solid #F5C100;
+      padding-left: 13px;
+    }
+    .email-item-from {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e0e0e0;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .email-item-subject {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .email-item-preview {
+      font-size: 11px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .email-item-time {
+      position: absolute;
+      top: 14px;
+      right: 12px;
+      font-size: 10px;
+      color: #555;
+    }
+    .unread-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #F5C100;
+      margin-right: 5px;
+      vertical-align: middle;
+      margin-top: -1px;
+    }
+
+    /* ── Reading pane ─────────────────────────────────── */
+    .reading-pane {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: #252525;
+    }
+    .email-header-bar {
+      background: #1e1e1e;
+      border-bottom: 1px solid #2e2e2e;
+      padding: 16px 28px;
+      flex-shrink: 0;
+    }
+    .email-subject-line {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0f0f0;
+      margin-bottom: 10px;
+    }
+    .email-meta {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .email-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #1a3060;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: #F5C100;
+      flex-shrink: 0;
+    }
+    .email-meta-detail { flex: 1; }
+    .email-from-name { font-size: 13px; font-weight: 700; color: #e0e0e0; }
+    .email-from-addr { font-size: 12px; color: #777; margin-top: 1px; }
+    .email-to { font-size: 12px; color: #666; margin-top: 3px; }
+    .email-date { font-size: 11px; color: #555; white-space: nowrap; margin-top: 2px; }
+
+    /* ── Viewport for email body ──────────────────────── */
+    .email-viewport {
+      flex: 1;
+      padding: 28px;
+      overflow-y: auto;
+    }
+    .email-body-wrapper {
+      background: #f5f5f5;
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 620px;
+      margin: 0 auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 640px) {
+      .sidebar { width: 200px; }
+      .email-viewport { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <img class="toolbar-logo"
+       src="themes/regtransfers/login/resources/img/logo.png"
+       alt="Regtransfers">
+  <span class="toolbar-title">Email Preview</span>
+  <span class="toolbar-badge">Transactional Emails</span>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Sidebar inbox -->
+  <div class="sidebar">
+    <div class="sidebar-header">Inbox (4)</div>
+
+    <div class="email-item active" onclick="show('password-reset', this)">
+      <span class="email-item-time">Just now</span>
+      <div class="email-item-from"><span class="unread-dot"></span>Regtransfers</div>
+      <div class="email-item-subject">Reset your Regtransfers account password</div>
+      <div class="email-item-preview">Someone has requested a password reset…</div>
+    </div>
+
+    <div class="email-item" onclick="show('email-verify', this)">
+      <span class="email-item-time">2 min ago</span>
+      <div class="email-item-from"><span class="unread-dot"></span>Regtransfers</div>
+      <div class="email-item-subject">Verify your Regtransfers account email address</div>
+      <div class="email-item-preview">Click below to verify your email address…</div>
+    </div>
+
+    <div class="email-item" onclick="show('password-changed', this)">
+      <span class="email-item-time">Yesterday</span>
+      <div class="email-item-from">Regtransfers</div>
+      <div class="email-item-subject">Your Regtransfers password has been changed</div>
+      <div class="email-item-preview">Your account password was successfully changed…</div>
+    </div>
+
+    <div class="email-item" onclick="show('idp-link', this)">
+      <span class="email-item-time">Yesterday</span>
+      <div class="email-item-from">Regtransfers</div>
+      <div class="email-item-subject">Link your Regtransfers account</div>
+      <div class="email-item-preview">An account link request was received…</div>
+    </div>
+  </div>
+
+  <!-- Reading pane -->
+  <div class="reading-pane">
+
+    <!-- ── PASSWORD RESET ───────────────────────────── -->
+    <div id="email-password-reset" class="email-panel" style="display:flex;flex-direction:column;height:100%;">
+      <div class="email-header-bar">
+        <div class="email-subject-line">Reset your Regtransfers account password</div>
+        <div class="email-meta">
+          <div class="email-avatar">R</div>
+          <div class="email-meta-detail">
+            <div class="email-from-name">Regtransfers</div>
+            <div class="email-from-addr">noreply@regtransfers.co.uk</div>
+            <div class="email-to">To: john.smith@example.com</div>
+          </div>
+          <div class="email-date">23 Mar 2026, 14:32</div>
+        </div>
+      </div>
+      <div class="email-viewport">
+        <div class="email-body-wrapper">
+          <!-- Actual email HTML -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 0;">
+            <tr><td align="center">
+              <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);max-width:100%;">
+                <tr><td style="background:#F5C100;padding:20px 28px;border-bottom:3px solid #1a3060;">
+                  <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png"
+                       alt="Regtransfers" height="40" style="display:block;" />
+                </td></tr>
+                <tr><td style="padding:32px 40px;">
+                  <h2 style="color:#1a3060;font-size:20px;margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;">Reset your password</h2>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;">Hello John,</p>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;">
+                    Someone has requested a password reset for your Regtransfers account. Click the button below to reset your password. This link is valid for <strong>30 minutes</strong>.
+                  </p>
+                  <p style="text-align:center;margin:0 0 28px;">
+                    <a href="#" style="display:inline-block;background:#2d8653;color:#ffffff;font-size:16px;font-weight:bold;padding:14px 36px;border-radius:4px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Reset Password</a>
+                  </p>
+                  <p style="color:#888;font-size:13px;line-height:1.6;margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;">
+                    If you did not request a password reset, please ignore this email or
+                    <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#1a3060;">contact us</a>
+                    if you have concerns.
+                  </p>
+                  <p style="color:#888;font-size:12px;line-height:1.6;margin:16px 0 0;border-top:1px solid #eee;padding-top:16px;font-family:Arial,Helvetica,sans-serif;">
+                    Or copy and paste this link into your browser:<br>
+                    <span style="color:#1a3060;word-break:break-all;">https://auth.regtransfers.co.uk/realms/regtransfers/login-actions/reset-credentials?key=abc123def456&amp;client_id=portal&amp;tab_id=xyz</span>
+                  </p>
+                </td></tr>
+                <tr><td style="background:#f9f9f9;border-top:1px solid #eeeeee;padding:20px 40px;">
+                  <p style="color:#aaa;font-size:12px;margin:0;line-height:1.8;font-family:Arial,Helvetica,sans-serif;">
+                    &copy; 1982&ndash;2026 Registration Transfers Limited. Registered in England No. 03933658.<br>
+                    Transfer House, 139 High Street South, Dunstable, Bedfordshire, LU6 3SS<br>
+                    <a href="https://www.regtransfers.co.uk/company/privacy" style="color:#aaa;">Privacy Policy</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/terms" style="color:#aaa;">Terms &amp; Conditions</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#aaa;">Contact Us</a>
+                  </p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EMAIL VERIFICATION ───────────────────────── -->
+    <div id="email-email-verify" class="email-panel" style="display:none;flex-direction:column;height:100%;">
+      <div class="email-header-bar">
+        <div class="email-subject-line">Verify your Regtransfers account email address</div>
+        <div class="email-meta">
+          <div class="email-avatar">R</div>
+          <div class="email-meta-detail">
+            <div class="email-from-name">Regtransfers</div>
+            <div class="email-from-addr">noreply@regtransfers.co.uk</div>
+            <div class="email-to">To: john.smith@example.com</div>
+          </div>
+          <div class="email-date">23 Mar 2026, 14:30</div>
+        </div>
+      </div>
+      <div class="email-viewport">
+        <div class="email-body-wrapper">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 0;">
+            <tr><td align="center">
+              <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);max-width:100%;">
+                <tr><td style="background:#F5C100;padding:20px 28px;border-bottom:3px solid #1a3060;">
+                  <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png"
+                       alt="Regtransfers" height="40" style="display:block;" />
+                </td></tr>
+                <tr><td style="padding:32px 40px;">
+                  <h2 style="color:#1a3060;font-size:20px;margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;">Verify your email address</h2>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;">Hello John,</p>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;">
+                    Thank you for creating a Regtransfers account. Please verify your email address by clicking the button below. This link is valid for <strong>30 minutes</strong>.
+                  </p>
+                  <p style="text-align:center;margin:0 0 28px;">
+                    <a href="#" style="display:inline-block;background:#2d8653;color:#ffffff;font-size:16px;font-weight:bold;padding:14px 36px;border-radius:4px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Verify Email Address</a>
+                  </p>
+                  <p style="color:#888;font-size:13px;line-height:1.6;margin:0;font-family:Arial,Helvetica,sans-serif;">
+                    If you didn't create an account with Regtransfers, you can safely ignore this email.
+                  </p>
+                  <p style="color:#888;font-size:12px;line-height:1.6;margin:16px 0 0;border-top:1px solid #eee;padding-top:16px;font-family:Arial,Helvetica,sans-serif;">
+                    Or copy and paste this link into your browser:<br>
+                    <span style="color:#1a3060;word-break:break-all;">https://auth.regtransfers.co.uk/realms/regtransfers/login-actions/action-token?key=abc123def456&amp;client_id=portal&amp;tab_id=xyz</span>
+                  </p>
+                </td></tr>
+                <tr><td style="background:#f9f9f9;border-top:1px solid #eeeeee;padding:20px 40px;">
+                  <p style="color:#aaa;font-size:12px;margin:0;line-height:1.8;font-family:Arial,Helvetica,sans-serif;">
+                    &copy; 1982&ndash;2026 Registration Transfers Limited. Registered in England No. 03933658.<br>
+                    Transfer House, 139 High Street South, Dunstable, Bedfordshire, LU6 3SS<br>
+                    <a href="https://www.regtransfers.co.uk/company/privacy" style="color:#aaa;">Privacy Policy</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/terms" style="color:#aaa;">Terms &amp; Conditions</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#aaa;">Contact Us</a>
+                  </p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASSWORD CHANGED ─────────────────────────── -->
+    <div id="email-password-changed" class="email-panel" style="display:none;flex-direction:column;height:100%;">
+      <div class="email-header-bar">
+        <div class="email-subject-line">Your Regtransfers password has been changed</div>
+        <div class="email-meta">
+          <div class="email-avatar">R</div>
+          <div class="email-meta-detail">
+            <div class="email-from-name">Regtransfers</div>
+            <div class="email-from-addr">noreply@regtransfers.co.uk</div>
+            <div class="email-to">To: john.smith@example.com</div>
+          </div>
+          <div class="email-date">22 Mar 2026, 09:15</div>
+        </div>
+      </div>
+      <div class="email-viewport">
+        <div class="email-body-wrapper">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 0;">
+            <tr><td align="center">
+              <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);max-width:100%;">
+                <tr><td style="background:#F5C100;padding:20px 28px;border-bottom:3px solid #1a3060;">
+                  <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png"
+                       alt="Regtransfers" height="40" style="display:block;" />
+                </td></tr>
+                <tr><td style="padding:32px 40px;">
+                  <h2 style="color:#1a3060;font-size:20px;margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;">Your password has been changed</h2>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;">Hello John,</p>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;">
+                    Your Regtransfers account password was successfully changed on <strong>22 March 2026 at 09:15</strong>.
+                  </p>
+                  <!-- Security alert box -->
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff8e1;border-left:4px solid #F5C100;border-radius:4px;margin-bottom:24px;">
+                    <tr><td style="padding:14px 18px;">
+                      <p style="color:#7a5c00;font-size:13px;line-height:1.6;margin:0;font-family:Arial,Helvetica,sans-serif;">
+                        <strong>&#9888; Didn't make this change?</strong><br>
+                        If you did not change your password, please
+                        <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#1a3060;font-weight:bold;">contact us immediately</a>
+                        or call <strong>01582 967777</strong>.
+                      </p>
+                    </td></tr>
+                  </table>
+                  <p style="color:#888;font-size:13px;line-height:1.6;margin:0;font-family:Arial,Helvetica,sans-serif;">
+                    If you did make this change, no further action is needed.
+                  </p>
+                </td></tr>
+                <tr><td style="background:#f9f9f9;border-top:1px solid #eeeeee;padding:20px 40px;">
+                  <p style="color:#aaa;font-size:12px;margin:0;line-height:1.8;font-family:Arial,Helvetica,sans-serif;">
+                    &copy; 1982&ndash;2026 Registration Transfers Limited. Registered in England No. 03933658.<br>
+                    Transfer House, 139 High Street South, Dunstable, Bedfordshire, LU6 3SS<br>
+                    <a href="https://www.regtransfers.co.uk/company/privacy" style="color:#aaa;">Privacy Policy</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/terms" style="color:#aaa;">Terms &amp; Conditions</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#aaa;">Contact Us</a>
+                  </p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IDENTITY PROVIDER LINK ───────────────────── -->
+    <div id="email-idp-link" class="email-panel" style="display:none;flex-direction:column;height:100%;">
+      <div class="email-header-bar">
+        <div class="email-subject-line">Link your Regtransfers account</div>
+        <div class="email-meta">
+          <div class="email-avatar">R</div>
+          <div class="email-meta-detail">
+            <div class="email-from-name">Regtransfers</div>
+            <div class="email-from-addr">noreply@regtransfers.co.uk</div>
+            <div class="email-to">To: john.smith@example.com</div>
+          </div>
+          <div class="email-date">22 Mar 2026, 08:50</div>
+        </div>
+      </div>
+      <div class="email-viewport">
+        <div class="email-body-wrapper">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 0;">
+            <tr><td align="center">
+              <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);max-width:100%;">
+                <tr><td style="background:#F5C100;padding:20px 28px;border-bottom:3px solid #1a3060;">
+                  <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png"
+                       alt="Regtransfers" height="40" style="display:block;" />
+                </td></tr>
+                <tr><td style="padding:32px 40px;">
+                  <h2 style="color:#1a3060;font-size:20px;margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;">Link your account</h2>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;">Hello John,</p>
+                  <p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;">
+                    A request was received to link your Regtransfers account with a <strong>Google</strong> sign-in. Click the button below to confirm and link your accounts. This link is valid for <strong>30 minutes</strong>.
+                  </p>
+                  <p style="text-align:center;margin:0 0 28px;">
+                    <a href="#" style="display:inline-block;background:#2d8653;color:#ffffff;font-size:16px;font-weight:bold;padding:14px 36px;border-radius:4px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Link Account</a>
+                  </p>
+                  <p style="color:#888;font-size:13px;line-height:1.6;margin:0;font-family:Arial,Helvetica,sans-serif;">
+                    If you did not request this, please ignore this email. Your account will not be linked.
+                  </p>
+                  <p style="color:#888;font-size:12px;line-height:1.6;margin:16px 0 0;border-top:1px solid #eee;padding-top:16px;font-family:Arial,Helvetica,sans-serif;">
+                    Or copy and paste this link into your browser:<br>
+                    <span style="color:#1a3060;word-break:break-all;">https://auth.regtransfers.co.uk/realms/regtransfers/login-actions/action-token?key=abc123def456&amp;client_id=portal</span>
+                  </p>
+                </td></tr>
+                <tr><td style="background:#f9f9f9;border-top:1px solid #eeeeee;padding:20px 40px;">
+                  <p style="color:#aaa;font-size:12px;margin:0;line-height:1.8;font-family:Arial,Helvetica,sans-serif;">
+                    &copy; 1982&ndash;2026 Registration Transfers Limited. Registered in England No. 03933658.<br>
+                    Transfer House, 139 High Street South, Dunstable, Bedfordshire, LU6 3SS<br>
+                    <a href="https://www.regtransfers.co.uk/company/privacy" style="color:#aaa;">Privacy Policy</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/terms" style="color:#aaa;">Terms &amp; Conditions</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="https://www.regtransfers.co.uk/company/contact-us" style="color:#aaa;">Contact Us</a>
+                  </p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.reading-pane -->
+</div><!-- /.layout -->
+
+<script>
+  const IDS = {
+    'password-reset':    'email-password-reset',
+    'email-verify':      'email-email-verify',
+    'password-changed':  'email-password-changed',
+    'idp-link':          'email-idp-link'
+  };
+
+  function show(key, item) {
+    // Hide all panels
+    Object.values(IDS).forEach(id => {
+      const el = document.getElementById(id);
+      el.style.display = 'none';
+    });
+    // Show selected
+    const target = document.getElementById(IDS[key]);
+    target.style.display = 'flex';
+
+    // Update sidebar active state
+    document.querySelectorAll('.email-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!--
+  Regtransfers Keycloak Theme — Static Preview
+  Open this file in any browser to preview the login page appearance.
+  This is NOT a real Keycloak instance — form submission is disabled.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regtransfers – Login Preview</title>
+
+  <!-- Simulate PatternFly base resets that Keycloak includes -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 0; }
+    input, button, select, textarea { font-family: inherit; }
+    ul { list-style: none; margin: 0; padding: 0; }
+    h1, h2, h3, h4 { margin: 0; }
+    p { margin: 0; }
+    a { color: inherit; }
+  </style>
+
+  <!-- Theme stylesheets — swapped by JS -->
+  <link id="theme-css" rel="stylesheet" href="themes/regtransfers/login/resources/css/regtransfers.css">
+
+  <style>
+    /* -------------------------------------------------------
+       Preview-only tweaks to fill the viewport properly
+       (Keycloak normally provides the outer PatternFly shell)
+    ------------------------------------------------------- */
+    .login-pf-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+    .kc-form-area {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Theme toggle bar ─────────────────────────────────── */
+    .preview-toolbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10000;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #F5C100;
+    }
+    .toolbar-label {
+      color: #888;
+      font-size: 11px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-right: 4px;
+    }
+    .theme-toggle {
+      display: flex;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .theme-btn {
+      background: transparent;
+      color: #888;
+      border: none;
+      padding: 5px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .theme-btn.active {
+      background: #F5C100;
+      color: #1a3060;
+    }
+    .toolbar-divider {
+      width: 1px; height: 20px;
+      background: #444;
+      margin: 0 8px;
+    }
+    /* Tab switcher for previewing different screens */
+    .preview-tabs {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .preview-tab {
+      background: transparent;
+      color: #888;
+      border: 1px solid #444;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      transition: all 0.2s;
+    }
+    /* dark variant (default) */
+    body.theme-dark .preview-tab { color: #888; border-color: #444; background: transparent; }
+    body.theme-dark .preview-tab:hover,
+    body.theme-dark .preview-tab.active { background: #F5C100; color: #1a3060; border-color: #F5C100; font-weight: 700; }
+    /* light variant */
+    body.theme-light .preview-tab { color: #555; border-color: #bbb; background: transparent; }
+    body.theme-light .preview-tab:hover,
+    body.theme-light .preview-tab.active { background: #1a3060; color: #F5C100; border-color: #1a3060; font-weight: 700; }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* Simulated alert banners */
+    .alert { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; font-size: 14px; }
+    .alert-icon { flex-shrink: 0; font-weight: bold; }
+    .pf-c-button.pf-m-primary { display: block; }
+    .form-group { margin-bottom: 18px; }
+    input[type=text], input[type=email], input[type=password] { width: 100%; }
+    .login-pf-settings { display: flex; justify-content: space-between; align-items: center; }
+    .kc-social-list { display: flex; flex-direction: column; gap: 8px; }
+    .kc-social-icon { font-size: 18px; }
+    .required-note { font-size: 12px; text-align: right; margin-bottom: 16px; }
+
+    /* Dark-mode preview-only overrides */
+    body.theme-dark label { color: #e0e0e0 !important; }
+    body.theme-dark .checkbox label { color: #aaa !important; font-weight: normal !important; }
+    body.theme-dark .forgot a { color: #aaa !important; }
+    body.theme-dark .forgot a:hover { color: #F5C100 !important; }
+    body.theme-dark hr { border-color: #3a3a3a !important; }
+    body.theme-dark .kc-social-btn { background: #333; border: 1px solid #444; color: #e0e0e0; }
+    body.theme-dark .kc-social-btn:hover { background: #444; border-color: #F5C100; color: #e0e0e0; }
+    body.theme-dark #kc-registration { color: #aaa; }
+    body.theme-dark #kc-registration a { color: #F5C100 !important; }
+    body.theme-dark #kc-page-title { color: #F5C100 !important; }
+    body.theme-dark .required-note { color: #aaa; }
+    body.theme-dark .required { color: #F5C100; }
+
+    /* Light-mode preview-only overrides */
+    body.theme-light label { color: #333333 !important; font-weight: 600 !important; }
+    body.theme-light .checkbox label { color: #666 !important; font-weight: normal !important; }
+    body.theme-light .forgot a { color: #666 !important; }
+    body.theme-light .forgot a:hover { color: #1a3060 !important; }
+    body.theme-light hr { border-color: #dddddd !important; }
+    body.theme-light .kc-social-btn { background: #f8f8f8; border: 1px solid #ccc; color: #333; }
+    body.theme-light .kc-social-btn:hover { background: #eeeeee; border-color: #1a3060; color: #333; }
+    body.theme-light #kc-registration { color: #666; }
+    body.theme-light #kc-registration a { color: #1a3060 !important; }
+    body.theme-light #kc-page-title { color: #1a3060 !important; }
+    body.theme-light .required-note { color: #666; }
+    body.theme-light .required { color: #1a3060; }
+
+    /* Light alert colours */
+    body.theme-light .alert-error  { background: #fdecea !important; border-left: 4px solid #c91919 !important; color: #b91c1c !important; }
+    body.theme-light .alert-info   { background: #eff6ff !important; border-left: 4px solid #1a3060 !important; color: #1a3060 !important; }
+    body.theme-light .alert-success { background: #ecfdf5 !important; border-left: 4px solid #2d8653 !important; color: #065f46 !important; }
+
+    /* Common social-btn styles */
+    .kc-social-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      border-radius: 4px;
+      padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; text-decoration: none; font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .kc-social-btn:hover { text-decoration: none; }
+
+    /* Light header — dark navy band with yellow border */
+    body.theme-light #kc-header {
+      background: #1a3060 !important;
+      border-bottom: 4px solid #F5C100 !important;
+      padding: 20px 0 !important;
+      width: 100%;
+    }
+    body.theme-dark #kc-header {
+      background: transparent !important;
+      border-bottom: none !important;
+      padding: 32px 0 8px !important;
+    }
+    /* Rounded card corners on light — flat top because header connects */
+    body.theme-light .card-pf {
+      border-radius: 0 0 8px 8px !important;
+      border-top: none !important;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1) !important;
+    }
+    body.theme-dark .card-pf {
+      border-radius: 8px !important;
+      margin-top: 0 !important;
+    }
+
+    /* push page content below fixed toolbar */
+    .page-body { padding-top: 48px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+  </style>
+</head>
+
+<body class="login-pf theme-dark">
+
+<!-- ── Fixed preview toolbar ──────────────────────────────── -->
+<div class="preview-toolbar" role="toolbar" aria-label="Preview controls">
+  <span class="toolbar-label">Theme</span>
+  <div class="theme-toggle">
+    <button class="theme-btn active" id="btn-dark"  onclick="switchTheme('dark')">&#9790; Dark</button>
+    <button class="theme-btn"        id="btn-light" onclick="switchTheme('light')">&#9728; Light</button>
+  </div>
+  <div class="toolbar-divider"></div>
+  <span class="toolbar-label">Screen</span>
+  <div class="preview-tabs" role="tablist">
+    <button class="preview-tab active" onclick="showScreen('login', this)">Sign In</button>
+    <button class="preview-tab" onclick="showScreen('login-error', this)">Sign In (error)</button>
+    <button class="preview-tab" onclick="showScreen('register', this)">Register</button>
+    <button class="preview-tab" onclick="showScreen('forgot', this)">Forgot Password</button>
+    <button class="preview-tab" onclick="showScreen('reset-sent', this)">Reset Sent</button>
+    <button class="preview-tab" onclick="showScreen('otp', this)">OTP / 2FA</button>
+  </div>
+</div>
+
+<div class="page-body">
+<div class="login-pf-page">
+
+  <!-- ── Logo ─────────────────────────────────────────────── -->
+  <div id="kc-header">
+    <a href="https://www.regtransfers.co.uk" target="_blank" rel="noopener noreferrer">
+      <img src="themes/regtransfers/login/resources/img/logo.png"
+           alt="Regtransfers - Personal Number Plates"
+           width="300" height="60" />
+    </a>
+  </div>
+
+  <div class="kc-form-area">
+
+    <!-- ── LOGIN ─────────────────────────────────────────── -->
+    <div id="screen-login" class="screen active card-pf">
+      <h1 id="kc-page-title">Sign in to your account</h1>
+
+      <div class="form-group">
+        <label for="username">Username or email</label>
+        <input type="text" id="username" placeholder="" autocomplete="username" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" />
+      </div>
+
+      <div class="form-group login-pf-settings">
+        <div class="checkbox">
+          <label><input type="checkbox" id="rememberMe"> Remember me</label>
+        </div>
+        <div class="forgot"><a href="#">Forgot password?</a></div>
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Sign In</button>
+      </div>
+
+      <hr>
+      <p style="text-align:center;color:#aaa;font-size:13px;margin-bottom:12px;">Or sign in with</p>
+      <div class="kc-social-list">
+        <a href="#" class="kc-social-btn"><span class="kc-social-icon">G</span> Continue with Google</a>
+        <a href="#" class="kc-social-btn"><span class="kc-social-icon">f</span> Continue with Facebook</a>
+      </div>
+
+      <div id="kc-registration">
+        New to Regtransfers? <a href="#">Create an account</a>
+      </div>
+    </div>
+
+    <!-- ── LOGIN + ERROR ─────────────────────────────────── -->
+    <div id="screen-login-error" class="screen card-pf">
+      <h1 id="kc-page-title">Sign in to your account</h1>
+
+      <div class="alert alert-error">
+        <span class="alert-icon">✕</span>
+        <span>Invalid username or password.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Username or email</label>
+        <input type="text" style="border-color:#c91919 !important;" value="john.doe@example.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" style="border-color:#c91919 !important;" />
+      </div>
+
+      <div class="form-group login-pf-settings">
+        <div class="checkbox">
+          <label><input type="checkbox"> Remember me</label>
+        </div>
+        <div class="forgot"><a href="#">Forgot password?</a></div>
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Sign In</button>
+      </div>
+    </div>
+
+    <!-- ── REGISTER ──────────────────────────────────────── -->
+    <div id="screen-register" class="screen card-pf">
+      <h1 id="kc-page-title">Create an account</h1>
+      <p class="required-note"><span class="required">*</span> Required fields</p>
+
+      <div class="form-group">
+        <label>First name <span class="required">*</span></label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group">
+        <label>Last name <span class="required">*</span></label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group">
+        <label>Email <span class="required">*</span></label>
+        <input type="email" />
+      </div>
+
+      <div class="form-group">
+        <label>Password <span class="required">*</span></label>
+        <input type="password" />
+      </div>
+
+      <div class="form-group">
+        <label>Confirm password <span class="required">*</span></label>
+        <input type="password" />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Create Account</button>
+      </div>
+
+      <div id="kc-registration">
+        Already have an account? <a href="#">Sign in</a>
+      </div>
+    </div>
+
+    <!-- ── FORGOT PASSWORD ───────────────────────────────── -->
+    <div id="screen-forgot" class="screen card-pf">
+      <h1 id="kc-page-title">Forgot your password?</h1>
+
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ</span>
+        <span>Enter your email or username and we'll send you a link to reset your password.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Username or email</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Send Reset Link</button>
+      </div>
+
+      <div id="kc-registration">
+        <a href="#">Back to Sign In</a>
+      </div>
+    </div>
+
+    <!-- ── RESET EMAIL SENT ──────────────────────────────── -->
+    <div id="screen-reset-sent" class="screen card-pf">
+      <h1 id="kc-page-title">Check your email</h1>
+
+      <div class="alert alert-success">
+        <span class="alert-icon">✓</span>
+        <span>We've sent a password reset link to your email address. Please check your inbox.</span>
+      </div>
+
+      <p style="font-size:14px;text-align:center;line-height:1.6;margin-top:8px;color:inherit;">
+        Didn't receive it? Check your spam folder or <a href="#">try again</a>.
+      </p>
+
+      <div class="form-group" style="margin-top:24px;">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Back to Sign In</button>
+      </div>
+    </div>
+
+    <!-- ── OTP / 2FA ─────────────────────────────────────── -->
+    <div id="screen-otp" class="screen card-pf">
+      <h1 id="kc-page-title">One-time code</h1>
+
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ</span>
+        <span>Open your authenticator app and enter the 6-digit code shown for your Regtransfers account.</span>
+      </div>
+
+      <div class="form-group" style="text-align:center;">
+        <label>Verification code</label>
+        <input type="text" id="otp-form"
+               style="text-align:center;font-size:1.5rem;letter-spacing:6px;font-weight:bold;max-width:220px;margin:0 auto;" 
+               maxlength="6" placeholder="000000" />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="pf-c-button pf-m-primary pf-m-block">Verify</button>
+      </div>
+
+      <div id="kc-registration">
+        <a href="#">Try another way to sign in</a>
+      </div>
+    </div>
+
+  </div><!-- /.kc-form-area -->
+
+  <!-- Brand footer -->
+  <footer id="kc-footer">
+    <p>&copy; 1982–2026 Registration Transfers Limited. All rights reserved.</p>
+    <p style="margin-top:4px;">
+      <a href="https://www.regtransfers.co.uk/company/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.regtransfers.co.uk/company/terms" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.regtransfers.co.uk/company/contact-us" target="_blank" rel="noopener noreferrer">Contact Us</a>
+    </p>
+  </footer>
+
+</div><!-- /.login-pf-page -->
+</div><!-- /.page-body -->
+
+<script>
+  const DARK_CSS  = 'themes/regtransfers/login/resources/css/regtransfers.css';
+  const LIGHT_CSS = 'themes/regtransfers/login/resources/css/regtransfers-light.css';
+
+  function switchTheme(mode) {
+    const link = document.getElementById('theme-css');
+    const body = document.body;
+    if (mode === 'light') {
+      link.href = LIGHT_CSS;
+      body.classList.remove('theme-dark');
+      body.classList.add('theme-light');
+      document.getElementById('btn-dark').classList.remove('active');
+      document.getElementById('btn-light').classList.add('active');
+    } else {
+      link.href = DARK_CSS;
+      body.classList.remove('theme-light');
+      body.classList.add('theme-dark');
+      document.getElementById('btn-light').classList.remove('active');
+      document.getElementById('btn-dark').classList.add('active');
+    }
+  }
+
+  function showScreen(id, tab) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    tab.classList.add('active');
+  }
+</script>
+</body>
+</html>
