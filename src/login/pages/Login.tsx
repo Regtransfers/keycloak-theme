@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Template } from "../components/Template";
+import { ProviderIcon } from "../components/ProviderIcon";
 
 type LoginKcContext = Extract<KcContext, { pageId: "login.ftl" }>;
 
@@ -33,9 +34,10 @@ export default function Login({ kcContext, i18n }: Props) {
                         href={p.loginUrl}
                         className={cn(
                             buttonVariants({ variant: "outline", size: "lg" }),
-                            "w-full text-foreground dark:text-foreground"
+                            "w-full text-foreground dark:text-foreground gap-2"
                         )}
                     >
+                        <ProviderIcon providerId={p.providerId} />
                         {p.displayName}
                     </a>
                 ))}
