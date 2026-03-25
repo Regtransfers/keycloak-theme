@@ -1,0 +1,132 @@
+/* =============================================
+   Keycloak Theme — Dark / Light mode styles
+   Uses CSS custom properties so both
+   prefers-color-scheme and theme-variant class
+   switching work from the same ruleset.
+   ============================================= */
+
+/* --- Light palette (default) --- */
+:root {
+    --kc-bg:             #f4f4f5;
+    --kc-card-bg:        #ffffff;
+    --kc-card-border:    #e4e4e7;
+    --kc-card-shadow:    0 2px 12px rgba(0, 0, 0, 0.08);
+    --kc-text:           #18181b;
+    --kc-text-muted:     #71717a;
+    --kc-input-bg:       #ffffff;
+    --kc-input-border:   #a1a1aa;
+    --kc-input-focus:    #2563eb;
+    --kc-btn-bg:         #2563eb;
+    --kc-btn-hover:      #1d4ed8;
+    --kc-btn-text:       #ffffff;
+    --kc-link:           #2563eb;
+    --kc-error:          #dc2626;
+}
+
+/* --- Dark palette — OS-level preference --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --kc-bg:             #09090b;
+        --kc-card-bg:        #18181b;
+        --kc-card-border:    #27272a;
+        --kc-card-shadow:    0 2px 24px rgba(0, 0, 0, 0.5);
+        --kc-text:           #fafafa;
+        --kc-text-muted:     #a1a1aa;
+        --kc-input-bg:       #27272a;
+        --kc-input-border:   #3f3f46;
+        --kc-input-focus:    #3b82f6;
+        --kc-btn-bg:         #3b82f6;
+        --kc-btn-hover:      #2563eb;
+        --kc-btn-text:       #ffffff;
+        --kc-link:           #60a5fa;
+        --kc-error:          #f87171;
+    }
+}
+
+/* --- Dark palette — explicit theme variant (-dark suffix) --- */
+/* Applied when the Keycloak admin selects the "-dark" theme variant */
+body.theme-dark {
+    --kc-bg:             #09090b;
+    --kc-card-bg:        #18181b;
+    --kc-card-border:    #27272a;
+    --kc-card-shadow:    0 2px 24px rgba(0, 0, 0, 0.5);
+    --kc-text:           #fafafa;
+    --kc-text-muted:     #a1a1aa;
+    --kc-input-bg:       #27272a;
+    --kc-input-border:   #3f3f46;
+    --kc-input-focus:    #3b82f6;
+    --kc-btn-bg:         #3b82f6;
+    --kc-btn-hover:      #2563eb;
+    --kc-btn-text:       #ffffff;
+    --kc-link:           #60a5fa;
+    --kc-error:          #f87171;
+}
+
+/* =============================================
+   Base styles using the CSS vars above
+   ============================================= */
+
+body {
+    background-color: var(--kc-bg);
+    color: var(--kc-text);
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Card / login box */
+.kcCardClass,
+.kcFormCardClass,
+.login-pf .card-pf {
+    background-color: var(--kc-card-bg) !important;
+    border: 1px solid var(--kc-card-border) !important;
+    box-shadow: var(--kc-card-shadow) !important;
+    color: var(--kc-text) !important;
+}
+
+/* Labels */
+.kcLabelClass {
+    color: var(--kc-text) !important;
+}
+
+/* Inputs */
+.kcInputClass {
+    background-color: var(--kc-input-bg) !important;
+    border-color: var(--kc-input-border) !important;
+    color: var(--kc-text) !important;
+}
+
+.kcInputClass:focus {
+    border-color: var(--kc-input-focus) !important;
+    outline: 2px solid var(--kc-input-focus) !important;
+    outline-offset: 1px;
+}
+
+/* Primary button */
+.kcButtonPrimaryClass {
+    background-color: var(--kc-btn-bg) !important;
+    border-color: var(--kc-btn-bg) !important;
+    color: var(--kc-btn-text) !important;
+}
+
+.kcButtonPrimaryClass:hover {
+    background-color: var(--kc-btn-hover) !important;
+    border-color: var(--kc-btn-hover) !important;
+}
+
+/* Links */
+.kcFormOptionsClass a,
+a {
+    color: var(--kc-link) !important;
+}
+
+/* Error messages */
+.kcAlertClass.alert-error,
+.pf-c-alert.pf-m-danger {
+    color: var(--kc-error) !important;
+}
+
+/* Muted / helper text */
+.kcFormOptionsClass,
+.kcInfoAreaClass {
+    color: var(--kc-text-muted) !important;
+}

@@ -1,91 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Regtransfers Keycloak Theme – Previews</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1a1a1a;
-      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-      color: #e0e0e0;
-    }
-    .card {
-      background: #242424;
-      border: 1px solid #333;
-      border-top: 3px solid #F5C100;
-      border-radius: 8px;
-      padding: 40px 48px;
-      text-align: center;
-      max-width: 480px;
-      width: 100%;
-    }
-    .logo {
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #F5C100;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    h1 {
-      font-size: 22px;
-      font-weight: 600;
-      margin: 0 0 8px;
-      color: #fff;
-    }
-    p {
-      font-size: 14px;
-      color: #888;
-      margin: 0 0 32px;
-    }
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    a.btn {
-      display: block;
-      padding: 14px 20px;
-      background: #1a3060;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-    a.btn:hover { background: #224080; }
-    a.btn span {
-      display: block;
-      font-size: 12px;
-      font-weight: 400;
-      color: #aac0e8;
-      margin-top: 3px;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="logo">Regtransfers</div>
-    <h1>Keycloak Theme Previews</h1>
-    <p>Static demos of the custom login and email templates.</p>
-    <div class="links">
-      <a class="btn" href="preview.html">
-        Login Page Preview
-        <span>Custom login / registration UI</span>
-      </a>
-      <a class="btn" href="preview-emails.html">
-        Email Preview
-        <span>Transactional email templates</span>
-      </a>
-    </div>
-  </div>
-</body>
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+
+    <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>
