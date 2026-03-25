@@ -5,7 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 
-const APP_NAME = "My App";
+const APP_NAME = "Regtransfers";
+const LOGO_URL = "https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png";
+const SITE_URL = "https://www.regtransfers.co.uk";
 
 type Props = {
     kcContext: KcContext & {
@@ -26,7 +28,8 @@ type Props = {
 
 export function Template({
     kcContext,
-    i18n,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    i18n: _i18n,
     headerNode,
     displayMessage = true,
     displayInfo = false,
@@ -35,88 +38,70 @@ export function Template({
     children,
 }: Props) {
     const { message, isAppInitiatedAction } = kcContext;
-    const { msgStr } = i18n;
 
     return (
         <TooltipProvider>
-            <div className="grid min-h-svh lg:grid-cols-2">
-                {/* ── Left column: form ── */}
-                <div className="relative flex min-h-screen flex-col px-4 py-6 lg:min-h-0 lg:p-10">
-                    {/* Back-to-app link (top-left) */}
-                    <div className="absolute top-4 left-4 z-20">
-                        <span className="font-semibold text-sm">{APP_NAME}</span>
+            {/* Full-screen background */}
+            <div className="relative min-h-svh flex flex-col items-center justify-center overflow-hidden">
+                {/* Car image background */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: "url('https://images.regtransfers.co.uk/websiteimages/banners/pages/porsche-gt3rs-white-jmr1-td.webp')" }}
+                />
+                {/* Navy overlay */}
+                <div className="absolute inset-0 bg-[#1a3060]/60" />
+                {/* Gold accent bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-2 bg-[#F5C100]" />
+
+                {/* Glassmorphism form card */}
+                <div className="relative z-10 w-full max-w-sm mx-4">
+                    {/* Logo above card */}
+                    <div className="flex justify-center mb-6">
+                        <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
+                            <img
+                                src={LOGO_URL}
+                                alt={APP_NAME}
+                                className="h-12 w-auto"
+                            />
+                        </a>
                     </div>
 
-                    {/* Centered form area */}
-                    <div className="flex flex-1 items-center justify-center">
-                        <div className="w-full max-w-sm">
-                            <Card className="shadow-none border-0 bg-transparent lg:border lg:shadow-sm lg:bg-card">
-                                <CardHeader>
-                                    <CardTitle className="text-2xl">{headerNode}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-4">
-                                        {/* Alert messages */}
-                                        {displayMessage &&
-                                            message !== undefined &&
-                                            (message.type !== "warning" || !isAppInitiatedAction) && (
-                                                <Alert
-                                                    variant={
-                                                        message.type === "error" ? "destructive" : "default"
-                                                    }
-                                                >
-                                                    <AlertDescription
-                                                        dangerouslySetInnerHTML={{ __html: message.summary }}
-                                                    />
-                                                </Alert>
-                                            )}
+                    <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white">
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-white">{headerNode}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {/* Alert messages */}
+                                {displayMessage &&
+                                    message !== undefined &&
+                                    (message.type !== "warning" || !isAppInitiatedAction) && (
+                                        <Alert
+                                            variant={
+                                                message.type === "error" ? "destructive" : "default"
+                                            }
+                                        >
+                                            <AlertDescription
+                                                dangerouslySetInnerHTML={{ __html: message.summary }}
+                                            />
+                                        </Alert>
+                                    )}
 
-                                        {/* Social providers above form */}
-                                        {socialProvidersNode}
+                                {/* Social providers above form */}
+                                {socialProvidersNode}
 
-                                        {/* Form content */}
-                                        {children}
+                                {/* Form content */}
+                                {children}
 
-                                        {/* Registration / info section */}
-                                        {displayInfo && (
-                                            <div className="text-center text-sm text-muted-foreground">
-                                                {infoNode}
-                                            </div>
-                                        )}
+                                {/* Registration / info section */}
+                                {displayInfo && (
+                                    <div className="text-center text-sm text-white/70">
+                                        {infoNode}
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── Right column: branding panel ── */}
-                <div className="bg-primary relative hidden lg:flex lg:flex-col lg:items-center lg:justify-center">
-                    <div className="flex flex-col items-center gap-4 px-8 text-center">
-                        {/* Logo placeholder */}
-                        <div className="flex size-16 items-center justify-center rounded-full bg-primary-foreground/10">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="size-8 text-primary-foreground"
-                            >
-                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                                <path d="M2 17l10 5 10-5" />
-                                <path d="M2 12l10 5 10-5" />
-                            </svg>
-                        </div>
-                        <span className="text-2xl font-semibold text-primary-foreground">
-                            {APP_NAME}
-                        </span>
-                        <p className="text-sm text-primary-foreground/70 max-w-xs">
-                            {msgStr("welcomeMessage")}
-                        </p>
-                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </TooltipProvider>
