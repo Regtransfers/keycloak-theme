@@ -16,18 +16,6 @@ export const Default: Story = {
   render: () => <KcPageStory />,
 };
 
-export const DarkMode: Story = {
-  render: () => (
-    <KcPageStory
-      kcContext={{
-        // Selecting the "-dark" theme variant applies the theme-dark body class
-        // and activates the dark CSS variables defined in main.css
-        themeName: "keycloak-theme-dark"
-      }}
-    />
-  ),
-};
-
 export const WithInvalidCredential: Story = {
   render: () => (
     <KcPageStory

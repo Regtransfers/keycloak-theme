@@ -1,46 +1,40 @@
 import type { Preview } from "@storybook/react";
 import React, { useEffect } from "react";
 
+const DARK_BG = "#09090b";
+
 const preview: Preview = {
-    globalTypes: {
-        colorMode: {
-            name: "Color mode",
-            description: "Light / dark mode",
-            defaultValue: "light",
-            toolbar: {
-                icon: "circlehollow",
-                items: [
-                    { value: "light", icon: "sun", title: "Light" },
-                    { value: "dark", icon: "moon", title: "Dark" },
-                ],
-                showName: true,
-            },
-        },
-    },
     decorators: [
         (Story, context) => {
-            const mode = context.globals.colorMode as string;
+            const isDark = context.globals.backgrounds?.value === DARK_BG;
             useEffect(() => {
                 const html = document.documentElement;
-                if (mode === "dark") {
+                if (isDark) {
                     html.classList.add("dark");
                     document.body.classList.add("dark", "theme-dark");
                 } else {
                     html.classList.remove("dark");
                     document.body.classList.remove("dark", "theme-dark");
                 }
-            }, [mode]);
+            }, [isDark]);
             return Story();
         },
     ],
     parameters: {
+        backgrounds: {
+            options: {
+                light: { name: "Light", value: "#ffffff" },
+                dark: { name: "Dark", value: DARK_BG },
+            },
+            default: "light",
+        },
         controls: {
             matchers: {
                 color: /(background|color)$/i,
-                date: /Date$/i
-            }
-        }
-    }
+                date: /Date$/i,
+            },
+        },
+    },
 };
 
 export default preview;
