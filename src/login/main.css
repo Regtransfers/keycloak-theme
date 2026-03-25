@@ -152,9 +152,9 @@ body {
     border-color: var(--kc-btn-hover) !important;
 }
 
-/* Links */
+/* Links — exclude button-styled anchors */
 .kcFormOptionsClass a,
-a {
+a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]) {
     color: var(--kc-link) !important;
 }
 

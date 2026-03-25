@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,7 +32,8 @@ export default function Login({ kcContext, i18n }: Props) {
                         key={p.providerId}
                         href={p.loginUrl}
                         className={cn(
-                            "inline-flex w-full items-center justify-center rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                            buttonVariants({ variant: "outline", size: "lg" }),
+                            "w-full text-foreground dark:text-foreground"
                         )}
                     >
                         {p.displayName}
