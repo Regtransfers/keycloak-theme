@@ -28,6 +28,14 @@ export default function Login({ kcContext, i18n }: Props) {
     const socialProvidersNode =
         realm.password && social?.providers && social.providers.length > 0 ? (
             <div className="flex flex-col gap-3">
+                <div className="relative text-center text-xs">
+                    <span className="relative z-10 bg-card px-2 text-muted-foreground">
+                        {msg("identity-provider-login-label")}
+                    </span>
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-border" />
+                    </div>
+                </div>
                 {social.providers.map(p => (
                     <a
                         key={p.providerId}
@@ -41,14 +49,6 @@ export default function Login({ kcContext, i18n }: Props) {
                         {p.displayName}
                     </a>
                 ))}
-                <div className="relative text-center text-xs">
-                    <span className="relative z-10 bg-card px-2 text-muted-foreground">
-                        {msg("identity-provider-login-label")}
-                    </span>
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-border" />
-                    </div>
-                </div>
             </div>
         ) : null;
 

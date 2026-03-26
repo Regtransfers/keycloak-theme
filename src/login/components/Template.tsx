@@ -87,11 +87,11 @@ export function Template({
                                         </Alert>
                                     )}
 
-                                {/* Social providers above form */}
-                                {socialProvidersNode}
-
                                 {/* Form content */}
                                 {children}
+
+                                {/* Social providers below form */}
+                                {socialProvidersNode}
 
                                 {/* Registration / info section */}
                                 {displayInfo && (
