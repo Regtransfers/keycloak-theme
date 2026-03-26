@@ -45,8 +45,8 @@ export function Template({
             <div className="relative min-h-svh flex flex-col">
                 {/* Car image background — decorative, must fill viewport */}
                 <div
-                    className="absolute inset-0 bg-cover"
-                    style={{ backgroundImage: "url('https://images.regtransfers.co.uk/websiteimages/banners/pages/porsche-gt3rs-white-jmr1-td.webp')", backgroundPosition: "60% 50%" }}
+                    className="absolute inset-0 bg-cover bg-[80%_50%] md:bg-[75%_50%] lg:bg-[60%_50%]"
+                    style={{ backgroundImage: "url('https://images.regtransfers.co.uk/websiteimages/banners/pages/porsche-gt3rs-white-jmr1-td.webp')" }}
                 />
                 {/* Navy overlay — decorative, must fill viewport */}
                 <div className="absolute inset-0 bg-[#1a3060]/60" />
