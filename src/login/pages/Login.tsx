@@ -29,12 +29,8 @@ export default function Login({ kcContext, i18n }: Props) {
         realm.password && social?.providers && social.providers.length > 0 ? (
             <div className="flex flex-col gap-3">
                 <div className="relative text-center text-xs">
-                    <span className="relative z-10 bg-card px-2 py-1 text-foreground dark:text-muted-foreground">
-                        {msg("identity-provider-login-label")}
-                    </span>
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-border" />
-                    </div>
+                    <hr className="pt-2"/>
+                    <span className="">{msg("identity-provider-login-label")}</span>
                 </div>
                 {social.providers.map(p => (
                     <a
