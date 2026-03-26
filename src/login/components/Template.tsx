@@ -65,7 +65,7 @@ export function Template({
                     </div>
 
                     <div className="w-full max-w-sm">
-                        <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white">
+                        <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white rounded-[1rem]">
                             <CardHeader>
                                 <CardTitle className="text-2xl text-white">{headerNode}</CardTitle>
                             </CardHeader>

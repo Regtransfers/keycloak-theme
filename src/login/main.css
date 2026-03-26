@@ -23,18 +23,18 @@
     --kc-input-bg:       #ffffff;
     --kc-input-border:   #a1a1aa;
     --kc-input-focus:    #1a3060;
-    --kc-btn-bg:         #1a3060;
-    --kc-btn-hover:      #0f2040;
+    --kc-btn-bg:         #00823b;
+    --kc-btn-hover:      #006830;
     --kc-btn-text:       #ffffff;
     --kc-link:           #1a3060;
-    --kc-error:          #dc2626;
+    --kc-error:          #ff5e63;
     --background:             oklch(1 0 0);
     --foreground:             oklch(0.145 0 0);
     --card:             oklch(1 0 0);
     --card-foreground:             oklch(0.145 0 0);
     --popover:             oklch(1 0 0);
     --popover-foreground:             oklch(0.145 0 0);
-    --primary:             oklch(0.283 0.093 263);
+    --primary:             #00823b;
     --primary-foreground:             oklch(0.985 0 0);
     --secondary:             oklch(0.97 0 0);
     --secondary-foreground:             oklch(0.205 0 0);
@@ -42,7 +42,7 @@
     --muted-foreground:             oklch(0.556 0 0);
     --accent:             oklch(0.831 0.185 88);
     --accent-foreground:             oklch(0.283 0.093 263);
-    --destructive:             oklch(0.577 0.245 27.325);
+    --destructive:             #ff5e63;
     --border:             oklch(0.922 0 0);
     --input:             oklch(0.922 0 0);
     --ring:             oklch(0.283 0.093 263);
@@ -74,11 +74,13 @@
         --kc-input-bg:       #0f1a2e;
         --kc-input-border:   #1e2d4a;
         --kc-input-focus:    #F5C100;
-        --kc-btn-bg:         #F5C100;
-        --kc-btn-hover:      #d4a800;
-        --kc-btn-text:       #1a3060;
+        --kc-btn-bg:         #00823b;
+        --kc-btn-hover:      #006830;
+        --kc-btn-text:       #ffffff;
+        --primary:           #00823b;
+        --primary-foreground: oklch(0.985 0 0);
         --kc-link:           #F5C100;
-        --kc-error:          #f87171;
+        --kc-error:          #ff5e63;
     }
 }
 
@@ -94,11 +96,13 @@ body.theme-dark {
     --kc-input-bg:       #0f1a2e;
     --kc-input-border:   #1e2d4a;
     --kc-input-focus:    #F5C100;
-    --kc-btn-bg:         #F5C100;
-    --kc-btn-hover:      #d4a800;
-    --kc-btn-text:       #1a3060;
+    --kc-btn-bg:         #00823b;
+    --kc-btn-hover:      #006830;
+    --kc-btn-text:       #ffffff;
+    --primary:           #00823b;
+    --primary-foreground: oklch(0.985 0 0);
     --kc-link:           #F5C100;
-    --kc-error:          #f87171;
+    --kc-error:          #ff5e63;
 }
 
 /* =============================================
@@ -143,19 +147,27 @@ body {
 /* Primary button */
 .kcButtonPrimaryClass {
     background-color: var(--kc-btn-bg) !important;
-    border-color: var(--kc-btn-bg) !important;
+    border-color: #1b9a38 !important;
     color: var(--kc-btn-text) !important;
 }
 
 .kcButtonPrimaryClass:hover {
     background-color: var(--kc-btn-hover) !important;
-    border-color: var(--kc-btn-hover) !important;
+    border-color: #1b9a38 !important;
 }
 
 /* Links — exclude button-styled anchors */
 .kcFormOptionsClass a,
 a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]) {
-    color: var(--kc-link) !important;
+    color: #F5C100 !important;
+    border-bottom: 1px dotted #fff !important;
+    text-decoration: none !important;
+}
+
+.kcFormOptionsClass a:hover,
+a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]):hover {
+    color: #fff !important;
+    border-bottom-style: solid !important;
 }
 
 /* Error messages */
