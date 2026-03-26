@@ -77,7 +77,7 @@ export function Template({
                                         (message.type !== "warning" || !isAppInitiatedAction) && (
                                             <Alert
                                                 variant={
-                                                    message.type === "error" ? "destructive" : "default"
+                                                    message.type === "error" ? "inline" : "default"
                                                 }
                                             >
                                                 <AlertDescription
