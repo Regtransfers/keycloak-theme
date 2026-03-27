@@ -64,7 +64,7 @@ export function Template({
                         </a>
                     </div>
 
-                    <div className="w-full max-w-lg">
+                    <div className="w-full max-w-md">
                         <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white rounded-[1rem] px-3">
                             <CardHeader>
                                 <CardTitle className="text-white">{headerNode}</CardTitle>
