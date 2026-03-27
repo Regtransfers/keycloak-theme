@@ -48,18 +48,30 @@ export default function Login({ kcContext, i18n }: Props) {
             </div>
         ) : null;
 
+    const hasMultipleOptions =
+        (social?.providers && social.providers.length > 0) || kcContext.enableWebAuthnConditionalUI;
+
     return (
         <Template
             kcContext={kcContext}
             i18n={i18n}
-            headerNode={msg("loginAccountTitle")}
+            headerNode={
+                <>
+                    <p className="text-2xl font-bold">Welcome</p>
+                    <h1 className="text-sm font-normal text-white/80 mt-1">
+                        {hasMultipleOptions
+                            ? "To continue, sign in with one of the easy options below"
+                            : "To continue, sign in below"}
+                    </h1>
+                </>
+            }
             displayMessage={!messagesPerField.existsError("username", "password")}
             displayInfo={realm.password && realm.registrationAllowed && !kcContext.registrationDisabled}
             infoNode={
                 <span>
-                    {msg("noAccount")}{" "}
+                    No account?{" "}
                     <a href={url.registrationUrl} className="underline underline-offset-4">
-                        {msg("doRegister")}
+                        Create one
                     </a>
                 </span>
             }

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { createKcPageStory } from "../KcPageStory";
+import { createKcPageStory, getKcContextMock } from "../KcPageStory";
+import RegisterChoice from "./RegisterChoice";
+import { useI18n } from "../i18n";
 
 const { KcPageStory } = createKcPageStory({ pageId: "register.ftl" });
 
@@ -13,6 +15,20 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  render: () => {
+    const kcContext = getKcContextMock({
+      pageId: "register.ftl",
+      overrides: {},
+    });
+    function RegisterChoiceStory() {
+      const { i18n } = useI18n({ kcContext });
+      return <RegisterChoice kcContext={kcContext} i18n={i18n} googleLoginUrl="/mock-google" />;
+    }
+    return <RegisterChoiceStory />;
+  },
+};
+
+export const SignUpWithEmail: Story = {
   render: () => <KcPageStory />,
 };
 

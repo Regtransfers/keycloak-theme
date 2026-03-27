@@ -45,11 +45,11 @@ export function Template({
             <div className="relative min-h-svh flex flex-col">
                 {/* Car image background — decorative, must fill viewport */}
                 <div
-                    className="absolute inset-0 bg-cover bg-[80%_50%] md:bg-[75%_50%] lg:bg-[60%_50%]"
+                    className="absolute inset-0 bg-cover bg-[68%_50%] md:bg-[75%_50%] lg:bg-[60%_50%]"
                     style={{ backgroundImage: "url('https://images.regtransfers.co.uk/websiteimages/banners/pages/porsche-gt3rs-white-jmr1-td.webp')" }}
                 />
                 {/* Navy overlay — decorative, must fill viewport */}
-                <div className="absolute inset-0 bg-[#1a3060]/60" />
+                <div className="absolute inset-0 bg-[#1a3060]/75 dark:bg-[#212529]/80" />
 
                 {/* Main content area — grows to fill space, centres the form */}
                 <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-10">
@@ -67,7 +67,7 @@ export function Template({
                     <div className="w-full max-w-sm">
                         <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white rounded-[1rem]">
                             <CardHeader>
-                                <CardTitle className="text-2xl text-white">{headerNode}</CardTitle>
+                                <CardTitle className="text-white">{headerNode}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">

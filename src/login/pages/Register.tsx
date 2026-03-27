@@ -30,7 +30,12 @@ export default function Register({ kcContext, i18n }: Props) {
         <Template
             kcContext={kcContext}
             i18n={i18n}
-            headerNode={msg("registerTitle")}
+            headerNode={
+                <>
+                    <p className="text-2xl font-bold">Join Regtransfers</p>
+                    <h1 className="text-sm font-normal text-white/80 mt-1">Create an account by filling in the fields below</h1>
+                </>
+            }
             displayMessage={!messagesPerField.existsError("firstName", "lastName", "email", "password", "password-confirm")}
             displayInfo={false}
         >
@@ -43,7 +48,7 @@ export default function Register({ kcContext, i18n }: Props) {
                 {/* First name, Middle initial & Last name */}
                 <div className="grid grid-cols-1 gap-3">
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="firstName">{msg("firstName")}</Label>
+                        <Label htmlFor="firstName">{msg("firstName")} <span className="text-destructive">*</span></Label>
                         <Input
                             id="firstName"
                             name="firstName"
@@ -72,7 +77,7 @@ export default function Register({ kcContext, i18n }: Props) {
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="lastName">{msg("lastName")}</Label>
+                        <Label htmlFor="lastName">{msg("lastName")} <span className="text-destructive">*</span></Label>
                         <Input
                             id="lastName"
                             name="lastName"
@@ -92,7 +97,7 @@ export default function Register({ kcContext, i18n }: Props) {
 
                 {/* Mobile number */}
                 <div className="flex flex-col gap-2">
-                    <Label htmlFor="mobileNumber">Mobile number</Label>
+                    <Label htmlFor="mobileNumber">Mobile number <span className="text-destructive">*</span></Label>
                     <Input
                         id="mobileNumber"
                         name="mobileNumber"
@@ -105,7 +110,7 @@ export default function Register({ kcContext, i18n }: Props) {
 
                 {/* Email */}
                 <div className="flex flex-col gap-2">
-                    <Label htmlFor="email">{msg("email")}</Label>
+                    <Label htmlFor="email">{msg("email")} <span className="text-destructive">*</span></Label>
                     <Input
                         id="email"
                         name="email"
@@ -125,7 +130,7 @@ export default function Register({ kcContext, i18n }: Props) {
                 {passwordRequired && (
                     <>
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="password">{msg("password")}</Label>
+                            <Label htmlFor="password">{msg("password")} <span className="text-destructive">*</span></Label>
                             <Input
                                 id="password"
                                 name="password"
@@ -142,7 +147,7 @@ export default function Register({ kcContext, i18n }: Props) {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="password-confirm">{msg("passwordConfirm")}</Label>
+                            <Label htmlFor="password-confirm">{msg("passwordConfirm")} <span className="text-destructive">*</span></Label>
                             <Input
                                 id="password-confirm"
                                 name="password-confirm"
