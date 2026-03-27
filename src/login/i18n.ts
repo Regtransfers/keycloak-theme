@@ -9,7 +9,8 @@ const { useI18n, ofTypeI18n } = i18nBuilder
         en: {
             welcomeMessage: "Sign in to your Regtransfers account to manage your personalised number plates.",
             "passkey-signin-with-passkey-label": "Sign in with a passkey",
-            or: "or"
+            or: "or",
+            doLogIn: "Sign in"
         }
     })
     .build();

@@ -161,7 +161,7 @@ export default function Login({ kcContext, i18n }: Props) {
                     <Button
                         type="submit"
                         size="lg"
-                        className="w-full border border-[#1b9a38]"
+                        className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
                         disabled={isLoginButtonDisabled}
                         name="login"
                         id="kc-login"
