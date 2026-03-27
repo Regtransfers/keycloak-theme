@@ -57,8 +57,8 @@ export default function Login({ kcContext, i18n }: Props) {
             i18n={i18n}
             headerNode={
                 <>
-                    <p className="text-2xl font-bold">Welcome</p>
-                    <h1 className="text-sm font-normal text-white/80 mt-1">
+                    <p className="kc-display-heading font-bold font-[Roboto]">Welcome</p>
+                    <h1 className="text-[0.9375rem] font-normal text-white/80 mt-1 font-[Arimo]">
                         {hasMultipleOptions
                             ? "To continue, sign in with one of the easy options below"
                             : "To continue, sign in below"}

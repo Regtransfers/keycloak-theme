@@ -22,8 +22,8 @@ export default function RegisterChoice({ kcContext, i18n, googleLoginUrl = "#" }
             i18n={i18n}
             headerNode={
                 <>
-                    <p className="text-2xl font-bold">Join Regtransfers</p>
-                    <h1 className="text-sm font-normal text-white/80 mt-1">Create an account with one of the easy options below</h1>
+                    <p className="kc-display-heading font-bold font-[Roboto]">Join Regtransfers</p>
+                    <h1 className="text-[0.9375rem] font-normal text-white/80 mt-1 font-[Arimo]">Create an account with one of the easy options below</h1>
                 </>
             }
             displayMessage={false}

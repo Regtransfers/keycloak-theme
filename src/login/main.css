@@ -1,9 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans: "Arimo", Arial, Helvetica, sans-serif;
+    --font-heading: "Roboto", Arial, Helvetica, sans-serif;
+}
 
 /* =============================================
    Keycloak Theme — Dark / Light mode styles
@@ -113,7 +117,36 @@ body {
     background-color: var(--kc-bg);
     color: var(--kc-text);
     margin: 0;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: "Arimo", Arial, Helvetica, sans-serif;
+    font-size: 0.9375rem;
+}
+
+h1 {
+    font-family: "Arimo", Arial, Helvetica, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: normal;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: calc(1.3125rem + 0.75vw);
+}
+
+@media (min-width: 1200px) {
+    h2, h3, h4, h5, h6 {
+        font-size: 1.875rem;
+    }
+}
+
+/* Fluid display heading — for <p> tags styled as main headings */
+.kc-display-heading {
+    font-size: calc(1.3125rem + 0.75vw);
+}
+
+@media (min-width: 1200px) {
+    .kc-display-heading {
+        font-size: 1.875rem;
+    }
 }
 
 /* Card / login box */

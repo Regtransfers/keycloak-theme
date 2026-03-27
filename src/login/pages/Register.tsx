@@ -32,8 +32,8 @@ export default function Register({ kcContext, i18n }: Props) {
             i18n={i18n}
             headerNode={
                 <>
-                    <p className="text-2xl font-bold">Join Regtransfers</p>
-                    <h1 className="text-sm font-normal text-white/80 mt-1">Create an account by filling in the fields below</h1>
+                    <p className="kc-display-heading font-bold font-[Roboto]">Join Regtransfers</p>
+                    <h1 className="text-[0.9375rem] font-normal text-white/80 mt-1 font-[Arimo]">Create an account by filling in the fields below</h1>
                 </>
             }
             displayMessage={!messagesPerField.existsError("firstName", "lastName", "email", "password", "password-confirm")}

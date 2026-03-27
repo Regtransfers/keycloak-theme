@@ -13,7 +13,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => <KcPageStory />,
+  render: (args) => (
+    <KcPageStory
+      {...args}
+      kcContext={{
+        social: {
+          displayInfo: true,
+          providers: [
+            {
+              loginUrl: "google",
+              alias: "google",
+              providerId: "google",
+              displayName: "Google",
+              iconClasses: "fa fa-google",
+            },
+          ],
+        },
+      }}
+    />
+  ),
 };
 
 export const WithInvalidCredential: Story = {
