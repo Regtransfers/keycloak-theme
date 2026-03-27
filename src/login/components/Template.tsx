@@ -55,7 +55,7 @@ export function Template({
                 <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-10">
                     {/* Logo above card */}
                     <div className="flex justify-center mb-6">
-                        <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
+                        <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="border-0">
                             <img
                                 src={LOGO_URL}
                                 alt={APP_NAME}

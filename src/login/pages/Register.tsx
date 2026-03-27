@@ -1,0 +1,207 @@
+import { useState } from "react";
+import type { KcContext } from "../KcContext";
+import type { I18n } from "../i18n";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Template } from "../components/Template";
+
+type RegisterKcContext = Extract<KcContext, { pageId: "register.ftl" }>;
+
+type Props = {
+    kcContext: RegisterKcContext;
+    i18n: I18n;
+};
+
+export default function Register({ kcContext, i18n }: Props) {
+    const { url, messagesPerField, passwordRequired, recaptchaRequired, recaptchaSiteKey } = kcContext;
+    const { msg, msgStr } = i18n;
+
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+
+    const firstNameError = messagesPerField.existsError("firstName");
+    const lastNameError = messagesPerField.existsError("lastName");
+    const emailError = messagesPerField.existsError("email");
+    const passwordError = messagesPerField.existsError("password");
+    const confirmPasswordError = messagesPerField.existsError("password-confirm");
+
+    return (
+        <Template
+            kcContext={kcContext}
+            i18n={i18n}
+            headerNode={msg("registerTitle")}
+            displayMessage={!messagesPerField.existsError("firstName", "lastName", "email", "password", "password-confirm")}
+            displayInfo={false}
+        >
+            <form
+                action={url.registrationAction}
+                method="post"
+                onSubmit={() => setIsSubmitDisabled(true)}
+                className="flex flex-col gap-4"
+            >
+                {/* First name, Middle initial & Last name */}
+                <div className="grid grid-cols-1 gap-3">
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="firstName">{msg("firstName")}</Label>
+                        <Input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            inputSize="lg"
+                            autoComplete="given-name"
+                            autoFocus
+                            required
+                            aria-invalid={firstNameError}
+                        />
+                        {firstNameError && (
+                            <p className="text-sm text-destructive">
+                                {messagesPerField.getFirstError("firstName")}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="middleName">Middle initial</Label>
+                        <Input
+                            id="middleName"
+                            name="middleName"
+                            type="text"
+                            inputSize="lg"
+                            autoComplete="additional-name"
+                            maxLength={1}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="lastName">{msg("lastName")}</Label>
+                        <Input
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            inputSize="lg"
+                            autoComplete="family-name"
+                            required
+                            aria-invalid={lastNameError}
+                        />
+                        {lastNameError && (
+                            <p className="text-sm text-destructive">
+                                {messagesPerField.getFirstError("lastName")}
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Mobile number */}
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="mobileNumber">Mobile number</Label>
+                    <Input
+                        id="mobileNumber"
+                        name="mobileNumber"
+                        type="tel"
+                        inputSize="lg"
+                        autoComplete="tel"
+                        required
+                    />
+                </div>
+
+                {/* Email */}
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="email">{msg("email")}</Label>
+                    <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        inputSize="lg"
+                        autoComplete="email"
+                        aria-invalid={emailError}
+                    />
+                    {emailError && (
+                        <p className="text-sm text-destructive">
+                            {messagesPerField.getFirstError("email")}
+                        </p>
+                    )}
+                </div>
+
+                {/* Password */}
+                {passwordRequired && (
+                    <>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="password">{msg("password")}</Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                inputSize="lg"
+                                autoComplete="new-password"
+                                aria-invalid={passwordError}
+                            />
+                            {passwordError && (
+                                <p className="text-sm text-destructive">
+                                    {messagesPerField.getFirstError("password")}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="password-confirm">{msg("passwordConfirm")}</Label>
+                            <Input
+                                id="password-confirm"
+                                name="password-confirm"
+                                type="password"
+                                inputSize="lg"
+                                autoComplete="new-password"
+                                aria-invalid={confirmPasswordError}
+                            />
+                            {confirmPasswordError && (
+                                <p className="text-sm text-destructive">
+                                    {messagesPerField.getFirstError("password-confirm")}
+                                </p>
+                            )}
+                        </div>
+                    </>
+                )}
+
+                {/* Recaptcha */}
+                {recaptchaRequired && (
+                    <div className="g-recaptcha" data-size="compact" data-sitekey={recaptchaSiteKey} />
+                )}
+
+                {/* Marketing consent */}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-start gap-3 py-3">
+                        <Checkbox id="marketingConsent" name="marketingConsent" className="mt-0.5 shrink-0" />
+                        <Label htmlFor="marketingConsent" className="font-normal cursor-pointer leading-snug">
+                            Please send me special offers, discounts and number plates that may be relevant to me. I understand I can unsubscribe at any time.
+                        </Label>
+                    </div>
+                    <p className="text-sm">
+                        <a
+                            href="https://www.regtransfers.review/company/privacy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-white/70 underline underline-offset-4 hover:text-white"
+                        >
+                            Privacy policy
+                        </a>
+                    </p>
+                </div>
+
+                <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full border border-[#1b9a38]"
+                    disabled={isSubmitDisabled}
+                    id="kc-register"
+                >
+                    {msgStr("doRegister")}
+                </Button>
+
+                <p className="text-center text-sm text-white/70">
+                    Already with Regtransfers?{" "}
+                    <a href={url.loginUrl} className="underline underline-offset-4 text-white">
+                        {msg("doLogIn")}
+                    </a>
+                </p>
+            </form>
+        </Template>
+    );
+}

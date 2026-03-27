@@ -72,21 +72,18 @@ export default function Login({ kcContext, i18n }: Props) {
                     onSubmit={() => setIsLoginButtonDisabled(true)}
                     className="flex flex-col gap-4"
                 >
-                    {/* Username / Email */}
+                    {/* Email */}
                     {!kcContext.usernameHidden && (
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="username">
-                                {!realm.loginWithEmailAllowed
-                                    ? msg("username")
-                                    : !realm.registrationEmailAsUsername
-                                      ? msg("usernameOrEmail")
-                                      : msg("email")}
+                                {msg("email")}
                             </Label>
                             <Input
                                 id="username"
                                 name="username"
-                                type="text"
-                                autoComplete={kcContext.enableWebAuthnConditionalUI ? "username webauthn" : "username"}
+                                type="email"
+                                inputSize="lg"
+                                autoComplete="email"
                                 defaultValue={login.username ?? ""}
                                 autoFocus={!login.username}
                                 aria-invalid={usernameError}
@@ -116,6 +113,7 @@ export default function Login({ kcContext, i18n }: Props) {
                             id="password"
                             name="password"
                             type="password"
+                            inputSize="lg"
                             autoComplete="current-password"
                             autoFocus={!!login.username}
                             aria-invalid={passwordError}
@@ -163,22 +161,20 @@ export default function Login({ kcContext, i18n }: Props) {
 
             {/* Passkey sign-in */}
             {kcContext.enableWebAuthnConditionalUI && (
-                <>
+                <div className="flex flex-col gap-3">
                     <div className="relative text-center text-xs">
-                        <span className="relative z-10 bg-card px-2 text-muted-foreground">
-                            {msg("or")}
-                        </span>
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-border" />
-                        </div>
+                        <hr className="pt-2"/>
+                        <span className="">{msg("or")}</span>
                     </div>
                     <form id="webauth" action={url.loginAction} method="post">
                         <input type="hidden" name="authenticationExecution" />
-                        <Button
+                        <button
                             type="submit"
-                            variant="outline"
-                            className="w-full"
                             id="authenticateWebAuthnButton"
+                            className={cn(
+                                buttonVariants({ variant: "outline", size: "lg" }),
+                                "w-full text-foreground dark:text-foreground gap-2"
+                            )}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4">
                                 <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z" />
@@ -187,9 +183,9 @@ export default function Login({ kcContext, i18n }: Props) {
                                 <line x1="10" y1="17" x2="14" y2="17" />
                             </svg>
                             {msgStr("passkey-signin-with-passkey-label")}
-                        </Button>
+                        </button>
                     </form>
-                </>
+                </div>
             )}
         </Template>
     );

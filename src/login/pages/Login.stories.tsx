@@ -74,16 +74,6 @@ export const WithoutPasswordReset: Story = {
   ),
 };
 
-export const WithEmailAsUsername: Story = {
-  render: () => (
-    <KcPageStory
-      kcContext={{
-        realm: { loginWithEmailAllowed: false },
-      }}
-    />
-  ),
-};
-
 export const WithPresetUsername: Story = {
   render: () => (
     <KcPageStory
