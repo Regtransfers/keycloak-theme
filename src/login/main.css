@@ -140,6 +140,7 @@ h2, h3, h4, h5, h6 {
 
 /* Fluid display heading — for <p> tags styled as main headings */
 .kc-display-heading {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: calc(1.3125rem + 0.75vw);
 }
 
