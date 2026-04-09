@@ -1,0 +1,305 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans: "Arimo", Arial, Helvetica, sans-serif;
+    --font-heading: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+/* =============================================
+   Keycloak Theme — Dark / Light mode styles
+   Uses CSS custom properties so both
+   prefers-color-scheme and theme-variant class
+   switching work from the same ruleset.
+   ============================================= */
+
+/* --- Light palette (default) --- */
+:root {
+    --kc-bg:             #f4f4f5;
+    --kc-card-bg:        #ffffff;
+    --kc-card-border:    #e4e4e7;
+    --kc-card-shadow:    0 2px 12px rgba(0, 0, 0, 0.08);
+    --kc-text:           #18181b;
+    --kc-text-muted:     #71717a;
+    --kc-input-bg:       #ffffff;
+    --kc-input-border:   #a1a1aa;
+    --kc-input-focus:    #1a3060;
+    --kc-btn-bg:         #00823b;
+    --kc-btn-hover:      #006830;
+    --kc-btn-text:       #ffffff;
+    --kc-link:           #1a3060;
+    --kc-error:          #ff5e63;
+    --background:             oklch(1 0 0);
+    --foreground:             oklch(0.145 0 0);
+    --card:             oklch(1 0 0);
+    --card-foreground:             oklch(0.145 0 0);
+    --popover:             oklch(1 0 0);
+    --popover-foreground:             oklch(0.145 0 0);
+    --primary:             #00823b;
+    --primary-foreground:             oklch(0.985 0 0);
+    --secondary:             oklch(0.97 0 0);
+    --secondary-foreground:             oklch(0.205 0 0);
+    --muted:             oklch(0.97 0 0);
+    --muted-foreground:             oklch(0.556 0 0);
+    --accent:             oklch(0.831 0.185 88);
+    --accent-foreground:             oklch(0.283 0.093 263);
+    --destructive:             #ff5e63;
+    --border:             oklch(0.922 0 0);
+    --input:             oklch(0.922 0 0);
+    --ring:             oklch(0.283 0.093 263);
+    --chart-1:             oklch(0.87 0 0);
+    --chart-2:             oklch(0.556 0 0);
+    --chart-3:             oklch(0.439 0 0);
+    --chart-4:             oklch(0.371 0 0);
+    --chart-5:             oklch(0.269 0 0);
+    --radius:             0.5rem;
+    --sidebar:             oklch(0.985 0 0);
+    --sidebar-foreground:             oklch(0.145 0 0);
+    --sidebar-primary:             oklch(0.283 0.093 263);
+    --sidebar-primary-foreground:             oklch(0.985 0 0);
+    --sidebar-accent:             oklch(0.97 0 0);
+    --sidebar-accent-foreground:             oklch(0.205 0 0);
+    --sidebar-border:             oklch(0.922 0 0);
+    --sidebar-ring:             oklch(0.283 0.093 263);
+}
+
+/* --- Dark palette — OS-level preference --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --kc-bg:             #080e1c;
+        --kc-card-bg:        #0f1a2e;
+        --kc-card-border:    #1e2d4a;
+        --kc-card-shadow:    0 2px 24px rgba(0, 0, 0, 0.5);
+        --kc-text:           #fafafa;
+        --kc-text-muted:     #a1a1aa;
+        --kc-input-bg:       #0f1a2e;
+        --kc-input-border:   #1e2d4a;
+        --kc-input-focus:    #F5C100;
+        --kc-btn-bg:         #00823b;
+        --kc-btn-hover:      #006830;
+        --kc-btn-text:       #ffffff;
+        --primary:           #00823b;
+        --primary-foreground: oklch(0.985 0 0);
+        --kc-link:           #F5C100;
+        --kc-error:          #ff5e63;
+    }
+}
+
+/* --- Dark palette — explicit theme variant (-dark suffix) --- */
+/* Applied when the Keycloak admin selects the "-dark" theme variant */
+body.theme-dark {
+    --kc-bg:             #080e1c;
+    --kc-card-bg:        #0f1a2e;
+    --kc-card-border:    #1e2d4a;
+    --kc-card-shadow:    0 2px 24px rgba(0, 0, 0, 0.5);
+    --kc-text:           #fafafa;
+    --kc-text-muted:     #a1a1aa;
+    --kc-input-bg:       #0f1a2e;
+    --kc-input-border:   #1e2d4a;
+    --kc-input-focus:    #F5C100;
+    --kc-btn-bg:         #00823b;
+    --kc-btn-hover:      #006830;
+    --kc-btn-text:       #ffffff;
+    --primary:           #00823b;
+    --primary-foreground: oklch(0.985 0 0);
+    --kc-link:           #F5C100;
+    --kc-error:          #ff5e63;
+}
+
+/* =============================================
+   Base styles using the CSS vars above
+   ============================================= */
+
+body {
+    background-color: var(--kc-bg);
+    color: var(--kc-text);
+    margin: 0;
+    font-family: "Arimo", Arial, Helvetica, sans-serif;
+    font-size: 0.9375rem;
+}
+
+h1 {
+    font-family: "Arimo", Arial, Helvetica, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: normal;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: calc(1.3125rem + 0.75vw);
+}
+
+@media (min-width: 1200px) {
+    h2, h3, h4, h5, h6 {
+        font-size: 1.875rem;
+    }
+}
+
+/* Fluid display heading — for <p> tags styled as main headings */
+.kc-display-heading {
+    font-size: calc(1.3125rem + 0.75vw);
+}
+
+@media (min-width: 1200px) {
+    .kc-display-heading {
+        font-size: 1.875rem;
+    }
+}
+
+/* Card / login box */
+.kcCardClass,
+.kcFormCardClass,
+.login-pf .card-pf {
+    background-color: var(--kc-card-bg) !important;
+    border: 1px solid var(--kc-card-border) !important;
+    box-shadow: var(--kc-card-shadow) !important;
+    color: var(--kc-text) !important;
+}
+
+/* Labels */
+.kcLabelClass {
+    color: var(--kc-text) !important;
+}
+
+/* Inputs */
+.kcInputClass {
+    background-color: var(--kc-input-bg) !important;
+    border-color: var(--kc-input-border) !important;
+    color: var(--kc-text) !important;
+}
+
+.kcInputClass:focus {
+    border-color: var(--kc-input-focus) !important;
+    outline: 2px solid var(--kc-input-focus) !important;
+    outline-offset: 1px;
+}
+
+/* Primary button */
+.kcButtonPrimaryClass {
+    background-color: var(--kc-btn-bg) !important;
+    border-color: #1b9a38 !important;
+    color: var(--kc-btn-text) !important;
+}
+
+.kcButtonPrimaryClass:hover {
+    background-color: var(--kc-btn-hover) !important;
+    border-color: #1b9a38 !important;
+}
+
+/* Links — exclude button-styled anchors */
+.kcFormOptionsClass a,
+a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]) {
+    color: #F5C100 !important;
+    border-bottom: 1px dotted #fff !important;
+    text-decoration: none !important;
+}
+
+.kcFormOptionsClass a:hover,
+a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]):hover {
+    color: #fff !important;
+    border-bottom-style: solid !important;
+}
+
+/* Error messages */
+.kcAlertClass.alert-error,
+.pf-c-alert.pf-m-danger {
+    color: var(--kc-error) !important;
+}
+
+/* Muted / helper text */
+.kcFormOptionsClass,
+.kcInfoAreaClass {
+    color: var(--kc-text-muted) !important;
+}
+
+@theme inline {
+    --font-heading:             var(--font-sans);
+    --font-sans:             'Geist Variable', sans-serif;
+    --color-sidebar-ring:             var(--sidebar-ring);
+    --color-sidebar-border:             var(--sidebar-border);
+    --color-sidebar-accent-foreground:             var(--sidebar-accent-foreground);
+    --color-sidebar-accent:             var(--sidebar-accent);
+    --color-sidebar-primary-foreground:             var(--sidebar-primary-foreground);
+    --color-sidebar-primary:             var(--sidebar-primary);
+    --color-sidebar-foreground:             var(--sidebar-foreground);
+    --color-sidebar:             var(--sidebar);
+    --color-chart-5:             var(--chart-5);
+    --color-chart-4:             var(--chart-4);
+    --color-chart-3:             var(--chart-3);
+    --color-chart-2:             var(--chart-2);
+    --color-chart-1:             var(--chart-1);
+    --color-ring:             var(--ring);
+    --color-input:             var(--input);
+    --color-border:             var(--border);
+    --color-destructive:             var(--destructive);
+    --color-accent-foreground:             var(--accent-foreground);
+    --color-accent:             var(--accent);
+    --color-muted-foreground:             var(--muted-foreground);
+    --color-muted:             var(--muted);
+    --color-secondary-foreground:             var(--secondary-foreground);
+    --color-secondary:             var(--secondary);
+    --color-primary-foreground:             var(--primary-foreground);
+    --color-primary:             var(--primary);
+    --color-popover-foreground:             var(--popover-foreground);
+    --color-popover:             var(--popover);
+    --color-card-foreground:             var(--card-foreground);
+    --color-card:             var(--card);
+    --color-foreground:             var(--foreground);
+    --color-background:             var(--background);
+    --radius-sm:             calc(var(--radius) * 0.6);
+    --radius-md:             calc(var(--radius) * 0.8);
+    --radius-lg:             var(--radius);
+    --radius-xl:             calc(var(--radius) * 1.4);
+    --radius-2xl:             calc(var(--radius) * 1.8);
+    --radius-3xl:             calc(var(--radius) * 2.2);
+    --radius-4xl:             calc(var(--radius) * 2.6);
+}
+
+.dark {
+    --background:             oklch(0.15 0.05 263);
+    --foreground:             oklch(0.985 0 0);
+    --card:             oklch(0.195 0.055 263);
+    --card-foreground:             oklch(0.985 0 0);
+    --popover:             oklch(0.195 0.055 263);
+    --popover-foreground:             oklch(0.985 0 0);
+    --primary:             oklch(0.831 0.185 88);
+    --primary-foreground:             oklch(0.283 0.093 263);
+    --secondary:             oklch(0.22 0.05 263);
+    --secondary-foreground:             oklch(0.985 0 0);
+    --muted:             oklch(0.22 0.05 263);
+    --muted-foreground:             oklch(0.708 0 0);
+    --accent:             oklch(0.831 0.185 88);
+    --accent-foreground:             oklch(0.283 0.093 263);
+    --destructive:             oklch(0.704 0.191 22.216);
+    --border:             oklch(1 0 0 / 10%);
+    --input:             oklch(1 0 0 / 12%);
+    --ring:             oklch(0.831 0.185 88);
+    --chart-1:             oklch(0.87 0 0);
+    --chart-2:             oklch(0.556 0 0);
+    --chart-3:             oklch(0.439 0 0);
+    --chart-4:             oklch(0.371 0 0);
+    --chart-5:             oklch(0.269 0 0);
+    --sidebar:             oklch(0.195 0.055 263);
+    --sidebar-foreground:             oklch(0.985 0 0);
+    --sidebar-primary:             oklch(0.831 0.185 88);
+    --sidebar-primary-foreground:             oklch(0.283 0.093 263);
+    --sidebar-accent:             oklch(0.22 0.05 263);
+    --sidebar-accent-foreground:             oklch(0.985 0 0);
+    --sidebar-border:             oklch(1 0 0 / 10%);
+    --sidebar-ring:             oklch(0.831 0.185 88);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
