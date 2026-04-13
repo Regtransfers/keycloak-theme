@@ -103,8 +103,7 @@ export function Template({
                         </Card>
                     </div>
                 </div>
-                {/* Gold accent bar */}
-                <div className="relative z-10 h-1 bg-[#F5C100]" />
+
                 {/* Footer legal text — in normal flow, pushed to bottom */}
                 <div className="relative z-10 w-full bg-[#212529]">
                     <div className="max-w-6xl mx-auto px-6 py-4 text-white/60 text-[12px] leading-relaxed space-y-1">
