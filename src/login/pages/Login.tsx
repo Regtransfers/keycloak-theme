@@ -93,7 +93,7 @@ export default function Login({ kcContext, i18n }: Props) {
                             <Input
                                 id="username"
                                 name="username"
-                                type="email"
+                                type="text"
                                 inputSize="lg"
                                 autoComplete="email"
                                 defaultValue={login.username ?? ""}
