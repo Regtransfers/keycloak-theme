@@ -61,7 +61,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="cta-button">
-                                                        <a href="${link}">SIGN IN NOW</a>
+                                                        <a href="${magicLink}">SIGN IN NOW</a>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -71,7 +71,7 @@
                                     <!-- Alternative link -->
                                     <p style="font-size: 13px; color: #666666; text-align: center; margin: 0 0 10px 0;">Or copy and paste this link into your browser:</p>
                                     <p style="font-size: 12px; text-align: center; margin: 0 0 30px 0;" class="link-text">
-                                        <a href="${link}" style="color: #0a9c8a; text-decoration: none;">${link}</a>
+                                        <a href="${magicLink}" style="color: #0a9c8a; text-decoration: none;">${magicLink}</a>
                                     </p>
 
                                     <!-- Security info -->
