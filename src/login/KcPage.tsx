@@ -5,6 +5,7 @@ import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/login/DefaultPage";
 import Template from "keycloakify/login/Template";
 import Login from "./pages/Login";
+import LoginUsername from "./pages/LoginUsername";
 import Register from "./pages/Register";
 import LoginResetCredentials from "./pages/LoginResetCredentials";
 import LoginOtp from "./pages/LoginOtp";
@@ -45,6 +46,8 @@ export default function KcPage(props: { kcContext: KcContext }) {
                     case "login-otp.ftl":
                         return <LoginOtp kcContext={kcContext} i18n={i18n} />;
                     case "login-config-totp.ftl":
+                    case "login-username.ftl":
+                        return <LoginUsername kcContext={kcContext} i18n={i18n} />;
                         return <LoginConfigTotp kcContext={kcContext} i18n={i18n} />;
                     default:
                         return (
