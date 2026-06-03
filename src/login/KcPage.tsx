@@ -6,6 +6,7 @@ import DefaultPage from "keycloakify/login/DefaultPage";
 import Template from "keycloakify/login/Template";
 import Login from "./pages/Login";
 import LoginUsername from "./pages/LoginUsername";
+import ViewEmail from "./pages/ViewEmail";
 import Register from "./pages/Register";
 import LoginResetCredentials from "./pages/LoginResetCredentials";
 import LoginOtp from "./pages/LoginOtp";
@@ -34,21 +35,23 @@ export default function KcPage(props: { kcContext: KcContext }) {
     return (
         <Suspense>
             {(() => {
-                switch (kcContext.pageId) {
+                switch (kcContext.pageId as string) {
                     case "login.ftl":
-                        return <Login kcContext={kcContext} i18n={i18n} />;
+                        return <Login kcContext={kcContext as Extract<KcContext, { pageId: "login.ftl" }>} i18n={i18n} />;
                     case "register.ftl":
-                        return <Register kcContext={kcContext} i18n={i18n} />;
+                        return <Register kcContext={kcContext as Extract<KcContext, { pageId: "register.ftl" }>} i18n={i18n} />;
                     case "login-reset-password.ftl":
-                        return <LoginResetCredentials kcContext={kcContext} i18n={i18n} />;
+                        return <LoginResetCredentials kcContext={kcContext as Extract<KcContext, { pageId: "login-reset-password.ftl" }>} i18n={i18n} />;
                     case "login-update-password.ftl":
-                        return <LoginUpdatePassword kcContext={kcContext} i18n={i18n} />;
+                        return <LoginUpdatePassword kcContext={kcContext as Extract<KcContext, { pageId: "login-update-password.ftl" }>} i18n={i18n} />;
                     case "login-otp.ftl":
-                        return <LoginOtp kcContext={kcContext} i18n={i18n} />;
+                        return <LoginOtp kcContext={kcContext as Extract<KcContext, { pageId: "login-otp.ftl" }>} i18n={i18n} />;
                     case "login-config-totp.ftl":
-                        return <LoginConfigTotp kcContext={kcContext} i18n={i18n} />;
+                        return <LoginConfigTotp kcContext={kcContext as Extract<KcContext, { pageId: "login-config-totp.ftl" }>} i18n={i18n} />;
                     case "login-username.ftl":
                         return <LoginUsername kcContext={kcContext as Extract<typeof kcContext, { pageId: "login-username.ftl" }>} i18n={i18n} />;
+                    case "view-email.ftl":
+                        return <ViewEmail kcContext={kcContext as never} i18n={i18n} />;
                     default:
                         return (
                             <DefaultPage
