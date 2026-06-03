@@ -22,13 +22,13 @@
                                     <tbody>
                                         <tr>
                                             <td style="background: #5bc0de; border-radius: 4px; padding: 16px 32px; text-align: center;">
-                                                <a href="${link}" style="color: #ffffff; text-decoration: none; font-size: 16px; letter-spacing: 0.5px; display: inline-block;">SIGN IN NOW</a>
+                                                <a href="${magicLink}" style="color: #ffffff; text-decoration: none; font-size: 16px; letter-spacing: 0.5px; display: inline-block;">SIGN IN NOW</a>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <p style="margin: 0 0 8px 0; font-size: 13px; line-height: 1.6; color: #666666; text-align: center;">Or copy and paste this link into your browser:</p>
-                                <p style="margin: 0 0 24px 0; font-size: 12px; line-height: 1.6; color: #0a9c8a; word-break: break-all; text-align: center;">${link}</p>
+                                <p style="margin: 0 0 24px 0; font-size: 12px; line-height: 1.6; color: #0a9c8a; word-break: break-all; text-align: center;">${magicLink}</p>
                                 <div style="background: #f9f9f9; border-left: 4px solid #0a9c8a; padding: 15px; margin-bottom: 26px; font-size: 13px; line-height: 1.6; color: #666666;">
                                     <p style="margin: 0;"><strong style="color: #0a9c8a;">Your security matters:</strong> This link is unique and will only work once. Never share this email with anyone.</p>
                                 </div>

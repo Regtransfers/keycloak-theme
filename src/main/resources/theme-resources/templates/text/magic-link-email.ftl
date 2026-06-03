@@ -6,7 +6,7 @@ Hello<#if user.firstName??> ${user.firstName}</#if>,
 You've requested secure, passwordless access to your Regtransfers account.
 
 SIGN IN NOW:
-${link}
+${magicLink}
 
 This link expires in 15 minutes. If you didn't request this sign-in link, you can safely ignore this email.
 
