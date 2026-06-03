@@ -46,9 +46,9 @@ export default function KcPage(props: { kcContext: KcContext }) {
                     case "login-otp.ftl":
                         return <LoginOtp kcContext={kcContext} i18n={i18n} />;
                     case "login-config-totp.ftl":
-                    case "login-username.ftl":
-                        return <LoginUsername kcContext={kcContext} i18n={i18n} />;
                         return <LoginConfigTotp kcContext={kcContext} i18n={i18n} />;
+                    case "login-username.ftl":
+                        return <LoginUsername kcContext={kcContext as Extract<typeof kcContext, { pageId: "login-username.ftl" }>} i18n={i18n} />;
                     default:
                         return (
                             <DefaultPage

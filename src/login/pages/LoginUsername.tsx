@@ -122,7 +122,7 @@ export default function LoginUsername({ kcContext, i18n }: Props) {
                 </Button>
             </form>
 
-            {auth.showTryAnotherWayLink && (
+            {auth?.showTryAnotherWayLink && (
                 <form id="kc-select-try-another-way-form" action={url.loginAction} method="post">
                     <input type="hidden" name="tryAnotherWay" value="on" />
                     <a href="#" id="try-another-way" onClick={e => { e.preventDefault(); (e.currentTarget.closest("form") as HTMLFormElement)?.submit(); }}>
