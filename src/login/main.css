@@ -216,6 +216,113 @@ a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*
     color: var(--kc-text-muted) !important;
 }
 
+/* =============================================
+   Magic-link plugin template pages
+   (io.phasetwo.keycloak/keycloak-magic-link)
+   ============================================= */
+
+/* Token entry form page: login-token-form.ftl */
+#kc-login-token-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#kc-login-token-form label,
+#kc-login-token-form p {
+    color: var(--kc-text) !important;
+}
+
+#kc-login-token-form input[type="text"],
+#kc-login-token-form input[type="email"],
+#kc-login-token-form input[type="password"],
+#login_token {
+    background-color: var(--kc-input-bg) !important;
+    border: 1px solid var(--kc-input-border) !important;
+    color: var(--kc-text) !important;
+    border-radius: 8px;
+    min-height: 42px;
+}
+
+#kc-login-token-form input:focus,
+#login_token:focus {
+    border-color: var(--kc-input-focus) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--kc-input-focus) 40%, transparent) !important;
+    outline: none !important;
+}
+
+#kc-login-token-form .kcInputErrorMessageClass,
+#kc-login-token-form .pf-c-form__helper-text,
+#kc-login-token-form .pf-v5-c-form__helper-text {
+    color: var(--kc-error) !important;
+}
+
+#kc-submit,
+#kc-login-token-form input[type="submit"],
+#kc-login-token-form button[type="submit"] {
+    background-color: var(--kc-btn-bg) !important;
+    border: 1px solid #1b9a38 !important;
+    color: var(--kc-btn-text) !important;
+    border-radius: 8px;
+    min-height: 42px;
+}
+
+#kc-submit:hover,
+#kc-login-token-form input[type="submit"]:hover,
+#kc-login-token-form button[type="submit"]:hover {
+    background-color: var(--kc-btn-hover) !important;
+}
+
+/* User-switch page: login-token-user-switch.ftl */
+#kc-user-switch-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#kc-user-switch-form p {
+    color: var(--kc-text) !important;
+}
+
+#kc-user-switch-form #kc-form-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+#kc-user-switch-form button {
+    border-radius: 8px;
+    min-height: 42px;
+}
+
+#kc-user-switch-form #kc-cancel {
+    background: transparent !important;
+    border: 1px solid var(--kc-card-border) !important;
+    color: var(--kc-text) !important;
+}
+
+#kc-user-switch-form #kc-logout {
+    background-color: var(--kc-btn-bg) !important;
+    border: 1px solid #1b9a38 !important;
+    color: var(--kc-btn-text) !important;
+}
+
+#kc-user-switch-form #kc-logout:hover {
+    background-color: var(--kc-btn-hover) !important;
+}
+
+/* Email confirmation / resend page: view-email.ftl */
+#kc-attempted-username,
+#kc-username label,
+#kc-content p {
+    color: var(--kc-text) !important;
+}
+
+#kc-content form button,
+#kc-content form input[type="submit"] {
+    border-radius: 8px;
+    min-height: 42px;
+}
+
 @theme inline {
     --font-heading:             var(--font-sans);
     --font-sans:             'Geist Variable', sans-serif;
