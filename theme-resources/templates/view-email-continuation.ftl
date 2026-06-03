@@ -1,6 +1,22 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayRequiredFields=false displayMessage=false displayInfo=false; section>
  <#if section = "header">
+    <style>
+      body, body.login-pf {
+        background: linear-gradient(160deg, #12254d 0%, #0c1a36 100%) !important;
+      }
+      #kc-info,
+      #kc-info-wrapper,
+      #kc-form-options,
+      #reset-login,
+      .kc-login-tooltip {
+        display: none !important;
+      }
+      #kc-content-wrapper,
+      #kc-content {
+        max-width: 620px;
+      }
+    </style>
     <div style="font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: 0.2px;">Waiting for confirmation</div>
   <#elseif section = "form">
     <div style="background: rgba(16, 28, 56, 0.8); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 22px; color: #ffffff;">
