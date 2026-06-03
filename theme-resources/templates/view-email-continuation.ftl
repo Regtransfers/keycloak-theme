@@ -1,18 +1,16 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayRequiredFields=false displayMessage=false displayInfo=false; section>
  <#if section = "header">
-    <div id="kc-username" class="${properties.kcFormGroupClass!}">
-      <label id="kc-attempted-username">${auth.attemptedUsername!"your inbox"}</label>
-      <a id="reset-login" href="${url.loginRestartFlowUrl}" aria-label="${msg("restartLoginTooltip")}">
-        <div class="kc-login-tooltip">
-          <i class="${properties.kcResetFlowIcon!}"></i>
-          <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>
-        </div>
-      </a>
-    </div>
+    <div style="font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: 0.2px;">Waiting for confirmation</div>
   <#elseif section = "form">
-    <div id="mlc-status">Waiting for confirmation...</div>
-    <div id="mlc-exp"></div>
+    <div style="background: rgba(16, 28, 56, 0.8); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 22px; color: #ffffff;">
+      <div style="font-size: 30px; margin-bottom: 12px; text-align: center;">⌛</div>
+      <div id="mlc-status" style="font-size: 18px; text-align: center; margin-bottom: 8px;">Waiting for confirmation...</div>
+      <div id="mlc-exp" style="font-size: 14px; text-align: center; color: rgba(255,255,255,0.85);"></div>
+      <div style="margin-top: 14px;">
+        <a href="${url.loginRestartFlowUrl}" style="display: inline-block; color: #ffcf4a; text-decoration: underline; text-underline-offset: 3px;">Try Another Way</a>
+      </div>
+    </div>
     <script>
       (function(){
         const pollingUrl = "${pollingUrl!""}";

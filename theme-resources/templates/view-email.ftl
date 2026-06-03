@@ -1,31 +1,25 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayRequiredFields=false displayMessage=false displayInfo=false; section>
- <#if section = "header">
-    <div id="kc-username" class="${properties.kcFormGroupClass!}">
-      <label id="kc-attempted-username">${auth.attemptedUsername!"your inbox"}</label>
-      <a id="reset-login" href="${url.loginRestartFlowUrl}" aria-label="${msg("restartLoginTooltip")}">
-        <div class="kc-login-tooltip">
-          <i class="${properties.kcResetFlowIcon!}"></i>
-          <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>
-        </div>
-      </a>
-    </div>
+  <#if section = "header">
+    <div style="font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: 0.2px;">Check your email</div>
   <#elseif section = "form">
-    <p>Check your email, and click on the link to log in.</p>
-    <form action="${url.loginAction}" method="post">
-      <div class="${properties.kcFormGroupClass!}">
-        <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
-          <button
-            type="submit"
-            id="kc-resend"
-            name="resend"
-            class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-          >
-            ${msg("doResend")}
-          </button>
-        </div>
-      </div>
-    </form>
-    <p><a href="${url.loginRestartFlowUrl}" id="try-another-way">Try Another Way</a></p>
+    <div style="background: rgba(16, 28, 56, 0.8); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 22px; color: #ffffff;">
+      <div style="font-size: 30px; margin-bottom: 12px; text-align: center;">📬</div>
+      <div style="font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 8px;">${auth.attemptedUsername!"your inbox"}</div>
+      <p style="margin: 0 0 16px 0; color: rgba(255,255,255,0.86); text-align: center;">Check your email, and click on the link to log in.</p>
+
+      <form action="${url.loginAction}" method="post" style="margin: 0 0 12px 0;">
+        <button
+          type="submit"
+          id="kc-resend"
+          name="resend"
+          style="width: 100%; background: #0a9c46; border: none; color: #ffffff; padding: 11px 14px; border-radius: 6px; font-size: 15px; cursor: pointer;"
+        >
+          ${msg("doResend")}
+        </button>
+      </form>
+
+      <a href="${url.loginRestartFlowUrl}" id="try-another-way" style="display: inline-block; color: #ffcf4a; text-decoration: underline; text-underline-offset: 3px;">Try Another Way</a>
+    </div>
   </#if>
 </@layout.registrationLayout>
