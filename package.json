@@ -13,6 +13,7 @@
         "build-keycloak-theme": "npm run build && keycloakify build",
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
+        "email": "email preview ./src/email/templates",
         "format": "prettier . --write"
     },
     "license": "MIT",
@@ -51,6 +52,8 @@
         "eslint-plugin-react-refresh": "^0.4.14",
         "eslint-plugin-storybook": "^0.11.1",
         "globals": "^15.12.0",
+        "jsx-email": "^2.8.4",
+        "keycloakify-emails": "^3.3.1",
         "prettier": "3.3.1",
         "storybook": "^8.1.10",
         "typescript": "^5.2.2",

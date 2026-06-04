@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { keycloakify } from "keycloakify/vite-plugin";
+import { buildEmailTheme } from "keycloakify-emails";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +14,24 @@ export default defineConfig({
         keycloakify({
             accountThemeImplementation: "none",
             postBuild: async buildContext => {
+                // Build email theme from JSX templates
+                await buildEmailTheme({
+                    templatesSrcDirPath: path.join(
+                        buildContext.themeSrcDirPath,
+                        "email",
+                        "templates"
+                    ),
+                    i18nSourceFile: path.join(
+                        buildContext.themeSrcDirPath,
+                        "email",
+                        "i18n.ts"
+                    ),
+                    themeNames: buildContext.themeNames,
+                    keycloakifyBuildDirPath: buildContext.keycloakifyBuildDirPath,
+                    locales: ["en"],
+                    cwd: import.meta.dirname,
+                });
+
                 const customTemplatesDir = path.join(
                     buildContext.projectDirPath,
                     "theme-resources",
