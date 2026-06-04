@@ -65,7 +65,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                         name="resend"
                         size="lg"
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 border-white/20 bg-white/8 text-white hover:bg-white/14 hover:text-white dark:border-white/20 dark:bg-white/8 dark:text-white dark:hover:bg-white/14"
                         disabled={isSubmitting}
                     >
                         {msgStr("doResend")}
