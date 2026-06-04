@@ -1,6 +1,6 @@
 # Keycloak Theme
 
-Custom Keycloak theme built with [Keycloakify](https://docs.keycloakify.dev) and React.
+Custom Keycloak theme built with [Keycloakify](https://docs.keycloakify.dev) and React. Includes a fully branded **email theme** using [keycloakify-emails](https://github.com/timofei-iatsenko/keycloakify-emails) and [jsx-email](https://jsx.email).
 
 ## Getting Started
 
@@ -12,7 +12,7 @@ npm install
 
 ### Development with Storybook (recommended)
 
-Test your theme outside of Keycloak using Storybook with hot reloading:
+Test your login/register pages outside of Keycloak using Storybook with hot reloading:
 
 ```bash
 # Add stories for pages you want to work on
@@ -23,6 +23,18 @@ npm run storybook
 ```
 
 Storybook will be available at http://localhost:6006
+
+### Previewing email templates
+
+All 15 standard Keycloak email templates live in `src/email/templates/`. Preview them with the jsx-email preview server:
+
+```bash
+npm run email
+```
+
+The preview server will start and display a local URL (e.g. http://localhost:55420). Open it in your browser to see all templates rendered with the full Regtransfers branded layout — header, footer, Trustpilot block, and compliance section.
+
+Templates are defined as React components using FreeMarker expression helpers from `keycloakify-emails`. The shared branded wrapper is in `src/email/EmailWrapper.tsx`.
 
 ### Development with Vite dev server
 
