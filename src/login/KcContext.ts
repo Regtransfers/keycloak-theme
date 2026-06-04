@@ -9,6 +9,34 @@ export type KcContextExtension = {
     // See: https://docs.keycloakify.dev/faq-and-help/some-values-you-need-are-missing-from-in-kccontext
 };
 
-export type KcContextExtensionPerPage = {};
+export type KcContextExtensionPerPage = {
+    "otp-form.ftl": {
+        auth: {
+            attemptedUsername: string;
+        };
+        url: {
+            loginRestartFlowUrl: string;
+            loginAction: string;
+        };
+    };
+    "email-confirmation.ftl": {
+        magicLinkContinuation: {
+            sameBrowser: boolean;
+            url: string;
+        };
+    };
+    "email-confirmation-error.ftl": {};
+    "view-email.ftl": {
+        auth: {
+            attemptedUsername: string;
+        };
+    };
+    "view-email-continuation.ftl": {
+        auth: {
+            attemptedUsername: string;
+        };
+        pollingUrl?: string;
+    };
+};
 
 export type KcContext = ExtendKcContext<KcContextExtension, KcContextExtensionPerPage>;

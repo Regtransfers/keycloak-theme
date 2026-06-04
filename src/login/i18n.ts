@@ -11,6 +11,7 @@ const { useI18n, ofTypeI18n } = i18nBuilder
             "passkey-signin-with-passkey-label": "Sign in with a passkey",
             or: "or",
             doLogIn: "Sign in",
+            doResend: "Resend",
             doRegister: "Create one",
             doForgotPassword: "Forgot password?",
             noAccount: "No account?",
@@ -18,6 +19,10 @@ const { useI18n, ofTypeI18n } = i18nBuilder
             rememberMe: "Remember me",
             loginAccountTitle: "Sign in",
             passwordConfirm: "Confirm password",
+            magicLinkContinuationConfirmation: "Waiting for confirmation. This page refreshes automatically.",
+            magicLinkSuccessfulLogin: "You have successfully signed in using your email link.",
+            magicLinkHasBeenUsed: "This sign-in link has already been used or has expired.",
+            loginPage: "Continue",
         }
     })
     .build();

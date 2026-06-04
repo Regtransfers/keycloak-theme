@@ -7,6 +7,10 @@ import Template from "keycloakify/login/Template";
 import Login from "./pages/Login";
 import LoginUsername from "./pages/LoginUsername";
 import ViewEmail from "./pages/ViewEmail";
+import ViewEmailContinuation from "./pages/ViewEmailContinuation";
+import OtpForm from "./pages/OtpForm";
+import EmailConfirmation from "./pages/EmailConfirmation";
+import EmailConfirmationError from "./pages/EmailConfirmationError";
 import Register from "./pages/Register";
 import LoginResetCredentials from "./pages/LoginResetCredentials";
 import LoginOtp from "./pages/LoginOtp";
@@ -52,10 +56,33 @@ export default function KcPage(props: { kcContext: KcContext }) {
                         return <LoginUsername kcContext={kcContext as Extract<typeof kcContext, { pageId: "login-username.ftl" }>} i18n={i18n} />;
                     case "view-email.ftl":
                         return <ViewEmail kcContext={kcContext as never} i18n={i18n} />;
+                    case "view-email-continuation.ftl":
+                        return (
+                            <ViewEmailContinuation
+                                kcContext={kcContext as Extract<KcContext, { pageId: "view-email-continuation.ftl" }>}
+                                i18n={i18n}
+                            />
+                        );
+                    case "otp-form.ftl":
+                        return <OtpForm kcContext={kcContext as Extract<KcContext, { pageId: "otp-form.ftl" }>} i18n={i18n} />;
+                    case "email-confirmation.ftl":
+                        return (
+                            <EmailConfirmation
+                                kcContext={kcContext as Extract<KcContext, { pageId: "email-confirmation.ftl" }>}
+                                i18n={i18n}
+                            />
+                        );
+                    case "email-confirmation-error.ftl":
+                        return (
+                            <EmailConfirmationError
+                                kcContext={kcContext as Extract<KcContext, { pageId: "email-confirmation-error.ftl" }>}
+                                i18n={i18n}
+                            />
+                        );
                     default:
                         return (
                             <DefaultPage
-                                kcContext={kcContext}
+                                kcContext={kcContext as never}
                                 i18n={i18n}
                                 classes={classes}
                                 Template={Template}
