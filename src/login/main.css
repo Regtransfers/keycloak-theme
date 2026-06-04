@@ -301,7 +301,6 @@ a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*
     border: 1px solid #1b9a38 !important;
     color: var(--kc-btn-text) !important;
     border-radius: 8px;
-    min-height: 42px;
 }
 
 #kc-submit:hover,

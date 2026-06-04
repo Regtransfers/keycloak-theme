@@ -1,10 +1,93 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Template } from "../components/Template";
+import { cn } from "@/lib/utils";
+
+function OtpSegmentedInput({
+    id,
+    name,
+    autoFocus,
+    hasError,
+}: {
+    id: string;
+    name: string;
+    autoFocus?: boolean;
+    hasError?: boolean;
+}) {
+    const [cells, setCells] = useState(["", "", "", "", "", ""]);
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+    const focusCell = (i: number) => {
+        inputRefs.current[Math.max(0, Math.min(5, i))]?.focus();
+    };
+
+    const handleChange = (i: number, raw: string) => {
+        const chars = raw.replace(/\D/g, "");
+        if (!chars) {
+            setCells(prev => { const n = [...prev]; n[i] = ""; return n; });
+            return;
+        }
+        const char = chars.slice(-1);
+        setCells(prev => { const n = [...prev]; n[i] = char; return n; });
+        if (i < 5) focusCell(i + 1);
+    };
+
+    const handleKeyDown = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Backspace" || e.key === "Delete") {
+            e.preventDefault();
+            if (cells[i]) {
+                setCells(prev => { const n = [...prev]; n[i] = ""; return n; });
+            } else if (i > 0) {
+                setCells(prev => { const n = [...prev]; n[i - 1] = ""; return n; });
+                focusCell(i - 1);
+            }
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            focusCell(i - 1);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            focusCell(i + 1);
+        }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+        setCells(prev => prev.map((_, i) => pasted[i] ?? ""));
+        focusCell(Math.min(pasted.length, 5));
+    };
+
+    return (
+        <div className="flex gap-2 justify-start">
+            <input type="hidden" id={id} name={name} value={cells.join("")} readOnly />
+            {cells.map((char, i) => (
+                <input
+                    key={i}
+                    ref={el => { inputRefs.current[i] = el; }}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete={i === 0 ? "one-time-code" : "off"}
+                    autoFocus={autoFocus && i === 0}
+                    maxLength={1}
+                    value={char}
+                    onChange={e => handleChange(i, e.target.value)}
+                    onKeyDown={e => handleKeyDown(i, e)}
+                    onPaste={handlePaste}
+                    onFocus={e => e.target.select()}
+                    aria-invalid={hasError}
+                    className={cn(
+                        "w-9 h-11 text-center rounded-lg border text-base font-mono bg-transparent text-white transition-colors outline-none",
+                        "border-input focus:border-ring focus:ring-3 focus:ring-ring/50",
+                        hasError && "border-destructive ring-3 ring-destructive/20"
+                    )}
+                />
+            ))}
+        </div>
+    );
+}
 
 type OtpFormKcContext = Extract<KcContext, { pageId: "otp-form.ftl" }>;
 
@@ -42,13 +125,18 @@ export default function OtpForm({ kcContext, i18n }: Props) {
             >
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="otp">{msg("loginOtpOneTime")}</Label>
-                    <Input id="otp" name="otp" autoComplete="off" type="text" inputSize="lg" autoFocus />
+                    <OtpSegmentedInput
+                        id="otp"
+                        name="otp"
+                        autoFocus
+                        hasError={messagesPerField.existsError("totp")}
+                    />
                     {messagesPerField.existsError("totp") && (
                         <p className="text-sm text-destructive">{messagesPerField.getFirstError("totp")}</p>
                     )}
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex gap-3">
                     <Button
                         type="submit"
                         id="kc-submit"
