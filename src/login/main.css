@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Responsive gap for OTP segmented input — scales from 8px on mobile to 32px on wide screens */
+@utility gap-otp {
+    gap: clamp(0.5rem, 4vw, 2rem);
+}
+
 @theme {
     --font-sans: "Arimo", Arial, Helvetica, sans-serif;
     --font-heading: "Roboto", Arial, Helvetica, sans-serif;

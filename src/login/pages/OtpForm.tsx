@@ -61,7 +61,7 @@ function OtpSegmentedInput({
     };
 
     return (
-        <div className="flex gap-2 justify-start">
+        <div className="flex gap-2 sm:gap-otp justify-start w-full">
             <input type="hidden" id={id} name={name} value={cells.join("")} readOnly />
             {cells.map((char, i) => (
                 <input
@@ -79,7 +79,7 @@ function OtpSegmentedInput({
                     onFocus={e => e.target.select()}
                     aria-invalid={hasError}
                     className={cn(
-                        "w-9 h-11 text-center rounded-lg border text-base font-mono bg-transparent text-white transition-colors outline-none",
+                        "flex-1 min-w-0 h-11 text-center rounded-lg border text-base font-mono bg-transparent text-white transition-colors outline-none",
                         "border-input focus:border-ring focus:ring-3 focus:ring-ring/50",
                         hasError && "border-destructive ring-3 ring-destructive/20"
                     )}
