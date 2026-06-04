@@ -61,7 +61,7 @@ function OtpSegmentedInput({
     };
 
     return (
-        <div className="flex gap-2 sm:gap-otp justify-start w-full">
+        <div className="flex max-[414px]:gap-1 gap-2 sm:gap-otp justify-start w-full">
             <input type="hidden" id={id} name={name} value={cells.join("")} readOnly />
             {cells.map((char, i) => (
                 <input
