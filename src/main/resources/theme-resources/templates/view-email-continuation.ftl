@@ -1,6 +1,6 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayRequiredFields=false displayMessage=false displayInfo=false; section>
- <#if section = "header">
+  <#if section = "header">
     <style>
       body,
       body.login-pf {
@@ -11,6 +11,7 @@
         background-size: cover;
         background-position: 65% 50%;
       }
+
       #kc-header,
       #kc-header-wrapper,
       #kc-page-title,
@@ -127,34 +128,45 @@
 
       <a href="${url.loginRestartFlowUrl}" class="rt-link">Try Another Way</a>
     </div>
+
     <script>
-      (function(){
-        const pollingUrl = "${pollingUrl!""}";
+      (function () {
+        const pollingUrl = "${pollingUrl!\"\"}";
         const loginActionUrl = "${url.loginAction?no_esc}";
         const statusEl = document.getElementById("mlc-status");
         const expEl = document.getElementById("mlc-exp");
 
-        async function tick(){
+        async function tick() {
+          if (!pollingUrl) {
+            setTimeout(tick, 3000);
+            return;
+          }
+
           try {
             const r = await fetch(pollingUrl, { cache: "no-store", credentials: "same-origin" });
             if (!r.ok) {
               setTimeout(tick, 3000);
               return;
             }
+
             const data = await r.json();
+
             if (typeof data.expires_in === "number") {
-              expEl.textContent = data.expires_in > 0 ? ("Expires in " + data.expires_in + "s") : "";
+              expEl.textContent = data.expires_in > 0 ? "Expires in " + data.expires_in + "s" : "";
             }
+
             if (data.state === "confirmed") {
               statusEl.textContent = "Redirecting...";
               window.location.href = loginActionUrl;
               return;
             }
+
             if (data.state === "expired") {
               statusEl.textContent = "Your link has expired. Please request a new one.";
               expEl.textContent = "";
               return;
             }
+
             setTimeout(tick, 2500);
           } catch (e) {
             setTimeout(tick, 4000);
