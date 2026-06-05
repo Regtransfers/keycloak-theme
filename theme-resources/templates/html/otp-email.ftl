@@ -1,7 +1,6 @@
 <#import "template.ftl" as layout>
 <@layout.emailLayout>
-<p>Hello<#if user.firstName??> ${user.firstName}</#if>,</p>
-<p>Use this code to finish signing in:</p>
-<p><strong>${code}</strong></p>
-<p>This code expires soon. If you did not request it, you can ignore this email.</p>
+<p>Someone requested a one-time-password to login to ${realmName!"your account"}.</p>
+<p><strong>Code: ${code}</strong></p>
+<p>If you did not request this code, please ignore this email.</p>
 </@layout.emailLayout>

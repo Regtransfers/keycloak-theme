@@ -1,10 +1,8 @@
 <#ftl output_format="plainText">
-REGTRANSFERS - ONE-TIME CODE
+Your access code for ${realmName!"your account"}
 
-Hello<#if user.firstName??> ${user.firstName}</#if>,
+Someone requested a one-time-password to login to ${realmName!"your account"}.
 
-Use this code to finish signing in:
+Code: ${code}
 
-${code}
-
-This code expires soon. If you didn't request it, you can ignore this email.
+If you did not request this code, please ignore this email.
