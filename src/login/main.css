@@ -441,6 +441,25 @@ a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*
     --sidebar-ring:             oklch(0.831 0.185 88);
 }
 
+/* =============================================
+   Animated Background - Figma-style
+   Subtle floating yellow and white orbs
+   ============================================= */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-60px) translateX(40px);
+    }
+    50% {
+        transform: translateY(-80px) translateX(-50px);
+    }
+    75% {
+        transform: translateY(-40px) translateX(60px);
+    }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -43,13 +43,26 @@ export function Template({
         <TooltipProvider>
             {/* Full-screen background */}
             <div className="relative min-h-svh flex flex-col">
-                {/* Car image background — decorative, must fill viewport */}
-                <div
-                    className="absolute inset-0 bg-cover bg-[68%_50%] md:bg-[75%_50%] lg:bg-[60%_50%]"
-                    style={{ backgroundImage: "url('https://images.regtransfers.co.uk/websiteimages/banners/pages/porsche-gt3rs-white-jmr1-td.webp')" }}
-                />
-                {/* Navy overlay — decorative, must fill viewport */}
-                <div className="absolute inset-0 bg-[#1a3060]/75 dark:bg-[#212529]/80" />
+                {/* Animated Figma-style gradient background */}
+                <div className="absolute inset-0 overflow-hidden">
+                    {/* Base dark blue gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0f1b35] via-[#1a2a4a] to-[#1a3060]" />
+                    
+                    {/* Animated floating yellow orb */}
+                    <div className="absolute -top-1/2 -left-1/2 w-[600px] h-[600px] rounded-full blur-[150px] opacity-40 bg-yellow-300" 
+                         style={{ animation: 'float 25s ease-in-out infinite' }} />
+                    
+                    {/* Animated floating white orb */}
+                    <div className="absolute -bottom-1/2 -right-1/3 w-[700px] h-[700px] rounded-full blur-[160px] opacity-35 bg-white" 
+                         style={{ animation: 'float 30s ease-in-out infinite 3s' }} />
+                    
+                    {/* Yellow accent orb */}
+                    <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25 bg-yellow-200" 
+                         style={{ animation: 'float 22s ease-in-out infinite 5s' }} />
+                </div>
+
+                {/* Subtle overlay for depth */}
+                <div className="absolute inset-0 bg-black/5 dark:bg-black/10" />
 
                 {/* Main content area — grows to fill space, centres the form */}
                 <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-10">
