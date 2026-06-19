@@ -18,6 +18,7 @@ import LoginOtp from "./pages/LoginOtp";
 import LoginConfigTotp from "./pages/LoginConfigTotp";
 import LoginUpdatePassword from "./pages/LoginUpdatePassword";
 import LoginVerifyEmail from "./pages/LoginVerifyEmail";
+import LoginPageExpired from "./pages/LoginPageExpired";
 import "./main.css";
 const UserProfileFormFields = lazy(
     () => import("keycloakify/login/UserProfileFormFields")
@@ -56,6 +57,8 @@ export default function KcPage(props: { kcContext: KcContext }) {
                         return <LoginConfigTotp kcContext={kcContext as Extract<KcContext, { pageId: "login-config-totp.ftl" }>} i18n={i18n} />;
                     case "login-verify-email.ftl":
                         return <LoginVerifyEmail kcContext={kcContext as never} i18n={i18n} />;
+                    case "login-page-expired.ftl":
+                        return <LoginPageExpired kcContext={kcContext as Extract<KcContext, { pageId: "login-page-expired.ftl" }>} i18n={i18n} />;
                     case "login-username.ftl":
                         return <LoginUsername kcContext={kcContext as Extract<typeof kcContext, { pageId: "login-username.ftl" }>} i18n={i18n} />;
                     case "view-email.ftl":
