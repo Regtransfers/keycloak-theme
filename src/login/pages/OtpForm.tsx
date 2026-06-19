@@ -161,12 +161,14 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                 </div>
             </form>
 
-            <a
-                href={url.loginRestartFlowUrl}
-                className="text-center text-sm text-white/70 underline underline-offset-4 hover:text-white"
-            >
-                Try another way
-            </a>
+            <div className="border-t border-white/20 pt-4 text-center">
+                <a
+                    href={url.loginRestartFlowUrl}
+                    className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
+                >
+                    Try another way
+                </a>
+            </div>
         </Template>
     );
 }

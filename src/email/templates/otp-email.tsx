@@ -21,10 +21,16 @@ const Content = (_props: TemplateProps) => (
             <p style={cs.p}>
                 We received a request for a one-time sign-in code for your account.
             </p>
-            <p style={cs.p}>
-                <strong>Your code: {exp("code")}</strong>
+            <p style={{ ...cs.p, textAlign: "center" }}>
+                <strong>Your code:</strong>
             </p>
-            <p style={cs.muted}>If this wasn&apos;t you, you can safely ignore this email.</p>
+            <p style={{ ...cs.p, textAlign: "center", fontSize: "28px", fontWeight: "bold", letterSpacing: "4px" }}>
+                {exp("code")}
+            </p>
+            <p style={cs.p}>
+                This code can only be used once. It expires in 15 minutes
+            </p>
+            <p style={cs.p}>If this wasn&apos;t you, you can safely ignore this email.</p>
         </td>
     </tr>
 );
