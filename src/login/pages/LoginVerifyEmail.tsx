@@ -19,10 +19,7 @@ type Props = {
 };
 
 export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
-    const { msg } = i18n;
-    const { url, auth } = kcContext;
-
-    const attemptedUsername = auth?.attemptedUsername;
+    const { url } = kcContext;
 
     return (
         <Template

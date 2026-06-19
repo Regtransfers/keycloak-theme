@@ -19,6 +19,15 @@ export type KcContextExtensionPerPage = {
             loginAction: string;
         };
     };
+    "login-verify-email.ftl": {
+        auth?: {
+            attemptedUsername?: string;
+        };
+        url: {
+            loginAction: string;
+            loginRestartFlowUrl?: string;
+        };
+    };
     "email-confirmation.ftl": {
         magicLinkContinuation: {
             sameBrowser: boolean;
