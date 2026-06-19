@@ -1,6 +1,6 @@
 {
     "name": "keycloak-theme",
-    "version": "1.0.22",
+    "version": "1.0.23",
     "description": "Custom Keycloak theme built with Keycloakify",
     "repository": {
         "type": "git",

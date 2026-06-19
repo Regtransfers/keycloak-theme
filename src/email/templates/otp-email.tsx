@@ -12,7 +12,7 @@ export const previewProps: TemplateProps = {
 };
 
 export const templateName = "One-Time Password";
-const exp = (name: string) => `{${name}}`;
+const exp = (name: string) => "${" + name + "}";
 
 const Content = (_props: TemplateProps) => (
     <tr>
