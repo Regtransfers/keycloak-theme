@@ -11,16 +11,20 @@ export const previewProps: TemplateProps = {
     themeName: "keycloak-theme",
 };
 
-export const templateName = "One-Time Access Code";
+export const templateName = "One-Time Password";
+const exp = (name: string) => `{${name}}`;
 
 const Content = (_props: TemplateProps) => (
     <tr>
         <td style={cs.outerTd}>
-            <p style={cs.p}>Someone requested a one-time-password to login to ${"${realmName}"}.</p>
+            <p style={cs.p}>Hi there,</p>
             <p style={cs.p}>
-                <strong>Code: ${"${code}"}</strong>
+                We received a request for a one-time sign-in code for your account.
             </p>
-            <p style={cs.muted}>If you did not request this code, please ignore this email.</p>
+            <p style={cs.p}>
+                <strong>Your code: {exp("code")}</strong>
+            </p>
+            <p style={cs.muted}>If this wasn&apos;t you, you can safely ignore this email.</p>
         </td>
     </tr>
 );
@@ -37,5 +41,5 @@ export const getTemplate: GetTemplate = async (props) => {
 };
 
 export const getSubject: GetSubject = async () => {
-    return "Your access code for ${realmName}";
+    return "Your one-time code for your account";
 };
