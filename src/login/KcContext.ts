@@ -35,6 +35,12 @@ export type KcContextExtensionPerPage = {
         };
     };
     "email-confirmation-error.ftl": {};
+    "error.ftl": {
+        message?: {
+            summary?: string;
+        };
+        status?: string;
+    };
     "view-email.ftl": {
         auth: {
             attemptedUsername: string;

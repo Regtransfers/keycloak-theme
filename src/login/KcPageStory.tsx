@@ -37,6 +37,12 @@ const kcContextExtensionPerPage: KcContextExtensionPerPage = {
         }
     },
     "email-confirmation-error.ftl": {},
+    "error.ftl": {
+        message: {
+            summary: "Invalid parameter: redirect_uri"
+        },
+        status: "Invalid parameter"
+    },
     "view-email.ftl": {
         auth: {
             attemptedUsername: "user@example.com"

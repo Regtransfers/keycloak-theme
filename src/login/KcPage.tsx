@@ -11,6 +11,7 @@ import ViewEmailContinuation from "./pages/ViewEmailContinuation";
 import OtpForm from "./pages/OtpForm";
 import EmailConfirmation from "./pages/EmailConfirmation";
 import EmailConfirmationError from "./pages/EmailConfirmationError";
+import Error from "./pages/Error";
 import Register from "./pages/Register";
 import LoginResetCredentials from "./pages/LoginResetCredentials";
 import LoginOtp from "./pages/LoginOtp";
@@ -82,6 +83,8 @@ export default function KcPage(props: { kcContext: KcContext }) {
                                 i18n={i18n}
                             />
                         );
+                    case "error.ftl":
+                        return <Error kcContext={kcContext as Extract<KcContext, { pageId: "error.ftl" }>} i18n={i18n} />;
                     default:
                         return (
                             <DefaultPage
