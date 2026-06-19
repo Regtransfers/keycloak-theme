@@ -23,10 +23,14 @@ export default function Error({ kcContext, i18n }: Props) {
             kcContext={kcContext as never}
             i18n={i18n}
             headerNode={<p className="kc-display-heading font-bold font-[Roboto]">Error</p>}
-            displayMessage={true}
+            displayMessage={false}
             displayInfo={false}
         >
             <p className="text-sm text-white/80 leading-6">We are sorry, but an error has occurred.</p>
+
+            {kcContext.message?.summary && (
+                <p className="text-sm text-red-400 leading-6 mt-3">{kcContext.message.summary}</p>
+            )}
 
             <div className="border-t border-white/20 pt-4 text-center mt-6">
                 <a
