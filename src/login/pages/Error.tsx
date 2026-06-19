@@ -7,7 +7,6 @@ type ErrorKcContext = {
     message?: {
         summary?: string;
     };
-    // Handle various error message formats
     realm?: {
         displayName?: string;
     };
@@ -27,20 +26,16 @@ export default function Error({ kcContext, i18n }: Props) {
             displayMessage={true}
             displayInfo={false}
         >
-            {kcContext.message?.summary && (
-                <p className="text-sm text-white/80 leading-6">{kcContext.message.summary}</p>
-            )}
+            <p className="text-sm text-white/80 leading-6">We are sorry, but an error has occurred.</p>
 
-            {kcContext.status && (
-                <p className="text-xs text-white/50 font-mono mt-4">{kcContext.status}</p>
-            )}
-
-            <a
-                href="/"
-                className="inline-block text-center text-sm text-white/70 underline underline-offset-4 hover:text-white mt-6"
-            >
-                Return to sign in
-            </a>
+            <div className="border-t border-white/20 pt-4 text-center mt-6">
+                <a
+                    href="/"
+                    className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
+                >
+                    Return to sign in
+                </a>
+            </div>
         </Template>
     );
 }
