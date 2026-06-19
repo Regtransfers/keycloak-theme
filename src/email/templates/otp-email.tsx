@@ -12,7 +12,6 @@ export const previewProps: TemplateProps = {
 };
 
 export const templateName = "One-Time Password";
-const exp = (name: string) => "${" + name + "}";
 
 const Content = (_props: TemplateProps) => (
     <tr>
@@ -25,7 +24,7 @@ const Content = (_props: TemplateProps) => (
                 <strong>Your code:</strong>
             </p>
             <p style={{ ...cs.p, textAlign: "center", fontSize: "28px", fontWeight: "bold", letterSpacing: "4px" }}>
-                {exp("code")}
+                {`{code}`}
             </p>
             <p style={cs.p}>
                 This code can only be used once. It expires in 15 minutes

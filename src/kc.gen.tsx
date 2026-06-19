@@ -27,7 +27,7 @@ export const kcEnvDefaults: Record<KcEnvName, string> = {};
  * If you need to import the KcContext import it either from src/login/KcContext.ts or src/account/KcContext.ts.
  * Depending on the theme type you are working on.
  */
-export type KcContext = import("./login/KcContext").KcContext;
+export type KcContext = import("./login/KcContext").KcContext | import("./account/KcContext").KcContext;
 
 declare global {
   interface Window {
@@ -36,6 +36,7 @@ declare global {
 }
 
 export const KcLoginPage = lazy(() => import("./login/KcPage"));
+export const KcAccountPage = lazy(() => import("./account/KcPage"));
 
 export function KcPage(props: { kcContext: KcContext; fallback?: ReactNode }) {
   const { kcContext, fallback } = props;
@@ -44,7 +45,9 @@ export function KcPage(props: { kcContext: KcContext; fallback?: ReactNode }) {
       {(() => {
         switch (kcContext.themeType) {
           case "login":
-            return <KcLoginPage kcContext={kcContext} />;
+            return <KcLoginPage kcContext={kcContext as import("./login/KcContext").KcContext} />;
+          case "account":
+            return <KcAccountPage kcContext={kcContext as import("./account/KcContext").KcContext} />;
         }
       })()}
     </Suspense>

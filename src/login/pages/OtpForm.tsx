@@ -116,25 +116,30 @@ export default function OtpForm({ kcContext, i18n }: Props) {
             displayMessage={false}
             displayInfo={false}
         >
-            <form
-                id="kc-otp-login-form"
-                action={url.loginAction}
-                method="post"
-                onSubmit={() => setIsSubmitting(true)}
-                className="flex flex-col gap-4"
-            >
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="otp">{msg("loginOtpOneTime")}</Label>
-                    <OtpSegmentedInput
-                        id="otp"
-                        name="otp"
-                        autoFocus
-                        hasError={messagesPerField.existsError("totp")}
-                    />
-                    {messagesPerField.existsError("totp") && (
-                        <p className="text-sm text-destructive">{messagesPerField.getFirstError("totp")}</p>
-                    )}
-                </div>
+            <div className="flex flex-col gap-4">
+                <p className="text-sm text-white/80 leading-6">
+                    A verification code has been sent to your email. Enter it below to continue.
+                </p>
+
+                <form
+                    id="kc-otp-login-form"
+                    action={url.loginAction}
+                    method="post"
+                    onSubmit={() => setIsSubmitting(true)}
+                    className="flex flex-col gap-4"
+                >
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="otp">{msg("loginOtpOneTime")}</Label>
+                        <OtpSegmentedInput
+                            id="otp"
+                            name="otp"
+                            autoFocus
+                            hasError={messagesPerField.existsError("totp")}
+                        />
+                        {messagesPerField.existsError("totp") && (
+                            <p className="text-sm text-destructive">{messagesPerField.getFirstError("totp")}</p>
+                        )}
+                    </div>
 
                 <div className="flex gap-3">
                     <Button
@@ -159,14 +164,15 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                         {msgStr("doResend")}
                     </Button>
                 </div>
-            </form>
+                </form>
+            </div>
 
             <div className="border-t border-white/20 pt-4 text-center">
                 <a
                     href={url.loginRestartFlowUrl}
                     className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
                 >
-                    Try another way
+                    Back to sign in
                 </a>
             </div>
         </Template>
