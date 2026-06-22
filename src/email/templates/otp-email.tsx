@@ -50,5 +50,5 @@ export const getTemplate: GetTemplate = async (props) => {
 };
 
 export const getSubject: GetSubject = async () => {
-    return "Your one-time code for your account";
+    return "Your access code for your Regtransfers account";
 };

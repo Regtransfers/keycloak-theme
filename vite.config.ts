@@ -32,46 +32,7 @@ export default defineConfig({
                     cwd: import.meta.dirname,
                 });
 
-                const customTemplatesDir = path.join(
-                    buildContext.projectDirPath,
-                    "theme-resources",
-                    "templates"
-                );
 
-                const generatedResourcesDir = process.cwd();
-
-                // Make plugin templates available as provider-level theme resources.
-                await fs.mkdir(
-                    path.join(generatedResourcesDir, "theme-resources", "templates"),
-                    { recursive: true }
-                );
-                await fs.cp(
-                    customTemplatesDir,
-                    path.join(generatedResourcesDir, "theme-resources", "templates"),
-                    { recursive: true }
-                );
-
-                // Ensure server-rendered magic-link waiting pages override per theme.
-                for (const themeName of buildContext.themeNames) {
-                    const loginDir = path.join(
-                        generatedResourcesDir,
-                        "theme",
-                        themeName,
-                        "login"
-                    );
-
-                    await fs.mkdir(loginDir, { recursive: true });
-
-                    for (const ftlName of [
-                        "view-email.ftl",
-                        "view-email-continuation.ftl"
-                    ]) {
-                        await fs.copyFile(
-                            path.join(customTemplatesDir, ftlName),
-                            path.join(loginDir, ftlName)
-                        );
-                    }
-                }
             },
             // Register two theme variants: light (default) and dark.
             // In the Keycloak admin console, Realm Settings → Themes,
