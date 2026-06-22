@@ -132,7 +132,7 @@ export default function Register({ kcContext, i18n }: Props) {
                 {/* Marketing consent */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-start gap-3 py-3">
-                        <Checkbox id="marketingConsent" name="marketingConsent" className="mt-0.5 shrink-0" />
+                        <Checkbox id="marketingConsent" name="user.attributes.marketingConsent" className="mt-0.5 shrink-0" />
                         <Label htmlFor="marketingConsent" className="font-normal cursor-pointer leading-snug">
                             Please send me special offers, discounts and number plates that may be relevant to me. I understand I can unsubscribe at any time.
                         </Label>
