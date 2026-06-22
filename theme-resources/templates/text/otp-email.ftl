@@ -1,5 +1,5 @@
 <#ftl output_format="plainText">
-Your access code for ${realmName!"your account"}
+Your access code for your Regtransfers account.
 
 Someone requested a one-time-password to login to ${realmName!"your account"}.
 
