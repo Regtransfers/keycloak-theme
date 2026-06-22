@@ -2,8 +2,6 @@ import { useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Template } from "../components/Template";
 
 type LoginUpdatePasswordKcContext = Extract<KcContext, { pageId: "login-update-password.ftl" }>;
@@ -14,8 +12,7 @@ type Props = {
 };
 
 export default function LoginUpdatePassword({ kcContext, i18n }: Props) {
-    const { url, messagesPerField } = kcContext;
-    const { msgStr } = i18n;
+    const { url } = kcContext;
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
