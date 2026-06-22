@@ -1,19 +1,23 @@
 import { GetSubject, GetTemplate, GetTemplateProps } from "keycloakify-emails";
+import * as Fm from "keycloakify-emails/jsx-email";
 import { render } from "jsx-email";
 import { EmailWrapper } from "../EmailWrapper";
 import { cs } from "../layout";
 import { buildEmailHtml } from "../wrapper";
 
-interface TemplateProps extends Omit<GetTemplateProps, "plainText"> {}
+interface TemplateProps extends Omit<GetTemplateProps, "plainText"> {
+    code?: string;
+}
 
 export const previewProps: TemplateProps = {
     locale: "en",
     themeName: "keycloak-theme",
+    code: "123456",
 };
 
 export const templateName = "One-Time Password";
 
-const Content = (_props: TemplateProps) => (
+const Content = (props: TemplateProps) => (
     <tr>
         <td style={cs.outerTd}>
             <p style={cs.p}>Hi there,</p>
@@ -24,7 +28,7 @@ const Content = (_props: TemplateProps) => (
                 <strong>Your code:</strong>
             </p>
             <p style={{ ...cs.p, textAlign: "center", fontSize: "28px", fontWeight: "bold", letterSpacing: "4px" }}>
-                {`{code}`}
+                {props.code ? props.code : <Fm.Tag name="code" />}
             </p>
             <p style={cs.p}>
                 This code can only be used once. It expires in 15 minutes
