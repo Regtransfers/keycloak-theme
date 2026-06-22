@@ -22,8 +22,7 @@ export default function Login({ kcContext, i18n }: Props) {
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
-    const usernameError = messagesPerField.existsError("username", "password");
-    const passwordError = messagesPerField.existsError("password");
+    const usernameError = messagesPerField.existsError("username");
 
     const socialProvidersNode =
         realm.password && social?.providers && social.providers.length > 0 ? (
@@ -65,7 +64,7 @@ export default function Login({ kcContext, i18n }: Props) {
                     </h1>
                 </>
             }
-            displayMessage={!messagesPerField.existsError("username", "password")}
+            displayMessage={!messagesPerField.existsError("username")}
             displayInfo={realm.password && realm.registrationAllowed && !kcContext.registrationDisabled}
             infoNode={
                 <span>
@@ -107,35 +106,6 @@ export default function Login({ kcContext, i18n }: Props) {
                             )}
                         </div>
                     )}
-
-                    {/* Password */}
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="password">{msg("password")}</Label>
-                            {realm.resetPasswordAllowed && (
-                                <a
-                                    href={url.loginResetCredentialsUrl}
-                                    className="text-sm underline underline-offset-4"
-                                >
-                                    {msg("doForgotPassword")}
-                                </a>
-                            )}
-                        </div>
-                        <Input
-                            id="password"
-                            name="password"
-                            type="password"
-                            inputSize="lg"
-                            autoComplete="current-password"
-                            autoFocus={!!login.username}
-                            aria-invalid={passwordError}
-                        />
-                        {passwordError && (
-                            <p className="text-sm text-destructive">
-                                {messagesPerField.getFirstError("username", "password")}
-                            </p>
-                        )}
-                    </div>
 
                     {/* Remember me */}
                     {realm.rememberMe && !kcContext.usernameHidden && (

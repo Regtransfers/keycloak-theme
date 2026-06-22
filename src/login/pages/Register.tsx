@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function Register({ kcContext, i18n }: Props) {
-    const { url, messagesPerField, passwordRequired, recaptchaRequired, recaptchaSiteKey } = kcContext;
+    const { url, messagesPerField, recaptchaRequired, recaptchaSiteKey } = kcContext;
     const { msg, msgStr } = i18n;
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
@@ -23,8 +23,6 @@ export default function Register({ kcContext, i18n }: Props) {
     const firstNameError = messagesPerField.existsError("firstName");
     const lastNameError = messagesPerField.existsError("lastName");
     const emailError = messagesPerField.existsError("email");
-    const passwordError = messagesPerField.existsError("password");
-    const confirmPasswordError = messagesPerField.existsError("password-confirm");
 
     return (
         <Template
@@ -36,7 +34,7 @@ export default function Register({ kcContext, i18n }: Props) {
                     <h1 className="text-[0.9375rem] font-normal text-white/80 mt-1 font-[Arimo]">Create an account by filling in the fields below</h1>
                 </>
             }
-            displayMessage={!messagesPerField.existsError("firstName", "lastName", "email", "password", "password-confirm")}
+            displayMessage={!messagesPerField.existsError("firstName", "lastName", "email")}
             displayInfo={false}
         >
             <form
@@ -125,45 +123,6 @@ export default function Register({ kcContext, i18n }: Props) {
                         </p>
                     )}
                 </div>
-
-                {/* Password */}
-                {passwordRequired && (
-                    <>
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="password">{msg("password")} <span className="text-destructive">*</span></Label>
-                            <Input
-                                id="password"
-                                name="password"
-                                type="password"
-                                inputSize="lg"
-                                autoComplete="new-password"
-                                aria-invalid={passwordError}
-                            />
-                            {passwordError && (
-                                <p className="text-sm text-destructive">
-                                    {messagesPerField.getFirstError("password")}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="password-confirm">{msg("passwordConfirm")} <span className="text-destructive">*</span></Label>
-                            <Input
-                                id="password-confirm"
-                                name="password-confirm"
-                                type="password"
-                                inputSize="lg"
-                                autoComplete="new-password"
-                                aria-invalid={confirmPasswordError}
-                            />
-                            {confirmPasswordError && (
-                                <p className="text-sm text-destructive">
-                                    {messagesPerField.getFirstError("password-confirm")}
-                                </p>
-                            )}
-                        </div>
-                    </>
-                )}
 
                 {/* Recaptcha */}
                 {recaptchaRequired && (

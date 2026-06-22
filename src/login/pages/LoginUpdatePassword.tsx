@@ -19,9 +19,6 @@ export default function LoginUpdatePassword({ kcContext, i18n }: Props) {
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
-    const passwordError = messagesPerField.existsError("password");
-    const confirmPasswordError = messagesPerField.existsError("password-confirm");
-
     return (
         <Template
             kcContext={kcContext}
@@ -34,7 +31,7 @@ export default function LoginUpdatePassword({ kcContext, i18n }: Props) {
                     </h1>
                 </>
             }
-            displayMessage={!messagesPerField.existsError("password", "password-confirm")}
+            displayMessage={false}
             displayInfo={false}
         >
             <form
@@ -43,49 +40,6 @@ export default function LoginUpdatePassword({ kcContext, i18n }: Props) {
                 onSubmit={() => setIsSubmitDisabled(true)}
                 className="flex flex-col gap-4"
             >
-                {/* New password */}
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="password">
-                        New password <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                        id="password"
-                        name="password-new"
-                        type="password"
-                        inputSize="lg"
-                        autoComplete="new-password"
-                        autoFocus
-                        required
-                        aria-invalid={passwordError}
-                    />
-                    {passwordError && (
-                        <p className="text-sm text-destructive">
-                            {messagesPerField.getFirstError("password")}
-                        </p>
-                    )}
-                </div>
-
-                {/* Confirm new password */}
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="password-confirm">
-                        {msgStr("passwordConfirm")} <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                        id="password-confirm"
-                        name="password-confirm"
-                        type="password"
-                        inputSize="lg"
-                        autoComplete="new-password"
-                        required
-                        aria-invalid={confirmPasswordError}
-                    />
-                    {confirmPasswordError && (
-                        <p className="text-sm text-destructive">
-                            {messagesPerField.getFirstError("password-confirm")}
-                        </p>
-                    )}
-                </div>
-
                 <Button
                     type="submit"
                     size="lg"
