@@ -43,8 +43,7 @@ export const WithFieldErrors: Story = {
               fieldNames.includes("firstName") ||
               fieldNames.includes("lastName") ||
               fieldNames.includes("mobileNumber") ||
-              fieldNames.includes("email") ||
-              fieldNames.includes("password-confirm")
+              fieldNames.includes("email")
             );
           },
           get: (fieldName: string) => {
@@ -52,7 +51,6 @@ export const WithFieldErrors: Story = {
             if (fieldName === "lastName") return "Last name is required.";
             if (fieldName === "mobileNumber") return "Mobile number is required.";
             if (fieldName === "email") return "Email already in use.";
-            if (fieldName === "password-confirm") return "Passwords do not match.";
             return "";
           },
         },

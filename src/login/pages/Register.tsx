@@ -23,6 +23,7 @@ export default function Register({ kcContext, i18n }: Props) {
     const firstNameError = messagesPerField.existsError("firstName");
     const lastNameError = messagesPerField.existsError("lastName");
     const emailError = messagesPerField.existsError("email");
+    const hasVisibleFieldErrors = messagesPerField.existsError("firstName", "lastName", "email", "mobileNumber");
 
     return (
         <Template
@@ -34,7 +35,7 @@ export default function Register({ kcContext, i18n }: Props) {
                     <h1 className="text-[0.9375rem] font-normal text-white/80 mt-1 font-[Arimo]">Create an account by filling in the fields below</h1>
                 </>
             }
-            displayMessage={!messagesPerField.existsError("firstName", "lastName", "email")}
+            displayMessage={!hasVisibleFieldErrors}
             displayInfo={false}
         >
             <form
