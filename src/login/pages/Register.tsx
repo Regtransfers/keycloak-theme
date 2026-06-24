@@ -19,6 +19,7 @@ export default function Register({ kcContext, i18n }: Props) {
     const { msg, msgStr } = i18n;
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+    const [marketingConsent, setMarketingConsent] = useState(false);
 
     const firstNameError = messagesPerField.existsError("firstName");
     const lastNameError = messagesPerField.existsError("lastName");
@@ -132,8 +133,18 @@ export default function Register({ kcContext, i18n }: Props) {
 
                 {/* Marketing consent */}
                 <div className="flex flex-col gap-2">
+                    <input
+                        type="hidden"
+                        name="user.attributes.marketingConsent"
+                        value={marketingConsent ? "true" : "false"}
+                    />
                     <div className="flex items-start gap-3 py-3">
-                        <Checkbox id="marketingConsent" name="user.attributes.marketingConsent" className="mt-0.5 shrink-0" />
+                        <Checkbox
+                            id="marketingConsent"
+                            checked={marketingConsent}
+                            onCheckedChange={nextChecked => setMarketingConsent(nextChecked === true)}
+                            className="mt-0.5 shrink-0"
+                        />
                         <Label htmlFor="marketingConsent" className="font-normal cursor-pointer leading-snug">
                             Please send me special offers, discounts and number plates that may be relevant to me. I understand I can unsubscribe at any time.
                         </Label>
