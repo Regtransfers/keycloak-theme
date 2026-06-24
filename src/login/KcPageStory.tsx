@@ -43,6 +43,11 @@ const kcContextExtensionPerPage: KcContextExtensionPerPage = {
         },
         status: "Invalid parameter"
     },
+    "login-page-expired.ftl": {
+        url: {
+            loginRestartFlowUrl: "/"
+        }
+    },
     "view-email.ftl": {
         auth: {
             attemptedUsername: "user@example.com"

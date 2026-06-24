@@ -13,7 +13,8 @@ const kcContextExtension: KcContextExtension = {
 };
 
 const kcContextExtensionPerPage: KcContextExtensionPerPage = {
-    "update-user-profile.ftl": {}
+    "update-user-profile.ftl": {},
+    "federated-identity-confirm-link.ftl": {}
 };
 
 export const { getKcContextMock } = createGetKcContextMock({

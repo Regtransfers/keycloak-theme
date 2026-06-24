@@ -41,6 +41,11 @@ export type KcContextExtensionPerPage = {
         };
         status?: string;
     };
+    "login-page-expired.ftl": {
+        url: {
+            loginRestartFlowUrl: string;
+        };
+    };
     "view-email.ftl": {
         auth: {
             attemptedUsername: string;

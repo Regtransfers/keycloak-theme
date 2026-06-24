@@ -10,6 +10,8 @@ type Props = {
 };
 
 export default function LoginPageExpired({ kcContext, i18n }: Props) {
+    const { url } = kcContext;
+
     return (
         <Template
             kcContext={kcContext}
@@ -25,7 +27,7 @@ export default function LoginPageExpired({ kcContext, i18n }: Props) {
 
                 <div className="border-t border-white/20 pt-4 text-center">
                     <a
-                        href="/"
+                        href={url.loginRestartFlowUrl}
                         className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
                     >
                         Return to sign in

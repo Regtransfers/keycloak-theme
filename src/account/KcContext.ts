@@ -9,6 +9,7 @@ export type KcContextExtension = {
 
 export type KcContextExtensionPerPage = {
     "update-user-profile.ftl": {};
+    "federated-identity-confirm-link.ftl": {};
 };
 
 export type KcContext = ExtendKcContext<KcContextExtension, KcContextExtensionPerPage>;

@@ -7,7 +7,8 @@ const { useI18n, ofTypeI18n } = i18nBuilder
     .withThemeName<ThemeName>()
     .withCustomTranslations({
         en: {
-            // Add custom translations here as needed
+            doReviewProfile: "Review profile",
+            doAddToExistingAccount: "Add to existing account",
         }
     })
     .build();

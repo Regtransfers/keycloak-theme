@@ -4,6 +4,7 @@ import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/account/DefaultPage";
 import Template from "keycloakify/account/Template";
 import UpdateAccountInformation from "./pages/UpdateAccountInformation";
+import FederatedIdentityConfirmLink from "./pages/FederatedIdentityConfirmLink";
 
 export default function KcPage(props: { kcContext: KcContext }) {
     const { kcContext } = props;
@@ -26,6 +27,13 @@ export default function KcPage(props: { kcContext: KcContext }) {
                         return (
                             <UpdateAccountInformation
                                 kcContext={kcContext as Extract<KcContext, { pageId: "update-user-profile.ftl" }>}
+                                i18n={i18n}
+                            />
+                        );
+                    case "federated-identity-confirm-link.ftl":
+                        return (
+                            <FederatedIdentityConfirmLink
+                                kcContext={kcContext as Extract<KcContext, { pageId: "federated-identity-confirm-link.ftl" }>}
                                 i18n={i18n}
                             />
                         );
