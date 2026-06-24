@@ -141,7 +141,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                         )}
                     </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 mt-6">
                     <Button
                         type="submit"
                         id="kc-submit"

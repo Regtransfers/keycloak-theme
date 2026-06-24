@@ -29,18 +29,18 @@ export default function LoginIdpLinkConfirm({ kcContext, i18n }: Props) {
             }
             displayInfo={false}
         >
-            <form id="kc-register-form" action={url.loginAction} method="post" className="flex flex-col gap-3">
+            <form id="kc-register-form" action={url.loginAction} method="post" className="flex flex-col gap-3 mt-3 mb-4">
                 <Button
                     type="submit"
                     name="submitAction"
                     id="updateProfile"
                     value="updateProfile"
                     size="lg"
-                    variant="outline"
-                    className="w-full"
+                    className="w-full border border-white/30 bg-white/10 hover:bg-white/20 text-white"
                 >
                     {msg("confirmLinkIdpReviewProfile")}
                 </Button>
+                <div className="h-px bg-white/20 my-3" />
                 <Button
                     type="submit"
                     name="submitAction"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,35 @@ type Props = {
 };
 
 export default function UpdateAccountInformation({ kcContext, i18n }: Props) {
-    const { url, messagesPerField } = kcContext;
+    const { url, messagesPerField, profile } = kcContext;
     const { msg, msgStr } = i18n;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const firstNameError = messagesPerField?.existsError?.("firstName");
-    const lastNameError = messagesPerField?.existsError?.("lastName");
+    const mobileFieldCandidates = ["mobileNumber", "phoneNumber", "phone", "mobile"] as const;
+
+    const attributes = useMemo(() => {
+        const orderedFieldNames = ["firstName", "lastName", ...mobileFieldCandidates] as const;
+
+        return orderedFieldNames
+            .map(fieldName => profile.attributesByName[fieldName])
+            .filter((attribute): attribute is NonNullable<typeof attribute> => attribute !== undefined && !attribute.readOnly);
+    }, [profile.attributesByName]);
+
+    const getLabel = (attributeName: string, fallback?: string) => {
+        switch (attributeName) {
+            case "firstName":
+                return msg("firstName");
+            case "lastName":
+                return msg("lastName");
+            case "mobileNumber":
+            case "phoneNumber":
+            case "phone":
+            case "mobile":
+                return "Mobile number";
+            default:
+                return fallback ?? attributeName;
+        }
+    };
 
     return (
         <Template
@@ -36,49 +59,55 @@ export default function UpdateAccountInformation({ kcContext, i18n }: Props) {
                 onSubmit={() => setIsSubmitting(true)}
                 className="flex flex-col gap-4"
             >
-                {/* First Name */}
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="firstName" className="text-white font-medium">
-                        {msg("firstName")}
-                        <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        required
-                        autoComplete="given-name"
-                        aria-invalid={firstNameError}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                    />
-                    {firstNameError && (
-                        <p className="text-sm text-destructive">
-                            {messagesPerField?.get?.("firstName")}
-                        </p>
-                    )}
-                </div>
+                {attributes.map(attribute => {
+                    const value = attribute.value ?? attribute.values?.[0] ?? "";
+                    const isInvalid = messagesPerField.existsError(attribute.name);
+                    const isMobileField = mobileFieldCandidates.includes(attribute.name as (typeof mobileFieldCandidates)[number]);
+                    const isRequired = attribute.required || isMobileField;
+                    const maxLength =
+                        attribute.annotations.inputTypeMaxlength ??
+                        attribute.validators.length?.max;
 
-                {/* Last Name */}
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="lastName" className="text-white font-medium">
-                        {msg("lastName")}
-                        <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        required
-                        autoComplete="family-name"
-                        aria-invalid={lastNameError}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                    />
-                    {lastNameError && (
-                        <p className="text-sm text-destructive">
-                            {messagesPerField?.get?.("lastName")}
-                        </p>
-                    )}
-                </div>
+                    return (
+                        <div key={attribute.name} className="flex flex-col gap-2">
+                            <Label htmlFor={attribute.name} className="text-white font-medium">
+                                {getLabel(attribute.name, attribute.displayName)}
+                                {isRequired && <span className="text-destructive">*</span>}
+                            </Label>
+                            <Input
+                                id={attribute.name}
+                                name={attribute.name}
+                                type={
+                                    attribute.name === "email"
+                                        ? "email"
+                                        : isMobileField
+                                          ? "tel"
+                                          : "text"
+                                }
+                                defaultValue={value}
+                                autoComplete={
+                                    attribute.autocomplete ??
+                                    (isMobileField
+                                        ? "tel"
+                                        : attribute.name === "firstName"
+                                          ? "given-name"
+                                          : attribute.name === "lastName"
+                                            ? "family-name"
+                                            : undefined)
+                                }
+                                required={isRequired}
+                                aria-invalid={isInvalid}
+                                maxLength={maxLength === undefined ? undefined : Number(maxLength)}
+                                className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                            />
+                            {isInvalid && (
+                                <p className="text-sm text-destructive">
+                                    {messagesPerField?.get?.(attribute.name)}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
 
                 {/* Message Alert */}
                 {kcContext.message !== undefined && (
@@ -94,7 +123,7 @@ export default function UpdateAccountInformation({ kcContext, i18n }: Props) {
                 )}
 
                 {/* Submit Button */}
-                <div className="pt-2">
+                <div className="mt-3 mb-4">
                     <Button
                         type="submit"
                         id="kc-submit"

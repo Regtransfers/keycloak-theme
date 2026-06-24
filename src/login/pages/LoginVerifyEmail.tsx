@@ -41,7 +41,7 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                 </p>
 
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 mt-3 mb-0">
                
                     <form action={url.loginAction} method="post">
                         <Button

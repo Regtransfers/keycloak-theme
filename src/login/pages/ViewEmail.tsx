@@ -43,7 +43,7 @@ export default function ViewEmail({ kcContext, i18n }: Props) {
                     Check your email, and click on the link to log in!
                 </p>
 
-                <form action={url.loginAction} method="post" className="flex flex-col gap-3">
+                <form action={url.loginAction} method="post" className="flex flex-col gap-3 mt-3 mb-4">
                     <Button
                         type="submit"
                         id="kc-resend"

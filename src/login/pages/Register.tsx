@@ -168,19 +168,21 @@ export default function Register({ kcContext, i18n }: Props) {
                 <Button
                     type="submit"
                     size="lg"
-                    className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
+                    className="w-full mt-3 mb-0 border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
                     disabled={isSubmitDisabled}
                     id="kc-register"
                 >
                     {msgStr("doRegister")}
                 </Button>
 
-                <p className="text-center text-sm text-white/70">
-                    Already with Regtransfers?{" "}
-                    <a href={url.loginUrl} className="underline underline-offset-4 text-white">
-                        {msg("doLogIn")}
-                    </a>
-                </p>
+                <div className="border-t border-white/20 pt-4">
+                    <p className="text-center text-sm text-white/70">
+                        Already with Regtransfers?{" "}
+                        <a href={url.loginUrl} className="underline underline-offset-4 text-white">
+                            {msg("doLogIn")}
+                        </a>
+                    </p>
+                </div>
             </form>
         </Template>
     );

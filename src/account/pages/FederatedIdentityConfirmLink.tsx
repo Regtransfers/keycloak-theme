@@ -26,7 +26,7 @@ export default function FederatedIdentityConfirmLink({ kcContext, i18n }: Props)
                 <input type="hidden" id="identityProviderId" name="identityProviderId" value="" />
 
                 {/* Action buttons */}
-                <div className="flex flex-col gap-2 pt-2">
+                <div className="flex flex-col gap-2 mt-3 mb-0">
                     {/* Review profile button */}
                     <Button
                         type="submit"
@@ -38,6 +38,8 @@ export default function FederatedIdentityConfirmLink({ kcContext, i18n }: Props)
                     >
                         {msgStr("doReviewProfile")}
                     </Button>
+
+                    <div className="h-px bg-white/20 my-3" />
 
                     {/* Add to existing account button */}
                     <Button

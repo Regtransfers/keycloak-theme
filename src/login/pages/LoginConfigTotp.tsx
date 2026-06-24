@@ -103,7 +103,7 @@ export default function LoginConfigTotp({ kcContext, i18n }: Props) {
                 <Button
                     type="submit"
                     size="lg"
-                    className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
+                    className="w-full mt-3 mb-4 border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
                     disabled={isSubmitDisabled}
                     name="submitAction"
                     value="Save"

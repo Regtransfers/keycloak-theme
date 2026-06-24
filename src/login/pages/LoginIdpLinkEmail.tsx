@@ -29,7 +29,11 @@ export default function LoginIdpLinkEmail({ kcContext, i18n }: Props) {
                     An email with instructions to link {providerName} account <strong>{username}</strong> with your Regtransfers account has been sent to you.
                 </p>
 
-                <div className="flex flex-col gap-3">
+                <p className="text-sm text-white/80 leading-6">
+                    Haven't received a verification code in your email? Check your spam/junk folder. If you still can't find it, click the button below.
+                </p>
+
+                <div className="flex flex-col gap-3 mt-3 mb-0">
                     {/* Resend email form */}
                     <form action={url.loginAction} method="post">
                         <input type="hidden" name="isResend" value="true" />
@@ -39,21 +43,7 @@ export default function LoginIdpLinkEmail({ kcContext, i18n }: Props) {
                             size="lg"
                             className="w-full border border-white/30 bg-white/10 hover:bg-white/20 text-white"
                         >
-                            Haven't received a verification code in your email?{" "}
-                            <span className="underline underline-offset-2">Click here</span> to re-send the email.
-                        </Button>
-                    </form>
-
-                    {/* Continue form */}
-                    <form action={url.loginAction} method="post">
-                        <Button
-                            type="submit"
-                            id="kc-continue"
-                            size="lg"
-                            className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
-                        >
-                            If you already verified the email in different browser{" "}
-                            <span className="underline underline-offset-2">Click here</span> to continue.
+                            Re-send verification email
                         </Button>
                     </form>
                 </div>
