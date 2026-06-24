@@ -99,7 +99,7 @@ export default function Register({ kcContext, i18n }: Props) {
                     <Label htmlFor="mobileNumber">Mobile number <span className="text-destructive">*</span></Label>
                     <Input
                         id="mobileNumber"
-                        name="user.attributes.mobileNumber[]"
+                        name="mobileNumber"
                         type="tel"
                         inputSize="lg"
                         autoComplete="tel"
@@ -133,15 +133,17 @@ export default function Register({ kcContext, i18n }: Props) {
                 {/* Marketing consent */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-start gap-3 py-3">
-                        {/* 
-                          1. Use a standard input checkbox.
-                          2. The name MUST include square brackets [] — Keycloak 26 expects attributes as arrays of strings.
-                          3. Set the active standard payload string value to "true".
+                        {/*
+                          With the declarative user profile enabled (Keycloak 26), the registration
+                          form posts user-profile attributes under their plain attribute name —
+                          NOT prefixed with "user.attributes." and with no "[]". The name must match
+                          the attribute name declared in the realm User Profile config ("marketingConsent").
+                          When unchecked nothing is posted, so the attribute's defaultValue ("false") applies.
                         */}
                         <input
                             type="checkbox"
                             id="marketingConsent"
-                            name="user.attributes.marketingConsent[]"
+                            name="marketingConsent"
                             value="true"
                             checked={marketingConsent}
                             onChange={(e) => setMarketingConsent(e.target.checked)}
