@@ -135,7 +135,7 @@ export default function Register({ kcContext, i18n }: Props) {
                 <div className="flex flex-col gap-2">
                     <input
                         type="hidden"
-                        name="user.attributes.marketingConsent"
+                        name="marketingConsent"
                         value={marketingConsent ? "true" : "false"}
                     />
                     <div className="flex items-start gap-3 py-3">
