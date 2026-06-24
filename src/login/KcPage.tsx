@@ -19,6 +19,7 @@ import LoginConfigTotp from "./pages/LoginConfigTotp";
 import LoginUpdatePassword from "./pages/LoginUpdatePassword";
 import LoginVerifyEmail from "./pages/LoginVerifyEmail";
 import LoginPageExpired from "./pages/LoginPageExpired";
+import LoginIdpLinkConfirm from "./pages/LoginIdpLinkConfirm";
 import LoginIdpLinkEmail from "./pages/LoginIdpLinkEmail";
 import IdpReviewUserProfile from "./pages/IdpReviewUserProfile";
 import "./main.css";
@@ -61,8 +62,16 @@ export default function KcPage(props: { kcContext: KcContext }) {
                         return <LoginVerifyEmail kcContext={kcContext as never} i18n={i18n} />;
                     case "login-page-expired.ftl":
                         return <LoginPageExpired kcContext={kcContext as Extract<KcContext, { pageId: "login-page-expired.ftl" }>} i18n={i18n} />;
-                       case "login-idp-link-email.ftl":
-                           return <LoginIdpLinkEmail kcContext={kcContext as Extract<KcContext, { pageId: "login-idp-link-email.ftl" }>} i18n={i18n} />;
+                    case "login-idp-link-confirm.ftl":
+                    case "login-idp-link-confirm-override.ftl":
+                        return (
+                            <LoginIdpLinkConfirm
+                                kcContext={kcContext as Extract<KcContext, { pageId: "login-idp-link-confirm.ftl" | "login-idp-link-confirm-override.ftl" }>}
+                                i18n={i18n}
+                            />
+                        );
+                    case "login-idp-link-email.ftl":
+                        return <LoginIdpLinkEmail kcContext={kcContext as Extract<KcContext, { pageId: "login-idp-link-email.ftl" }>} i18n={i18n} />;
                     case "idp-review-user-profile.ftl":
                         return <IdpReviewUserProfile kcContext={kcContext as Extract<KcContext, { pageId: "idp-review-user-profile.ftl" }>} i18n={i18n} />;
                     case "login-username.ftl":

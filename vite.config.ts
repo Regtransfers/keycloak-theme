@@ -32,6 +32,50 @@ export default defineConfig({
                     cwd: import.meta.dirname,
                 });
 
+                const customTemplatesDir = path.join(
+                    buildContext.projectDirPath,
+                    "src",
+                    "main",
+                    "resources",
+                    "theme-resources",
+                    "templates"
+                );
+
+                const generatedResourcesDir = buildContext.keycloakifyBuildDirPath;
+
+                // Keep custom provider-level templates (magic-link and extensions) in generated output.
+                await fs.mkdir(
+                    path.join(generatedResourcesDir, "theme-resources", "templates"),
+                    { recursive: true }
+                );
+                await fs.cp(
+                    customTemplatesDir,
+                    path.join(generatedResourcesDir, "theme-resources", "templates"),
+                    { recursive: true }
+                );
+
+                // Ensure server-rendered waiting pages override in each theme's login directory.
+                for (const themeName of buildContext.themeNames) {
+                    const loginDir = path.join(
+                        generatedResourcesDir,
+                        "theme",
+                        themeName,
+                        "login"
+                    );
+
+                    await fs.mkdir(loginDir, { recursive: true });
+
+                    for (const ftlName of [
+                        "view-email.ftl",
+                        "view-email-continuation.ftl"
+                    ]) {
+                        await fs.copyFile(
+                            path.join(customTemplatesDir, ftlName),
+                            path.join(loginDir, ftlName)
+                        );
+                    }
+                }
+
 
             },
             // Register two theme variants: light (default) and dark.

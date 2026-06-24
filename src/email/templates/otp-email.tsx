@@ -13,6 +13,8 @@ export const previewProps: TemplateProps = {
 
 export const templateName = "One-Time Password";
 
+const OTP_CODE_EXPRESSION = "${code}";
+
 const Content = (_props: TemplateProps) => (
     <tr>
         <td style={cs.outerTd}>
@@ -24,7 +26,7 @@ const Content = (_props: TemplateProps) => (
                 <strong>Your code:</strong>
             </p>
             <p style={{ ...cs.p, textAlign: "center", fontSize: "28px", fontWeight: "bold", letterSpacing: "4px" }}>
-                {`{code}`}
+                {OTP_CODE_EXPRESSION}
             </p>
             <p style={cs.p}>
                 This code can only be used once. It expires in 15 minutes
