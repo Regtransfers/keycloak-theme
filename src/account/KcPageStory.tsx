@@ -13,7 +13,11 @@ const kcContextExtension: KcContextExtension = {
 };
 
 const kcContextExtensionPerPage: KcContextExtensionPerPage = {
-    "update-user-profile.ftl": {},
+    "update-user-profile.ftl": {
+        profile: {
+            attributesByName: {}
+        }
+    },
     "federated-identity-confirm-link.ftl": {}
 };
 
