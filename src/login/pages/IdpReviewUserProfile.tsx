@@ -17,6 +17,8 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
     const { url, profile, messagesPerField, message } = kcContext;
     const { msg } = i18n;
 
+    const mobileFieldCandidates = ["mobileNumber", "phoneNumber", "phone", "mobile"] as const;
+
     const providerName =
         (kcContext as { idpAlias?: string }).idpAlias ??
         (kcContext as { brokerContext?: { idpAlias?: string } }).brokerContext?.idpAlias ??
@@ -25,12 +27,18 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
     const attributes = useMemo(() => {
-        const orderedFieldNames = ["email", "firstName", "lastName"] as const;
+        const orderedFieldNames = ["email", "firstName", "lastName", ...mobileFieldCandidates] as const;
 
         return orderedFieldNames
             .map(fieldName => profile.attributesByName[fieldName])
             .filter((attribute): attribute is NonNullable<typeof attribute> => attribute !== undefined && !attribute.readOnly);
     }, [profile.attributesByName]);
+
+    const mobileAttributeName = attributes.find(attribute =>
+        mobileFieldCandidates.includes(attribute.name as (typeof mobileFieldCandidates)[number])
+    )?.name;
+
+    const showFallbackMobileField = mobileAttributeName === undefined;
 
     const getLabel = (attributeName: string, fallback?: string) => {
         switch (attributeName) {
@@ -40,6 +48,11 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
                 return msg("lastName");
             case "email":
                 return msg("email");
+            case "mobileNumber":
+            case "phoneNumber":
+            case "phone":
+            case "mobile":
+                return "Mobile number";
             default:
                 return fallback ?? attributeName;
         }
@@ -69,6 +82,8 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
                 {attributes.map(attribute => {
                     const value = attribute.value ?? attribute.values?.[0] ?? "";
                     const isInvalid = messagesPerField.existsError(attribute.name);
+                    const isMobileField = mobileFieldCandidates.includes(attribute.name as (typeof mobileFieldCandidates)[number]);
+                    const isRequired = attribute.required || isMobileField;
                     const maxLength =
                         attribute.annotations.inputTypeMaxlength ??
                         attribute.validators.length?.max;
@@ -77,16 +92,27 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
                         <div key={attribute.name} className="flex flex-col gap-2">
                             <Label htmlFor={attribute.name}>
                                 {getLabel(attribute.name, attribute.displayName)}
-                                {attribute.required && <span className="text-destructive"> *</span>}
+                                {isRequired && <span className="text-destructive"> *</span>}
                             </Label>
                             <Input
                                 id={attribute.name}
                                 name={attribute.name}
-                                type={attribute.name === "email" ? "email" : "text"}
+                                type={
+                                    attribute.name === "email"
+                                        ? "email"
+                                        : mobileFieldCandidates.includes(attribute.name as (typeof mobileFieldCandidates)[number])
+                                          ? "tel"
+                                          : "text"
+                                }
                                 inputSize="lg"
                                 defaultValue={value}
-                                autoComplete={attribute.autocomplete}
-                                required={attribute.required}
+                                autoComplete={
+                                    attribute.autocomplete ??
+                                    (mobileFieldCandidates.includes(attribute.name as (typeof mobileFieldCandidates)[number])
+                                        ? "tel"
+                                        : undefined)
+                                }
+                                required={isRequired}
                                 aria-invalid={isInvalid}
                                 maxLength={maxLength === undefined ? undefined : Number(maxLength)}
                             />
@@ -98,6 +124,29 @@ export default function IdpReviewUserProfile({ kcContext, i18n }: Props) {
                         </div>
                     );
                 })}
+
+                {showFallbackMobileField && (
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="mobileNumber">
+                            Mobile number
+                            <span className="text-destructive"> *</span>
+                        </Label>
+                        <Input
+                            id="mobileNumber"
+                            name="mobileNumber"
+                            type="tel"
+                            inputSize="lg"
+                            autoComplete="tel"
+                            required
+                            aria-invalid={messagesPerField.existsError("mobileNumber")}
+                        />
+                        {messagesPerField.existsError("mobileNumber") && (
+                            <p className="text-sm text-destructive">
+                                {messagesPerField.getFirstError("mobileNumber")}
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 <Button
                     type="submit"

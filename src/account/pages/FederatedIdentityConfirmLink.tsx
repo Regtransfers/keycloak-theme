@@ -1,7 +1,6 @@
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Template } from "../components/Template";
 
 type FederatedIdentityConfirmLinkKcContext = Extract<KcContext, { pageId: "federated-identity-confirm-link.ftl" }>;
@@ -12,7 +11,7 @@ type Props = {
 };
 
 export default function FederatedIdentityConfirmLink({ kcContext, i18n }: Props) {
-    const { url, formAction } = kcContext;
+    const { url } = kcContext;
     const { msgStr } = i18n;
 
     return (
@@ -22,7 +21,7 @@ export default function FederatedIdentityConfirmLink({ kcContext, i18n }: Props)
             headerNode={<p className="kc-display-heading font-bold font-[Roboto]">Account already exists</p>}
             displayMessage={true}
         >
-            <form id="kc-confirm-link-form" action={formAction} method="post" className="flex flex-col gap-4">
+            <form id="kc-confirm-link-form" action={url.accountUrl} method="post" className="flex flex-col gap-4">
                 {/* Hidden field for federated identity link confirmation */}
                 <input type="hidden" id="identityProviderId" name="identityProviderId" value="" />
 
@@ -47,7 +46,7 @@ export default function FederatedIdentityConfirmLink({ kcContext, i18n }: Props)
                         name="submitAction"
                         value="Add to existing account"
                         size="lg"
-                        className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d] bg-green-600"
+                        className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
                     >
                         {msgStr("doAddToExistingAccount")}
                     </Button>

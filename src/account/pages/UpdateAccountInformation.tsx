@@ -102,7 +102,7 @@ export default function UpdateAccountInformation({ kcContext, i18n }: Props) {
                         value="Save"
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d] bg-green-600"
+                        className="w-full border border-[#1b9a38] hover:bg-[#00692f] hover:border-[#007f1d]"
                     >
                         {msgStr("doSave")}
                     </Button>

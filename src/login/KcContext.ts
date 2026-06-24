@@ -46,6 +46,14 @@ export type KcContextExtensionPerPage = {
             loginRestartFlowUrl: string;
         };
     };
+       "login-idp-link-email.ftl": {
+           idpAlias?: string;
+           username?: string;
+           url: {
+               loginAction: string;
+               loginRestartFlowUrl?: string;
+           };
+       };
     "view-email.ftl": {
         auth: {
             attemptedUsername: string;

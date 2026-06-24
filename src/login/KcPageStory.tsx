@@ -48,6 +48,14 @@ const kcContextExtensionPerPage: KcContextExtensionPerPage = {
             loginRestartFlowUrl: "/"
         }
     },
+       "login-idp-link-email.ftl": {
+           idpAlias: "google",
+           username: "ross@regtransfers.co.uk",
+           url: {
+               loginAction: "#",
+               loginRestartFlowUrl: "#"
+           }
+       },
     "view-email.ftl": {
         auth: {
             attemptedUsername: "user@example.com"

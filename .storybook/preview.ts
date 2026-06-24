@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import { useEffect } from "react";
+import "../src/login/main.css";
 
 const preview: Preview = {
     globalTypes: {

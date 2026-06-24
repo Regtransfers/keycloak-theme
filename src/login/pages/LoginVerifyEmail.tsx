@@ -7,6 +7,7 @@ type LoginVerifyEmailKcContext = {
     url: {
         loginAction: string;
         loginRestartFlowUrl?: string;
+        loginUrl?: string;
     };
     auth?: {
         attemptedUsername?: string;
@@ -20,6 +21,7 @@ type Props = {
 
 export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
     const { url } = kcContext;
+    const signInUrl = url.loginRestartFlowUrl ?? url.loginUrl;
 
     return (
         <Template
@@ -54,10 +56,10 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                     </form>
                 </div>
 
-                {url.loginRestartFlowUrl ? (
+                {signInUrl ? (
                     <div className="border-t border-white/20 pt-4 text-center">
                         <a
-                            href={url.loginRestartFlowUrl}
+                            href={signInUrl}
                             className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
                         >
                             Back to sign in

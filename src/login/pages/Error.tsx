@@ -10,6 +10,10 @@ type ErrorKcContext = {
     realm?: {
         displayName?: string;
     };
+    url?: {
+        loginRestartFlowUrl?: string;
+        loginUrl?: string;
+    };
 };
 
 type Props = {
@@ -18,6 +22,8 @@ type Props = {
 };
 
 export default function Error({ kcContext, i18n }: Props) {
+    const signInUrl = kcContext.url?.loginRestartFlowUrl ?? kcContext.url?.loginUrl ?? "/";
+
     return (
         <Template
             kcContext={kcContext as never}
@@ -34,7 +40,7 @@ export default function Error({ kcContext, i18n }: Props) {
 
             <div className="border-t border-white/20 pt-4 text-center mt-6">
                 <a
-                    href="/"
+                    href={signInUrl}
                     className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
                 >
                     Return to sign in

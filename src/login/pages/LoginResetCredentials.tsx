@@ -16,6 +16,7 @@ type Props = {
 export default function LoginResetCredentials({ kcContext, i18n }: Props) {
     const { url, messagesPerField } = kcContext;
     const { msgStr } = i18n;
+    const signInUrl = url.loginRestartFlowUrl ?? url.loginUrl;
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
@@ -71,7 +72,7 @@ export default function LoginResetCredentials({ kcContext, i18n }: Props) {
                 </Button>
 
                 <p className="text-center text-sm text-white/70">
-                    <a href={url.loginUrl} className="underline underline-offset-4 text-white">
+                    <a href={signInUrl} className="underline underline-offset-4 text-white">
                         Back to sign in
                     </a>
                 </p>
