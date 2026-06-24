@@ -4,7 +4,6 @@ import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Template } from "../components/Template";
 
 type RegisterKcContext = Extract<KcContext, { pageId: "register.ftl" }>;
@@ -100,7 +99,7 @@ export default function Register({ kcContext, i18n }: Props) {
                     <Label htmlFor="mobileNumber">Mobile number <span className="text-destructive">*</span></Label>
                     <Input
                         id="mobileNumber"
-                        name="mobileNumber"
+                        name="user.attributes.mobileNumber[]"
                         type="tel"
                         inputSize="lg"
                         autoComplete="tel"
@@ -133,17 +132,20 @@ export default function Register({ kcContext, i18n }: Props) {
 
                 {/* Marketing consent */}
                 <div className="flex flex-col gap-2">
-                    <input
-                        type="hidden"
-                        name="user.attributes.marketingConsent"
-                        value={marketingConsent ? "true" : "false"}
-                    />
                     <div className="flex items-start gap-3 py-3">
-                        <Checkbox
+                        {/* 
+                          1. Use a standard input checkbox.
+                          2. The name MUST include square brackets [] — Keycloak 26 expects attributes as arrays of strings.
+                          3. Set the active standard payload string value to "true".
+                        */}
+                        <input
+                            type="checkbox"
                             id="marketingConsent"
+                            name="user.attributes.marketingConsent[]"
+                            value="true"
                             checked={marketingConsent}
-                            onCheckedChange={nextChecked => setMarketingConsent(nextChecked === true)}
-                            className="mt-0.5 shrink-0"
+                            onChange={(e) => setMarketingConsent(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-primary"
                         />
                         <Label htmlFor="marketingConsent" className="font-normal cursor-pointer leading-snug">
                             Please send me special offers, discounts and number plates that may be relevant to me. I understand I can unsubscribe at any time.
