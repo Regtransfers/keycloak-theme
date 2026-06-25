@@ -16,7 +16,8 @@ import org.keycloak.services.managers.AuthenticationSessionManager;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.sessions.RootAuthenticationSessionModel;
 
-import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * JAX-RS resource backing {@code GET /realms/{realm}/verify-email/status}.
@@ -45,38 +46,46 @@ public class VerifyEmailStatusResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response status(@QueryParam("client_id") String clientId,
                            @QueryParam("tab_id") String tabId) {
-        boolean verified = isVerified(clientId, tabId);
-        return Response.ok(Collections.singletonMap("verified", verified))
-                .header("Cache-Control", "no-store")
-                .build();
-    }
-
-    private boolean isVerified(String clientId, String tabId) {
         RealmModel realm = session.getContext().getRealm();
-        if (realm == null) {
-            return false;
-        }
 
         // (1) Cross-device case: the waiting tab's authentication session is
         // still alive here; the user record was flipped to verified when the
         // link was followed on another device.
-        UserModel user = userFromAuthSession(realm, clientId, tabId);
+        UserModel user = realm == null ? null : userFromAuthSession(realm, clientId, tabId);
+        String source = user != null ? "authSession" : "none";
 
         // (2) Same-browser case: following the link in another tab completed the
         // flow and consumed the authentication session, but left an SSO identity
         // cookie we can read instead.
-        if (user == null) {
+        if (user == null && realm != null) {
             user = userFromIdentityCookie(realm);
+            if (user != null) {
+                source = "identityCookie";
+            }
         }
 
-        if (user == null) {
-            return false;
+        // The user object resolved above may carry a value cached on the session
+        // models, so also re-read through the user provider.
+        Boolean sessionUserVerified = user == null ? null : user.isEmailVerified();
+        Boolean freshUserVerified = null;
+        if (realm != null && user != null) {
+            UserModel fresh = session.users().getUserById(realm, user.getId());
+            if (fresh != null) {
+                freshUserVerified = fresh.isEmailVerified();
+            }
         }
 
-        // Re-read through the user provider so we observe the freshly-persisted
-        // emailVerified flag rather than anything cached on the session models.
-        UserModel current = session.users().getUserById(realm, user.getId());
-        return current != null && current.isEmailVerified();
+        boolean verified = Boolean.TRUE.equals(sessionUserVerified)
+                || Boolean.TRUE.equals(freshUserVerified);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("verified", verified);
+        // Diagnostic fields (booleans only, about the caller's own session — no PII).
+        body.put("source", source);
+        body.put("sessionUserVerified", sessionUserVerified);
+        body.put("freshUserVerified", freshUserVerified);
+
+        return Response.ok(body).header("Cache-Control", "no-store").build();
     }
 
     private UserModel userFromAuthSession(RealmModel realm, String clientId, String tabId) {
