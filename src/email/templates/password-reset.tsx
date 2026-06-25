@@ -27,7 +27,7 @@ const Content = (_props: TemplateProps) => (
             <EmailButton href={exp("link")}>Reset password</EmailButton>
             <p style={cs.muted}>
                 This link will expire within {exp("linkExpirationFormatter(linkExpiration)")}. If you
-                didn&apos;t request a password reset, just ignore this message — your password will
+                didn&apos;t request a password reset, just ignore this message - your password will
                 not be changed.
             </p>
         </td>

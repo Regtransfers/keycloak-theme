@@ -56,7 +56,7 @@ export function Template({
                 {/* Subtle overlay for depth */}
                 <div className="absolute inset-0 bg-black/5 dark:bg-black/10" />
 
-                {/* Main content area — grows to fill space, centres the form */}
+                {/* Main content area - grows to fill space, centres the form */}
                 <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-10">
                     {/* Logo above card */}
                     <div className="flex justify-center mb-6">
@@ -100,7 +100,7 @@ export function Template({
                 </div>
                 {/* Gold accent bar */}
                 <div className="relative z-10 h-1 bg-[#F5C100]" />
-                {/* Footer legal text — in normal flow, pushed to bottom */}
+                {/* Footer legal text - in normal flow, pushed to bottom */}
                 <div className="relative z-10 w-full bg-[#212529]">
                     <div className="max-w-6xl mx-auto px-6 py-4 text-white/60 text-[12px] leading-relaxed space-y-1">
                         <p>© 1982 - 2026 Registration Transfers Limited. All rights reserved. Registered in England. Company registration number 03933658. 'Regtransfers', 'Reg transfers' and the Regtransfers logo are registered trademarks of Registration Transfers Limited.</p>

@@ -86,7 +86,7 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                     }
                 }
             } catch {
-                // Network blip — try again on the next tick.
+                // Network blip - try again on the next tick.
             }
 
             if (!cancelled) {
@@ -158,7 +158,7 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                 </p>
 
                 <p className="text-sm text-white/60 leading-6" aria-live="polite">
-                    Waiting for you to verify your email — this page updates automatically.
+                    Waiting for you to verify your email - this page updates automatically.
                 </p>
 
                 <div className="flex flex-col gap-3 mt-3 mb-0">

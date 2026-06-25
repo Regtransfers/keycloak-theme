@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
@@ -11,14 +11,31 @@ function OtpSegmentedInput({
     name,
     autoFocus,
     hasError,
+    onComplete,
 }: {
     id: string;
     name: string;
     autoFocus?: boolean;
     hasError?: boolean;
+    onComplete?: () => void;
 }) {
     const [cells, setCells] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+    const hasNotifiedCompleteRef = useRef(false);
+
+    useEffect(() => {
+        const isComplete = cells.every(cell => cell !== "");
+
+        if (isComplete && !hasNotifiedCompleteRef.current) {
+            hasNotifiedCompleteRef.current = true;
+            onComplete?.();
+            return;
+        }
+
+        if (!isComplete) {
+            hasNotifiedCompleteRef.current = false;
+        }
+    }, [cells, onComplete]);
 
     const focusCell = (i: number) => {
         inputRefs.current[Math.max(0, Math.min(5, i))]?.focus();
@@ -100,6 +117,17 @@ export default function OtpForm({ kcContext, i18n }: Props) {
     const { auth, url, messagesPerField, message } = kcContext;
     const { msg, msgStr } = i18n;
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+
+    const submitWhenComplete = () => {
+        if (isSubmitting) {
+            return;
+        }
+
+        setIsSubmitting(true);
+        formRef.current?.requestSubmit(submitButtonRef.current ?? undefined);
+    };
 
     // The email-OTP authenticator (ext-email-otp) reports a wrong code as a
     // GLOBAL form error (kcContext.message), not under the "totp" field, so we
@@ -129,6 +157,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
 
                 <form
                     id="kc-otp-login-form"
+                    ref={formRef}
                     action={url.loginAction}
                     method="post"
                     onSubmit={() => setIsSubmitting(true)}
@@ -141,6 +170,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                             name="otp"
                             autoFocus
                             hasError={hasError}
+                            onComplete={submitWhenComplete}
                         />
                         {messagesPerField.existsError("totp") && (
                             <p className="text-sm text-destructive">{messagesPerField.getFirstError("totp")}</p>
@@ -150,6 +180,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                 <div className="flex gap-3 mt-6">
                     <Button
                         type="submit"
+                        ref={submitButtonRef}
                         id="kc-submit"
                         name="submit"
                         size="lg"

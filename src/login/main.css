@@ -4,7 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Responsive gap for OTP segmented input — scales from 8px on mobile to 32px on wide screens */
+/* Responsive gap for OTP segmented input - scales from 8px on mobile to 32px on wide screens */
 @utility gap-otp {
     gap: clamp(0.5rem, 4vw, 2rem);
 }
@@ -15,7 +15,7 @@
 }
 
 /* =============================================
-   Keycloak Theme — Dark / Light mode styles
+    Keycloak Theme - Dark / Light mode styles
    Uses CSS custom properties so both
    prefers-color-scheme and theme-variant class
    switching work from the same ruleset.
@@ -71,7 +71,7 @@
     --sidebar-ring:             oklch(0.283 0.093 263);
 }
 
-/* --- Dark palette — OS-level preference --- */
+/* --- Dark palette - OS-level preference --- */
 @media (prefers-color-scheme: dark) {
     :root {
         --kc-bg:             #080e1c;
@@ -93,7 +93,7 @@
     }
 }
 
-/* --- Dark palette — explicit theme variant (-dark suffix) --- */
+/* --- Dark palette - explicit theme variant (-dark suffix) --- */
 /* Applied when the Keycloak admin selects the "-dark" theme variant */
 body.theme-dark {
     --kc-bg:             #080e1c;
@@ -143,7 +143,7 @@ h2, h3, h4, h5, h6 {
     }
 }
 
-/* Fluid display heading — for <p> tags styled as main headings */
+/* Fluid display heading - for <p> tags styled as main headings */
 .kc-display-heading {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: calc(1.3125rem + 0.75vw);
@@ -195,7 +195,7 @@ h2, h3, h4, h5, h6 {
     border-color: #1b9a38 !important;
 }
 
-/* Links — exclude button-styled anchors */
+/* Links - exclude button-styled anchors */
 .kcFormOptionsClass a,
 a:not([class*="rounded"]):not([class*="border"]):not([class*="bg-"]):not([class*="inline-flex"]) {
     color: #F5C100 !important;

@@ -135,7 +135,7 @@ export default function Register({ kcContext, i18n }: Props) {
                     <div className="flex items-start gap-3 py-3">
                         {/*
                           With the declarative user profile enabled (Keycloak 26), the registration
-                          form posts user-profile attributes under their plain attribute name —
+                          form posts user-profile attributes under their plain attribute name -
                           NOT prefixed with "user.attributes." and with no "[]". The name must match
                           the attribute name declared in the realm User Profile config ("marketingConsent").
                           When unchecked nothing is posted, so the attribute's defaultValue ("false") applies.
