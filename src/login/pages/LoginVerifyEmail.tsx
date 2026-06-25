@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Template } from "../components/Template";
@@ -6,17 +7,7 @@ import { Template } from "../components/Template";
 /** How often to ask the server whether the email has been verified yet. */
 const POLL_INTERVAL_MS = 5000;
 
-type LoginVerifyEmailKcContext = {
-    pageId: "login-verify-email.ftl";
-    url: {
-        loginAction: string;
-        loginRestartFlowUrl?: string;
-        loginUrl?: string;
-    };
-    auth?: {
-        attemptedUsername?: string;
-    };
-};
+type LoginVerifyEmailKcContext = Extract<KcContext, { pageId: "login-verify-email.ftl" }>;
 
 type Props = {
     kcContext: LoginVerifyEmailKcContext;
@@ -49,14 +40,15 @@ function buildStatusUrl(): string | undefined {
 export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
     const { url } = kcContext;
     const signInUrl = url.loginRestartFlowUrl ?? url.loginUrl;
+    const forceVerifiedState = kcContext.storybook?.forceVerifiedState === true;
 
-    const [verified, setVerified] = useState(false);
+    const [verified, setVerified] = useState(forceVerifiedState);
     // Realm-signed token the server hands back on the first poll; lets later
     // polls keep checking after the auth session is gone (same-browser verify).
     const tokenRef = useRef<string | null>(null);
 
     useEffect(() => {
-        if (verified) {
+        if (verified || forceVerifiedState) {
             return;
         }
 
@@ -110,14 +102,14 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                 clearTimeout(timeoutId);
             }
         };
-    }, [verified]);
+    }, [verified, forceVerifiedState]);
 
     if (verified) {
         return (
             <Template
                 kcContext={kcContext as never}
                 i18n={i18n}
-                headerNode={<p className="kc-display-heading font-bold font-[Roboto]">Email verified</p>}
+                headerNode={<p className="kc-display-heading font-bold font-[Roboto] text-center">Email verified</p>}
                 displayMessage={false}
                 displayInfo={false}
             >

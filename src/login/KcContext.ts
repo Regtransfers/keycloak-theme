@@ -27,6 +27,9 @@ export type KcContextExtensionPerPage = {
             loginAction: string;
             loginRestartFlowUrl?: string;
         };
+        storybook?: {
+            forceVerifiedState?: boolean;
+        };
     };
     "email-confirmation.ftl": {
         magicLinkContinuation: {

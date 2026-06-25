@@ -2,7 +2,7 @@ import { Suspense, useEffect } from "react";
 import type { KcContext } from "./KcContext";
 import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/account/DefaultPage";
-import Template from "keycloakify/account/Template";
+import { Template } from "./components/Template";
 import UpdateAccountInformation from "./pages/UpdateAccountInformation";
 import FederatedIdentityConfirmLink from "./pages/FederatedIdentityConfirmLink";
 import "../login/main.css";
