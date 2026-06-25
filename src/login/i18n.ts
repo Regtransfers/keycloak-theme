@@ -23,6 +23,8 @@ const { useI18n, ofTypeI18n } = i18nBuilder
             magicLinkSuccessfulLogin: "You have successfully signed in using your email link.",
             magicLinkHasBeenUsed: "This sign-in link has already been used or has expired.",
             loginPage: "Continue",
+            mobileNumber: "Mobile number",
+            marketingConsent: "Please send me special offers, discounts and number plates that may be relevant to me. I understand I can unsubscribe at any time.",
         }
     })
     .build();
