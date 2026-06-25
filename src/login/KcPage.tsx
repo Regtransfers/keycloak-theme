@@ -3,7 +3,7 @@ import type { ClassKey } from "keycloakify/login";
 import type { KcContext } from "./KcContext";
 import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/login/DefaultPage";
-import Template from "keycloakify/login/Template";
+import { Template } from "./components/Template";
 import Login from "./pages/Login";
 import LoginUsername from "./pages/LoginUsername";
 import ViewEmail from "./pages/ViewEmail";
@@ -12,6 +12,8 @@ import OtpForm from "./pages/OtpForm";
 import EmailConfirmation from "./pages/EmailConfirmation";
 import EmailConfirmationError from "./pages/EmailConfirmationError";
 import Error from "./pages/Error";
+import Info from "./pages/Info.tsx";
+import LogoutConfirm from "./pages/LogoutConfirm.tsx";
 import Register from "./pages/Register";
 import LoginResetCredentials from "./pages/LoginResetCredentials";
 import LoginOtp from "./pages/LoginOtp";
@@ -23,6 +25,7 @@ import LoginIdpLinkConfirm from "./pages/LoginIdpLinkConfirm";
 import LoginIdpLinkEmail from "./pages/LoginIdpLinkEmail";
 import IdpReviewUserProfile from "./pages/IdpReviewUserProfile";
 import UpdateUserProfile from "./pages/UpdateUserProfile";
+import UpdateEmail from "./pages/UpdateEmail.tsx";
 import "./main.css";
 const UserProfileFormFields = lazy(
     () => import("keycloakify/login/UserProfileFormFields")
@@ -77,6 +80,8 @@ export default function KcPage(props: { kcContext: KcContext }) {
                         return <IdpReviewUserProfile kcContext={kcContext as Extract<KcContext, { pageId: "idp-review-user-profile.ftl" }>} i18n={i18n} />;
                     case "login-update-profile.ftl":
                         return <UpdateUserProfile kcContext={kcContext as Extract<KcContext, { pageId: "login-update-profile.ftl" }>} i18n={i18n} />;
+                    case "update-email.ftl":
+                        return <UpdateEmail kcContext={kcContext as Extract<KcContext, { pageId: "update-email.ftl" }>} i18n={i18n} />;
                     case "login-username.ftl":
                         return <LoginUsername kcContext={kcContext as Extract<typeof kcContext, { pageId: "login-username.ftl" }>} i18n={i18n} />;
                     case "view-email.ftl":
@@ -104,6 +109,10 @@ export default function KcPage(props: { kcContext: KcContext }) {
                                 i18n={i18n}
                             />
                         );
+                    case "info.ftl":
+                        return <Info kcContext={kcContext as Extract<KcContext, { pageId: "info.ftl" }>} i18n={i18n} />;
+                    case "logout-confirm.ftl":
+                        return <LogoutConfirm kcContext={kcContext as Extract<KcContext, { pageId: "logout-confirm.ftl" }>} i18n={i18n} />;
                     case "error.ftl":
                         return <Error kcContext={kcContext as Extract<KcContext, { pageId: "error.ftl" }>} i18n={i18n} />;
                     default:

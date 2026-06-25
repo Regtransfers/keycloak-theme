@@ -27,3 +27,15 @@ export const WithoutUsername: Story = {
     />
   ),
 };
+
+export const Verified: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        storybook: {
+          forceVerifiedState: true,
+        },
+      }}
+    />
+  ),
+};

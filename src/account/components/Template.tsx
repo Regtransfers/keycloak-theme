@@ -16,7 +16,7 @@ type Props = {
         message?: { type: "success" | "warning" | "error" | "info"; summary: string };
     };
     i18n: I18n;
-    headerNode: ReactNode;
+    headerNode?: ReactNode;
     displayMessage?: boolean;
     children: ReactNode;
 };
@@ -71,9 +71,11 @@ export function Template({
 
                     <div className="w-full max-w-md">
                         <Card className="border border-white/20 bg-white/10 dark:bg-black/50 shadow-2xl backdrop-blur-md text-white rounded-[1rem] px-3">
-                            <CardHeader>
-                                <CardTitle className="text-white">{headerNode}</CardTitle>
-                            </CardHeader>
+                            {headerNode && (
+                                <CardHeader>
+                                    <CardTitle className="text-white">{headerNode}</CardTitle>
+                                </CardHeader>
+                            )}
                             <CardContent>
                                 <div className="space-y-4">
                                     {/* Alert messages */}
