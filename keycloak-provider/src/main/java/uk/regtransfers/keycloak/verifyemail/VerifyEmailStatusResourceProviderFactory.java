@@ -7,12 +7,12 @@ import org.keycloak.services.resource.RealmResourceProvider;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 /**
- * Registers the {@code verify-email-status} realm resource, exposing it at
- * {@code /realms/{realm}/verify-email-status}.
+ * Registers the {@code verify-email} realm resource, exposing the status check at
+ * {@code /realms/{realm}/verify-email/status}.
  */
 public class VerifyEmailStatusResourceProviderFactory implements RealmResourceProviderFactory {
 
-    public static final String ID = "verify-email-status";
+    public static final String ID = "verify-email";
 
     @Override
     public RealmResourceProvider create(KeycloakSession session) {

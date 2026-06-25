@@ -43,7 +43,7 @@ function buildStatusUrl(): string | undefined {
     }
 
     const query = new URLSearchParams({ client_id: clientId, tab_id: tabId });
-    return `${window.location.origin}/realms/${encodeURIComponent(realm)}/verify-email-status?${query.toString()}`;
+    return `${window.location.origin}/realms/${encodeURIComponent(realm)}/verify-email/status?${query.toString()}`;
 }
 
 export default function LoginVerifyEmail({ kcContext, i18n }: Props) {

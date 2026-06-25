@@ -1,6 +1,7 @@
 package uk.regtransfers.keycloak.verifyemail;
 
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -18,7 +19,7 @@ import org.keycloak.sessions.RootAuthenticationSessionModel;
 import java.util.Collections;
 
 /**
- * JAX-RS resource backing {@code GET /realms/{realm}/verify-email-status}.
+ * JAX-RS resource backing {@code GET /realms/{realm}/verify-email/status}.
  *
  * <p>The caller is the un-authenticated browser tab that is sat on the
  * "verify your email" page. It cannot be trusted to tell us who it is, so we
@@ -40,6 +41,7 @@ public class VerifyEmailStatusResource {
     }
 
     @GET
+    @Path("status")
     @Produces(MediaType.APPLICATION_JSON)
     public Response status(@QueryParam("client_id") String clientId,
                            @QueryParam("tab_id") String tabId) {

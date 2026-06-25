@@ -9,7 +9,7 @@ window"** message — instead of redirecting/logging in or hitting an expired pa
 A realm resource endpoint:
 
 ```
-GET /realms/{realm}/verify-email-status?client_id={clientId}&tab_id={tabId}
+GET /realms/{realm}/verify-email/status?client_id={clientId}&tab_id={tabId}
 → 200 {"verified": true|false}
 ```
 
