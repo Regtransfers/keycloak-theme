@@ -11,6 +11,7 @@ import org.keycloak.models.ClientModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.representations.JsonWebToken;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.managers.AuthenticationSessionManager;
 import org.keycloak.sessions.AuthenticationSessionModel;
@@ -22,18 +23,26 @@ import java.util.Map;
 /**
  * JAX-RS resource backing {@code GET /realms/{realm}/verify-email/status}.
  *
- * <p>The caller is the un-authenticated browser tab that is sat on the
- * "verify your email" page. It cannot be trusted to tell us who it is, so we
- * never accept a user id from the request. Instead we resolve the caller's own
- * in-progress authentication session from the {@code AUTH_SESSION_ID} cookie
- * (sent automatically, same-origin) plus the {@code tab_id}/{@code client_id}
- * already present in the page URL. From that session we read the attached user
- * and report whether their email is now verified.
+ * <p>The caller is the un-authenticated browser tab sat on the "verify your
+ * email" page. We never trust a user id from the request. Instead:
  *
- * <p>This only ever reveals a single boolean about the caller's *own* pending
- * registration, so there is no user enumeration or PII exposure.
+ * <ol>
+ *   <li>On the first poll the tab's authentication session is still alive, so we
+ *       resolve the attached user from the {@code AUTH_SESSION_ID} cookie plus
+ *       the {@code tab_id}/{@code client_id} from the page URL, and hand back a
+ *       short-lived, realm-signed {@code token} carrying only that user id.</li>
+ *   <li>On subsequent polls the tab sends that token back. This survives the
+ *       authentication session being consumed (which happens the moment
+ *       verification completes in the same browser) and works across devices.</li>
+ * </ol>
+ *
+ * <p>The token is signed with the realm keys (unforgeable), expires quickly, and
+ * only ever lets the holder read a single boolean about their own registration.
  */
 public class VerifyEmailStatusResource {
+
+    private static final String TOKEN_TYPE = "verify-email-status";
+    private static final long TOKEN_TTL_SECONDS = 900L; // 15 minutes
 
     private final KeycloakSession session;
 
@@ -45,45 +54,57 @@ public class VerifyEmailStatusResource {
     @Path("status")
     @Produces(MediaType.APPLICATION_JSON)
     public Response status(@QueryParam("client_id") String clientId,
-                           @QueryParam("tab_id") String tabId) {
+                           @QueryParam("tab_id") String tabId,
+                           @QueryParam("token") String token) {
         RealmModel realm = session.getContext().getRealm();
 
-        // (1) Cross-device case: the waiting tab's authentication session is
-        // still alive here; the user record was flipped to verified when the
-        // link was followed on another device.
-        UserModel user = realm == null ? null : userFromAuthSession(realm, clientId, tabId);
-        String source = user != null ? "authSession" : "none";
+        String userId = null;
+        String source = "none";
 
-        // (2) Same-browser case: following the link in another tab completed the
-        // flow and consumed the authentication session, but left an SSO identity
-        // cookie we can read instead.
-        if (user == null && realm != null) {
-            user = userFromIdentityCookie(realm);
-            if (user != null) {
-                source = "identityCookie";
+        if (realm != null) {
+            // Durable path: a token we minted earlier — independent of the
+            // authentication session's lifetime.
+            if (token != null) {
+                userId = userIdFromToken(token);
+                if (userId != null) {
+                    source = "token";
+                }
+            }
+            // First poll: resolve from the live authentication session.
+            if (userId == null) {
+                UserModel user = userFromAuthSession(realm, clientId, tabId);
+                if (user != null) {
+                    userId = user.getId();
+                    source = "authSession";
+                }
+            }
+            // Same-browser, already logged in: fall back to the SSO identity cookie.
+            if (userId == null) {
+                UserModel user = userFromIdentityCookie(realm);
+                if (user != null) {
+                    userId = user.getId();
+                    source = "identityCookie";
+                }
             }
         }
 
-        // The user object resolved above may carry a value cached on the session
-        // models, so also re-read through the user provider.
-        Boolean sessionUserVerified = user == null ? null : user.isEmailVerified();
-        Boolean freshUserVerified = null;
-        if (realm != null && user != null) {
-            UserModel fresh = session.users().getUserById(realm, user.getId());
-            if (fresh != null) {
-                freshUserVerified = fresh.isEmailVerified();
+        boolean verified = false;
+        String issuedToken = "token".equals(source) ? token : null;
+
+        if (realm != null && userId != null) {
+            UserModel current = session.users().getUserById(realm, userId);
+            verified = current != null && current.isEmailVerified();
+            if (issuedToken == null) {
+                issuedToken = mintToken(userId);
             }
         }
-
-        boolean verified = Boolean.TRUE.equals(sessionUserVerified)
-                || Boolean.TRUE.equals(freshUserVerified);
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("verified", verified);
-        // Diagnostic fields (booleans only, about the caller's own session — no PII).
-        body.put("source", source);
-        body.put("sessionUserVerified", sessionUserVerified);
-        body.put("freshUserVerified", freshUserVerified);
+        body.put("source", source); // diagnostic only; booleans/strings, no PII
+        if (issuedToken != null) {
+            body.put("token", issuedToken);
+        }
 
         return Response.ok(body).header("Cache-Control", "no-store").build();
     }
@@ -112,5 +133,25 @@ public class VerifyEmailStatusResource {
         AuthenticationManager.AuthResult authResult =
                 new AuthenticationManager().authenticateIdentityCookie(session, realm);
         return authResult == null ? null : authResult.user();
+    }
+
+    private String mintToken(String userId) {
+        JsonWebToken token = new JsonWebToken();
+        token.type(TOKEN_TYPE);
+        token.subject(userId);
+        token.exp((System.currentTimeMillis() / 1000L) + TOKEN_TTL_SECONDS);
+        return session.tokens().encode(token);
+    }
+
+    private String userIdFromToken(String token) {
+        try {
+            JsonWebToken decoded = session.tokens().decode(token, JsonWebToken.class);
+            if (decoded == null || !decoded.isActive() || !TOKEN_TYPE.equals(decoded.getType())) {
+                return null;
+            }
+            return decoded.getSubject();
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 }

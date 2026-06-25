@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Template } from "../components/Template";
@@ -51,6 +51,9 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
     const signInUrl = url.loginRestartFlowUrl ?? url.loginUrl;
 
     const [verified, setVerified] = useState(false);
+    // Realm-signed token the server hands back on the first poll; lets later
+    // polls keep checking after the auth session is gone (same-browser verify).
+    const tokenRef = useRef<string | null>(null);
 
     useEffect(() => {
         if (verified) {
@@ -67,7 +70,12 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
 
         const poll = async () => {
             try {
-                const response = await fetch(statusUrl, {
+                const requestUrl = new URL(statusUrl);
+                if (tokenRef.current !== null) {
+                    requestUrl.searchParams.set("token", tokenRef.current);
+                }
+
+                const response = await fetch(requestUrl.toString(), {
                     cache: "no-store",
                     credentials: "same-origin",
                     headers: { Accept: "application/json" }
@@ -76,7 +84,10 @@ export default function LoginVerifyEmail({ kcContext, i18n }: Props) {
                 if (cancelled) return;
 
                 if (response.ok) {
-                    const data = (await response.json()) as { verified?: boolean };
+                    const data = (await response.json()) as { verified?: boolean; token?: string };
+                    if (typeof data.token === "string") {
+                        tokenRef.current = data.token;
+                    }
                     if (data.verified === true) {
                         setVerified(true);
                         return;
