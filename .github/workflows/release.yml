@@ -38,8 +38,13 @@ jobs:
       - name: Build Keycloak theme JAR
         run: npm run build-keycloak-theme
 
+      - name: Build Keycloak provider JAR
+        run: mvn -B -f keycloak-provider/pom.xml clean package
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist_keycloak/*.jar
+          files: |
+            dist_keycloak/*.jar
+            keycloak-provider/target/regtransfers-keycloak-provider.jar
           generate_release_notes: true
