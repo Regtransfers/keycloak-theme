@@ -97,9 +97,15 @@ type Props = {
 };
 
 export default function OtpForm({ kcContext, i18n }: Props) {
-    const { auth, url, messagesPerField } = kcContext;
+    const { auth, url, messagesPerField, message } = kcContext;
     const { msg, msgStr } = i18n;
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // The email-OTP authenticator (ext-email-otp) reports a wrong code as a
+    // GLOBAL form error (kcContext.message), not under the "totp" field, so we
+    // surface both: the global error banner and any field-scoped error.
+    const isGlobalError = message?.type === "error";
+    const hasError = isGlobalError || messagesPerField.existsError("totp");
 
     return (
         <Template
@@ -113,7 +119,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                     </h1>
                 </>
             }
-            displayMessage={false}
+            displayMessage={isGlobalError}
             displayInfo={false}
         >
             <div className="flex flex-col gap-4">
@@ -134,7 +140,7 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                             id="otp"
                             name="otp"
                             autoFocus
-                            hasError={messagesPerField.existsError("totp")}
+                            hasError={hasError}
                         />
                         {messagesPerField.existsError("totp") && (
                             <p className="text-sm text-destructive">{messagesPerField.getFirstError("totp")}</p>
