@@ -116,23 +116,32 @@ type Props = {
 export default function OtpForm({ kcContext, i18n }: Props) {
     const { auth, url, messagesPerField, message } = kcContext;
     const { msg, msgStr } = i18n;
+    const COOLDOWN_KEY = "otp_resend_until";
+    const COOLDOWN_SECS = 60;
+
+    const getRemainingCooldown = () => {
+        const until = sessionStorage.getItem(COOLDOWN_KEY);
+        if (!until) return 0;
+        return Math.max(0, Math.ceil((parseInt(until, 10) - Date.now()) / 1000));
+    };
+
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isResending, setIsResending] = useState(false);
-    const [resendCooldown, setResendCooldown] = useState(0);
+    const [resendCooldown, setResendCooldown] = useState(getRemainingCooldown);
     const formRef = useRef<HTMLFormElement | null>(null);
     const submitButtonRef = useRef<HTMLButtonElement | null>(null);
-    const resendButtonRef = useRef<HTMLButtonElement | null>(null);
 
-    // Cooldown timer for resend button
+    // Tick down the cooldown every second
     useEffect(() => {
         if (resendCooldown <= 0) return;
-        
-        const timer = setTimeout(() => {
-            setResendCooldown(prev => prev - 1);
-        }, 1000);
-        
-        return () => clearTimeout(timer);
-    }, [resendCooldown]);
+
+        const timer = setInterval(() => {
+            const remaining = getRemainingCooldown();
+            setResendCooldown(remaining);
+            if (remaining <= 0) clearInterval(timer);
+        }, 500);
+
+        return () => clearInterval(timer);
+    }, [resendCooldown > 0]);
 
     const submitWhenComplete = () => {
         if (isSubmitting) {
@@ -144,30 +153,28 @@ export default function OtpForm({ kcContext, i18n }: Props) {
     };
 
     const handleResend = () => {
-        if (isResending || resendCooldown > 0 || isSubmitting) {
+        if (resendCooldown > 0 || isSubmitting) {
             return;
         }
 
-        setIsResending(true);
-        
+        // Persist cooldown end-time so it survives the page reload caused by form submit
+        sessionStorage.setItem(COOLDOWN_KEY, String(Date.now() + COOLDOWN_SECS * 1000));
+        setResendCooldown(COOLDOWN_SECS);
+
         // Create a temporary form to submit just the resend action
         const tempForm = document.createElement("form");
         tempForm.method = "post";
         tempForm.action = url.loginAction;
-        
+
         const resendInput = document.createElement("input");
         resendInput.type = "hidden";
         resendInput.name = "resend";
         resendInput.value = "true";
         tempForm.appendChild(resendInput);
-        
+
         document.body.appendChild(tempForm);
         tempForm.submit();
         document.body.removeChild(tempForm);
-        
-        // Set cooldown to prevent spam (60 seconds)
-        setResendCooldown(60);
-        setIsResending(false);
     };
 
     // The email-OTP authenticator (ext-email-otp) reports a wrong code as a
@@ -231,16 +238,15 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                         {msgStr("doSubmit")}
                     </Button>
                     <Button
-                        ref={resendButtonRef}
                         type="button"
                         id="kc-resend"
                         size="lg"
                         variant="outline"
                         className="flex-1 border-white/20 bg-white/8 text-white hover:bg-white/14 hover:text-white dark:border-white/20 dark:bg-white/8 dark:text-white dark:hover:bg-white/14"
-                        disabled={isResending || resendCooldown > 0 || isSubmitting}
+                        disabled={resendCooldown > 0 || isSubmitting}
                         onClick={handleResend}
                     >
-                        {isResending ? "Sending..." : resendCooldown > 0 ? `Resend (${resendCooldown}s)` : msgStr("doResend")}
+                        {resendCooldown > 0 ? `Resend (${resendCooldown}s)` : msgStr("doResend")}
                     </Button>
                 </div>
                 </form>
