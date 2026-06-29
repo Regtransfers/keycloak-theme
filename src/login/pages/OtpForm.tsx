@@ -21,6 +21,7 @@ function OtpSegmentedInput({
 }) {
     const [cells, setCells] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+    const autofillInputRef = useRef<HTMLInputElement | null>(null);
     const hasNotifiedCompleteRef = useRef(false);
 
     useEffect(() => {
@@ -36,6 +37,14 @@ function OtpSegmentedInput({
             hasNotifiedCompleteRef.current = false;
         }
     }, [cells, onComplete]);
+
+    // Handle autofill from browser/device (iOS, Android, password managers)
+    const handleAutofill = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const autofilled = e.target.value.replace(/\D/g, "").slice(0, 6);
+        if (autofilled.length > 0) {
+            setCells(prev => prev.map((_, i) => autofilled[i] ?? ""));
+        }
+    };
 
     const focusCell = (i: number) => {
         inputRefs.current[Math.max(0, Math.min(5, i))]?.focus();
@@ -79,6 +88,18 @@ function OtpSegmentedInput({
 
     return (
         <div className="flex max-[414px]:gap-1 gap-2 sm:gap-otp justify-start w-full">
+            {/* Hidden input for browser autofill (iOS, Android, password managers) */}
+            <input
+                ref={autofillInputRef}
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                onChange={handleAutofill}
+                style={{ display: "none" }}
+                maxLength={6}
+                aria-hidden="true"
+            />
+            {/* Hidden input for form submission */}
             <input type="hidden" id={id} name={name} value={cells.join("")} readOnly />
             {cells.map((char, i) => (
                 <input
