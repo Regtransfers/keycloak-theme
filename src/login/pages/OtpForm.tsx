@@ -117,8 +117,22 @@ export default function OtpForm({ kcContext, i18n }: Props) {
     const { auth, url, messagesPerField, message } = kcContext;
     const { msg, msgStr } = i18n;
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isResending, setIsResending] = useState(false);
+    const [resendCooldown, setResendCooldown] = useState(0);
     const formRef = useRef<HTMLFormElement | null>(null);
     const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+    const resendButtonRef = useRef<HTMLButtonElement | null>(null);
+
+    // Cooldown timer for resend button
+    useEffect(() => {
+        if (resendCooldown <= 0) return;
+        
+        const timer = setTimeout(() => {
+            setResendCooldown(prev => prev - 1);
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+    }, [resendCooldown]);
 
     const submitWhenComplete = () => {
         if (isSubmitting) {
@@ -127,6 +141,33 @@ export default function OtpForm({ kcContext, i18n }: Props) {
 
         setIsSubmitting(true);
         formRef.current?.requestSubmit(submitButtonRef.current ?? undefined);
+    };
+
+    const handleResend = () => {
+        if (isResending || resendCooldown > 0 || isSubmitting) {
+            return;
+        }
+
+        setIsResending(true);
+        
+        // Create a temporary form to submit just the resend action
+        const tempForm = document.createElement("form");
+        tempForm.method = "post";
+        tempForm.action = url.loginAction;
+        
+        const resendInput = document.createElement("input");
+        resendInput.type = "hidden";
+        resendInput.name = "resend";
+        resendInput.value = "true";
+        tempForm.appendChild(resendInput);
+        
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        document.body.removeChild(tempForm);
+        
+        // Set cooldown to prevent spam (60 seconds)
+        setResendCooldown(60);
+        setIsResending(false);
     };
 
     // The email-OTP authenticator (ext-email-otp) reports a wrong code as a
@@ -190,15 +231,16 @@ export default function OtpForm({ kcContext, i18n }: Props) {
                         {msgStr("doSubmit")}
                     </Button>
                     <Button
-                        type="submit"
+                        ref={resendButtonRef}
+                        type="button"
                         id="kc-resend"
-                        name="resend"
                         size="lg"
                         variant="outline"
                         className="flex-1 border-white/20 bg-white/8 text-white hover:bg-white/14 hover:text-white dark:border-white/20 dark:bg-white/8 dark:text-white dark:hover:bg-white/14"
-                        disabled={isSubmitting}
+                        disabled={isResending || resendCooldown > 0 || isSubmitting}
+                        onClick={handleResend}
                     >
-                        {msgStr("doResend")}
+                        {isResending ? "Sending..." : resendCooldown > 0 ? `Resend (${resendCooldown}s)` : msgStr("doResend")}
                     </Button>
                 </div>
                 </form>
