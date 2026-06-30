@@ -22,7 +22,10 @@ type Props = {
 };
 
 export default function Error({ kcContext, i18n }: Props) {
-    const signInUrl = kcContext.url?.loginRestartFlowUrl ?? kcContext.url?.loginUrl ?? "/";
+    const isCookieError = kcContext.message?.summary?.toLowerCase().includes("cookie");
+    const returnUrl = isCookieError
+        ? "https://www.regtransfers.co.uk"
+        : (kcContext.url?.loginRestartFlowUrl ?? kcContext.url?.loginUrl ?? "/");
 
     return (
         <Template
@@ -40,10 +43,10 @@ export default function Error({ kcContext, i18n }: Props) {
 
             <div className="border-t border-white/20 pt-4 text-center mt-6">
                 <a
-                    href={signInUrl}
+                    href={returnUrl}
                     className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
                 >
-                    Return to sign in
+                    {isCookieError ? "Return to Regtransfers" : "Return to sign in"}
                 </a>
             </div>
         </Template>
