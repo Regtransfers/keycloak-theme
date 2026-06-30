@@ -56,8 +56,13 @@ function OtpSegmentedInput({
             setCells(prev => { const n = [...prev]; n[i] = ""; return n; });
             return;
         }
-        const char = chars.slice(-1);
-        setCells(prev => { const n = [...prev]; n[i] = char; return n; });
+        if (chars.length > 1) {
+            // Autofill (iOS/Android one-time-code) delivers the full code into one cell
+            setCells(prev => prev.map((c, idx) => idx >= i ? (chars[idx - i] ?? c) : c));
+            focusCell(Math.min(i + chars.length - 1, 5));
+            return;
+        }
+        setCells(prev => { const n = [...prev]; n[i] = chars; return n; });
         if (i < 5) focusCell(i + 1);
     };
 
