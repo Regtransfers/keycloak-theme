@@ -1,9 +1,8 @@
 import { GetSubject, GetTemplate, GetTemplateProps } from "keycloakify-emails";
 import { createVariablesHelper } from "keycloakify-emails/variables";
-import { render } from "jsx-email";
 import { EmailWrapper } from "../EmailWrapper";
-import { cs, EmailButton } from "../layout";
-import { buildEmailHtml } from "../wrapper";
+import { cs, EmailButton, SignOff } from "../layout";
+import { buildEmailHtml, buildEmailPlainText } from "../wrapper";
 
 interface TemplateProps extends Omit<GetTemplateProps, "plainText"> {}
 
@@ -42,7 +41,14 @@ export const Template = (props: TemplateProps) => (
 );
 
 export const getTemplate: GetTemplate = async (props) => {
-    if (props.plainText) return await render(<Content {...props} />, { plainText: true });
+    if (props.plainText) {
+        return await buildEmailPlainText(
+            <>
+                <Content {...props} />
+                <SignOff />
+            </>
+        );
+    }
     return buildEmailHtml(<Template {...props} />);
 };
 
