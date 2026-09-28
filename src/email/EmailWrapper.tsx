@@ -1,16 +1,9 @@
 import { ReactNode } from "react";
+import { SignOff } from "./layout";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const CSS = `
-    @font-face {
-        font-family:'Roboto';
-        font-style:normal;
-        font-weight:400;
-        src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v18/ek4gzZ-GeXAPcSbHtCeQI_esZW2xOQ-xsNqO47m55DA.woff2) format('woff2');
-        unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
-        mso-font-alt: 'Arial';
-    }
     html, body { margin: 0 auto !important; padding: 0 !important; height: 100% !important; width: 100% !important; }
     * { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
     .ReadMsgBody, .ExternalClass { width: 100%; }
@@ -19,7 +12,7 @@ const CSS = `
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
     img { -ms-interpolation-mode: bicubic; border: 0; outline: none; }
     table .payment { border-color: #339933 !important; }
-    h1.h1, h2, .h2, h3, .h3 { color: #212529; font-weight: normal; font-weight: 300; font-family: 'Roboto', helvetica, arial, sans-serif; line-height: 1.1 !important; }
+    h1.h1, h2, .h2, h3, .h3 { color: #212529; font-weight: normal; font-weight: 300; font-family: Helvetica, Arial, sans-serif; line-height: 1.1 !important; }
     h1, .h1 { font-size: 32px; }
     h2, .h2 { font-size: 24px; }
     h3, .h3 { font-size: 21px; }
@@ -30,7 +23,7 @@ const CSS = `
     }
     p.lead { font-size: 21px; font-weight: normal; color: #999999; }
     .price { color: #5cb85c; }
-    .price-xl { font-size: 48px; font-weight: normal; font-family: 'Roboto', helvetica, arial, sans-serif; }
+    .price-xl { font-size: 48px; font-weight: normal; font-family: Helvetica, Arial, sans-serif; }
     div[style*="margin: 16px 0"] { margin: 0 !important; }
     table { border-spacing: 0 !important; border-collapse: collapse !important; table-layout: fixed !important; margin: 0 auto !important; }
     table table table { table-layout: auto; }
@@ -80,6 +73,7 @@ export function EmailWrapper({ children }: { children: ReactNode }) {
             <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
             <meta name="x-apple-disable-message-reformatting" />
             <title></title>
+            {/* Roboto for the green headlines (cs.headline); clients that block web fonts fall back to Arial. */}
             <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet" type="text/css" />
             <style dangerouslySetInnerHTML={{ __html: CSS }} />
         </head>
@@ -93,14 +87,14 @@ export function EmailWrapper({ children }: { children: ReactNode }) {
                             <tr>
                                 <td {...a({ class: "column", valign: "middle" })} style={{ padding: "20px 30px 20px 30px", textAlign: "left" }}>
                                     <a {...a({ name: "rt-logo" })} href="https://www.regtransfers.co.uk?utm_source=marketing&utm_medium=email&utm_campaign=keycloak">
-                                        <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png" width={200} height={40} alt="Regtransfers" {...a({ border: "0", class: "logo" })} style={{ display: "block", height: "auto", backgroundColor: "#1a1a1a", fontFamily: "sans-serif", fontSize: "15px", lineHeight: "1.5", color: "#ffffff" }} />
+                                        <img src="https://images.regtransfers.co.uk/websiteimages/branding/logo-regtransfers@2x.png" width={200} height={40} alt="Regtransfers" {...a({ border: "0", class: "logo" })} style={{ display: "block", height: "auto", backgroundColor: "#1a1a1a", fontFamily: "Helvetica, Arial, sans-serif", fontSize: "15px", lineHeight: "1.5", color: "#ffffff" }} />
                                     </a>
                                 </td>
                                 <td {...a({ class: "column", valign: "middle" })} style={{ padding: "20px 30px 20px 30px", textAlign: "right" }}>
                                     <a {...a({ name: "header-tel", id: "header-tel", class: "masthead-telephone-number" })} href="tel:01582967777" style={{ textDecoration: "none", color: "#ffcc00", display: "block", lineHeight: "125%" }}>
-                                        <span style={{ display: "inline-block", color: "#ffcc00", fontFamily: "sans-serif", fontSize: "18px", lineHeight: "100%" }}>01582 967777</span>
+                                        <span style={{ display: "inline-block", color: "#ffcc00", fontFamily: "Helvetica, Arial, sans-serif", fontSize: "18px", lineHeight: "100%" }}>01582 967777</span>
                                     </a>
-                                    <span {...a({ class: "header-opening-times" })} style={{ display: "block", color: "#ffffff", fontFamily: "sans-serif", fontSize: "12px" }}>9am-9pm, 7 days a week</span>
+                                    <span {...a({ class: "header-opening-times" })} style={{ display: "block", color: "#ffffff", fontFamily: "Helvetica, Arial, sans-serif", fontSize: "12px" }}>9am-9pm, 7 days a week</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -127,9 +121,7 @@ export function EmailWrapper({ children }: { children: ReactNode }) {
                                     </table>
                                 </td>
                             </tr>
-                            <tr>
-                                <td {...a({ "aria-hidden": "true", height: "30" })} style={{ fontSize: "0", lineHeight: "0" }}>&nbsp;</td>
-                            </tr>
+                            <SignOff />
                         </tbody>
                     </table>
 
@@ -199,7 +191,7 @@ export function EmailWrapper({ children }: { children: ReactNode }) {
                             <tr>
                                 <td {...a({ valign: "top", align: "center" })} style={{ padding: "0px 15px 30px 15px", fontFamily: "Helvetica, Arial, sans-serif", lineHeight: "140%", textAlign: "center", color: "#ffffff", fontSize: "13px" }}>
                                     <p style={{ margin: "0", padding: "0", paddingBottom: "15px", fontSize: "13px" }}>
-                                        E: <a href="mailto:sales@regtransfers.co.uk" style={{ color: "#ffdd00" }}>sales@regtransfers.co.uk</a>{" "}
+                                        E: <a href="mailto:sales@regtransfers.co.uk" style={{ color: "#ffdd00" }}><span data-skip="true">sales@regtransfers.co.uk</span></a>{" "}
                                         <span style={{ color: "white" }} {...a({ class: "bullet-separator" })}>&bull;</span>{" "}
                                         <span style={{ whiteSpace: "nowrap" }}>T: <a style={{ color: "#ffdd00" }} href="tel:01582967777">01582 967777</a></span>
                                     </p>

@@ -1,11 +1,10 @@
 import { GetSubject, GetTemplate, GetTemplateProps } from "keycloakify-emails";
 import { createVariablesHelper } from "keycloakify-emails/variables";
-import { render } from "jsx-email";
 import * as Fm from "keycloakify-emails/jsx-email";
 import { ReactNode } from "react";
 import { EmailWrapper } from "../EmailWrapper";
-import { cs, EmailButton } from "../layout";
-import { buildEmailHtml } from "../wrapper";
+import { cs, EmailButton, SignOff } from "../layout";
+import { buildEmailHtml, buildEmailPlainText } from "../wrapper";
 
 interface TemplateProps extends Omit<GetTemplateProps, "plainText"> {}
 
@@ -37,7 +36,7 @@ const Content = (_props: TemplateProps) => (
                 completing the following action(s):
             </p>
             <Fm.If condition="requiredActions??">
-                <ul style={{ color: "#555555", fontSize: "15px", paddingLeft: "20px", margin: "0 0 20px", fontFamily: "Arial, Helvetica, sans-serif" }}>
+                <ul style={{ color: "#555555", fontSize: "15px", paddingLeft: "20px", margin: "0 0 20px", fontFamily: "Helvetica, Arial, sans-serif" }}>
                     <FmList value="requiredActions" itemAs="reqActionItem">
                         <li style={{ marginBottom: "6px" }}>
                             <Fm.If condition={`reqActionItem == 'UPDATE_PASSWORD'`}>Update Password</Fm.If>
@@ -66,7 +65,14 @@ export const Template = (props: TemplateProps) => (
 );
 
 export const getTemplate: GetTemplate = async (props) => {
-    if (props.plainText) return await render(<Content {...props} />, { plainText: true });
+    if (props.plainText) {
+        return await buildEmailPlainText(
+            <>
+                <Content {...props} />
+                <SignOff />
+            </>
+        );
+    }
     return buildEmailHtml(<Template {...props} />);
 };
 
