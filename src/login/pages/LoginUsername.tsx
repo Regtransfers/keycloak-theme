@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function LoginUsername({ kcContext, i18n }: Props) {
-    const { realm, url, login, messagesPerField, social, auth } = kcContext;
+    const { realm, url, login, messagesPerField, social } = kcContext;
     const { msg, msgStr } = i18n;
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
@@ -121,15 +121,6 @@ export default function LoginUsername({ kcContext, i18n }: Props) {
                     {msgStr("doLogIn")}
                 </Button>
             </form>
-
-            {auth?.showTryAnotherWayLink && (
-                <form id="kc-select-try-another-way-form" action={url.loginAction} method="post">
-                    <input type="hidden" name="tryAnotherWay" value="on" />
-                    <a href="#" id="try-another-way" onClick={e => { e.preventDefault(); (e.currentTarget.closest("form") as HTMLFormElement)?.submit(); }}>
-                        {msg("doTryAnotherWay")}
-                    </a>
-                </form>
-            )}
         </Template>
     );
 }

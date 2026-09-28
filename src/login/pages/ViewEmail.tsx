@@ -55,11 +55,9 @@ export default function ViewEmail({ kcContext, i18n }: Props) {
                     </Button>
                 </form>
 
-                <a
-                    href={url.loginRestartFlowUrl}
-                    className="text-center text-sm text-white/70 underline underline-offset-4 hover:text-white"
-                >
-                    Try another way
+                {/* self-center so the link (and its underline) is only as wide as its text */}
+                <a href={url.loginRestartFlowUrl} className="self-center text-sm">
+                    Go back
                 </a>
             </div>
         </Template>
