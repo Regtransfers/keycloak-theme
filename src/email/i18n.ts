@@ -17,6 +17,11 @@ export const getMessages: GetMessages = ({ locale }) => {
         // so the subject must be overridden here. Note: this is a Java MessageFormat
         // string, so escape any literal apostrophes by doubling them ('').
         result["otpSubject"] = "Your access code for your Regtransfers account";
+
+        // Same story for the magic-link email: the extension reads "magicLinkSubject",
+        // not the "magicLinkEmailSubject" key keycloakify-emails derives from the
+        // template file name.
+        result["magicLinkSubject"] = "Sign in to your Regtransfers account";
     }
     return result;
 };
