@@ -14,6 +14,7 @@
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
         "email": "email preview ./src/email/templates",
+        "email:build": "node scripts/render-emails.mjs",
         "format": "prettier . --write"
     },
     "license": "MIT",
@@ -45,6 +46,7 @@
         "@typescript-eslint/eslint-plugin": "^8.15.0",
         "@typescript-eslint/parser": "^8.15.0",
         "@vitejs/plugin-react": "^4.2.1",
+        "esbuild": "^0.25.12",
         "eslint": "^9.15.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-react": "^7.37.2",

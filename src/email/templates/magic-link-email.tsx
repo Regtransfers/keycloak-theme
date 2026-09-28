@@ -35,16 +35,7 @@ const Content = (_props: TemplateProps) => (
                     </tr>
                 </tbody>
             </table>
-            <p style={{ ...cs.p, marginTop: "16px" }}>
-                Or copy and paste this link into your browser:
-                <br />
-                {/* data-skip hides the visible URL from the plain-text version, so the
-                    link prints its href once instead of "url url". */}
-                <a href={MAGIC_LINK_EXPRESSION} style={{ color: "#0066b3", wordBreak: "break-all" }}>
-                    <span data-skip="true">{MAGIC_LINK_EXPRESSION}</span>
-                </a>
-            </p>
-            <p style={cs.p}>This link can only be used once. It expires in 15 minutes.</p>
+            <p style={{ ...cs.p, marginTop: "16px" }}>This link can only be used once. It expires in 15 minutes.</p>
             <p style={cs.p}>If this wasn&apos;t you, you can safely ignore this email.</p>
         </td>
     </tr>
