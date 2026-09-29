@@ -35,7 +35,7 @@ const Content = (_props: TemplateProps) => (
                     </tr>
                 </tbody>
             </table>
-            <p style={{ ...cs.p, marginTop: "16px" }}>This link can only be used once. It expires in 15 minutes.</p>
+            <p style={{ ...cs.p, marginTop: "16px" }}>This link expires in 15 minutes.</p>
             <p style={cs.p}>If this wasn&apos;t you, you can safely ignore this email.</p>
         </td>
     </tr>
