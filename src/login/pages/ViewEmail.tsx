@@ -13,9 +13,6 @@ type ViewEmailKcContext = {
     auth?: {
         attemptedUsername?: string;
     };
-    authenticationSession?: {
-        authSessionIdHash?: string;
-    };
 };
 
 type Props = {
@@ -29,10 +26,7 @@ export default function ViewEmail({ kcContext, i18n }: Props) {
     // The customer leaves this page open while they go to their inbox. When the link signs them in (in
     // another tab of this browser) carry this tab on to where they were going; if the attempt has
     // expired by the time they come back, start again rather than leave them on a dead page.
-    useSignInAwareness({
-        signedInUrl: url.ssoLoginInOtherTabsUrl,
-        pageAuthSessionHash: kcContext.authenticationSession?.authSessionIdHash
-    });
+    useSignInAwareness({ signedInUrl: url.ssoLoginInOtherTabsUrl });
 
     const attemptedUsername = auth?.attemptedUsername ?? "your inbox";
 
