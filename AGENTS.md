@@ -52,6 +52,24 @@ No test script exists in this repo (verify via `package.json`).
   `postBuild` hook in `vite.config.ts`. The build **output** is the JAR/zip in
   `dist_keycloak/`.
 
+## Sign-in awareness (`src/login/lib/signInAwareness.ts`)
+
+Our custom `Template` does not load Keycloak's `authChecker.js`, so pages do not get its "signed in in
+another tab" handling for free. `useSignInAwareness` restores it where it matters — currently the
+magic-link "Check your email" page (`ViewEmail.tsx`), which customers leave open while they go to their
+inbox:
+
+- `KEYCLOAK_SESSION` appearing → go to `url.ssoLoginInOtherTabsUrl`, which finishes this tab's sign-in.
+- `KC_AUTH_SESSION_HASH` changing/vanishing, or 30 minutes passing (the realm's login timeout) → the
+  attempt is gone; go to the website's `/authentication/challenge`, which sends a signed-in customer on
+  and gives anyone else a fresh sign-in.
+- `Error.tsx` does the same hand-off for Keycloak's "cookie not found" error (an old sign-in page
+  reloaded after its attempt ended — 430 of ~880 login errors in the first 18 h measured), once per tab
+  per two minutes so a browser that really blocks cookies still sees the message.
+
+Nothing redirects by itself unless the page is served from a `*.regtransfers.*` Keycloak host, so
+Storybook stays put. A sign-in completed in a different browser or device cannot be seen from the page.
+
 ## Terminology
 
 - Keycloak ships **login** and **account** themes; pages render via FreeMarker

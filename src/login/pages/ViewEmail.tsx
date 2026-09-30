@@ -1,15 +1,20 @@
 import type { I18n } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Template } from "../components/Template";
+import { useSignInAwareness } from "../lib/signInAwareness";
 
 type ViewEmailKcContext = {
     pageId: "view-email.ftl";
     url: {
         loginAction: string;
         loginRestartFlowUrl: string;
+        ssoLoginInOtherTabsUrl?: string;
     };
     auth?: {
         attemptedUsername?: string;
+    };
+    authenticationSession?: {
+        authSessionIdHash?: string;
     };
 };
 
@@ -20,6 +25,14 @@ type Props = {
 
 export default function ViewEmail({ kcContext, i18n }: Props) {
     const { auth, url } = kcContext;
+
+    // The customer leaves this page open while they go to their inbox. When the link signs them in (in
+    // another tab of this browser) carry this tab on to where they were going; if the attempt has
+    // expired by the time they come back, start again rather than leave them on a dead page.
+    useSignInAwareness({
+        signedInUrl: url.ssoLoginInOtherTabsUrl,
+        pageAuthSessionHash: kcContext.authenticationSession?.authSessionIdHash
+    });
 
     const attemptedUsername = auth?.attemptedUsername ?? "your inbox";
 
