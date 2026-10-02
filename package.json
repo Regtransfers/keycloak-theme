@@ -15,7 +15,8 @@
         "build-storybook": "storybook build",
         "email": "email preview ./src/email/templates",
         "email:build": "node scripts/render-emails.mjs",
-        "format": "prettier . --write"
+        "format": "prettier . --write",
+        "test": "vitest run"
     },
     "license": "MIT",
     "keywords": [],
@@ -60,7 +61,8 @@
         "storybook": "^8.1.10",
         "typescript": "^5.2.2",
         "typescript-eslint": "^8.15.0",
-        "vite": "^5.0.8"
+        "vite": "^5.0.8",
+        "vitest": "^2.1.9"
     },
     "engines": {
         "node": "^18.0.0 || >=20.0.0"

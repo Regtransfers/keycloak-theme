@@ -22,8 +22,8 @@ Deploys into the Keycloak instance (flux: `infrastructure/base/controllers/keycl
 
 ## Build / Dev
 
-No test script exists in this repo (verify via `package.json`).
-
+- `npm test` — Vitest unit tests (`src/**/*.test.ts`, node environment, config in
+  `vitest.config.ts`). Pure logic only; pages are previewed in Storybook, not unit-tested.
 - `npm run dev` — Vite dev server. (Uncomment the mock context block in
   `src/main.tsx` to preview a specific page.)
 - `npm run storybook` — Storybook on port **6006**; preview login/account pages
@@ -51,6 +51,27 @@ No test script exists in this repo (verify via `package.json`).
   FreeMarker templates (e.g. magic-link `.ftl`), copied into the build output by the
   `postBuild` hook in `vite.config.ts`. The build **output** is the JAR/zip in
   `dist_keycloak/`.
+
+## Sign-in awareness (`src/login/lib/signInAwareness.ts`)
+
+Our custom `Template` does not load Keycloak's `authChecker.js`, so pages do not get its "signed in in
+another tab" handling for free. `useSignInAwareness` restores it where it matters — currently the
+magic-link "Check your email" page (`ViewEmail.tsx`), which customers leave open while they go to their
+inbox:
+
+- `KEYCLOAK_SESSION` appearing, or changing from the value it had at load → go to
+  `url.ssoLoginInOtherTabsUrl`, which finishes this tab's sign-in.
+- 30 minutes passing (the realm's login timeout) → the attempt is gone; go to the website's
+  `/authentication/challenge`, which sends a signed-in customer on and gives anyone else a fresh sign-in.
+- `KC_AUTH_SESSION_HASH` is deliberately not watched: opening the magic link can replace it before the
+  session cookie appears (well before, when a profile form is shown first), so reacting to it would
+  abandon a sign-in that is about to complete.
+- `Error.tsx` does the same hand-off for Keycloak's "cookie not found" error (an old sign-in page
+  reloaded after its attempt ended — 430 of ~880 login errors in the first 18 h measured), once per tab
+  per two minutes so a browser that really blocks cookies still sees the message.
+
+Nothing redirects by itself unless the page is served from a `*.regtransfers.*` Keycloak host, so
+Storybook stays put. A sign-in completed in a different browser or device cannot be seen from the page.
 
 ## Terminology
 

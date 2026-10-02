@@ -41,3 +41,19 @@ export const WithSessionExpired: Story = {
         />
     ),
 };
+
+// What Keycloak serves when an old sign-in page is reloaded after its attempt has ended. On a real
+// Keycloak host this page hands the customer back to the website's sign-in instead of showing; here
+// (Storybook is not one of those hosts) it renders, which is also what a customer sees if it happens
+// twice within the cool-down.
+export const CookieNotFound: Story = {
+    render: () => (
+        <KcPageStory
+            kcContext={{
+                message: {
+                    summary: "Cookie not found. Please make sure cookies are enabled in your browser.",
+                },
+            }}
+        />
+    ),
+};
