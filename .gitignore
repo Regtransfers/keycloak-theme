@@ -33,3 +33,8 @@ jspm_packages
 
 # build output of `jsx-email`
 /.rendered
+
+# Playwright output
+/playwright-report
+/test-results
+/blob-report

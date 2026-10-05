@@ -1,0 +1,24 @@
+{
+    "realm": "e2e",
+    "enabled": true,
+    "sslRequired": "none",
+    "loginTheme": "keycloak-theme",
+    "registrationAllowed": false,
+    "resetPasswordAllowed": false,
+    "rememberMe": false,
+    "internationalizationEnabled": false,
+    "clients": [
+        {
+            "clientId": "e2e-client",
+            "name": "e2e-client",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": true,
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "directAccessGrantsEnabled": false,
+            "serviceAccountsEnabled": false,
+            "redirectUris": ["http://127.0.0.1:8080/*"]
+        }
+    ]
+}
