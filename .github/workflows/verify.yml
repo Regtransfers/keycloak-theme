@@ -1,0 +1,202 @@
+name: Verify
+
+# Reusable: called by pr-checks.yml for every pull request and by release.yml for every v* tag, so
+# a release publishes exactly the jars that passed these checks. Background: docs/asset-loading.md.
+on:
+  workflow_call:
+
+env:
+  KEYCLOAK_IMAGE: quay.io/keycloak/keycloak:26.7.3
+  THEME_JAR: dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar
+  THEME_JAR_KC_22_TO_25: dist_keycloak/keycloak-theme-for-kc-22-to-25.jar
+  PROVIDER_JAR: keycloak-provider/target/regtransfers-keycloak-provider.jar
+
+jobs:
+  verify:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y maven
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build Keycloak theme jars
+        run: npm run build-keycloak-theme
+
+      - name: Check the build and both theme jars
+        id: check
+        run: node scripts/check-build.mjs --jar "$THEME_JAR" --jar "$THEME_JAR_KC_22_TO_25"
+
+      - name: Build Keycloak provider jar
+        id: provider
+        run: mvn -B -f keycloak-provider/pom.xml clean package
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      # Each run writes its own report and results folder; otherwise the second run would clear the first.
+      - name: Browser tests against the edge simulator (Chromium, Firefox, WebKit)
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report/static
+        run: |
+          npm run e2e -- --output=test-results/static \
+            --project=static-chromium --project=static-firefox --project=static-webkit
+
+      # Production mode (`start`), as production runs it: `start-dev` switches off theme and template
+      # caching. Not a `services:` container, because the jars it mounts do not exist when services start.
+      # The Keycloak steps run even if the simulator tests above failed, so one run reports on both.
+      - name: Start Keycloak with the built theme and provider
+        id: keycloak-start
+        if: ${{ !cancelled() && steps.check.outcome == 'success' && steps.provider.outcome == 'success' }}
+        run: |
+          # For a missing source path Docker would mount an empty directory, and Keycloak would start
+          # without the theme, the provider or the realms. Fail here instead.
+          for file in "$THEME_JAR" "$PROVIDER_JAR" e2e/keycloak/e2e-realm.json e2e/keycloak/e2e-dark-realm.json; do
+            if [ ! -f "$file" ]; then
+              echo "::error::$file is missing"
+              exit 1
+            fi
+          done
+
+          pulled=no
+          for attempt in 1 2 3; do
+            if docker pull --quiet "$KEYCLOAK_IMAGE"; then
+              pulled=yes
+              break
+            fi
+            echo "docker pull failed (attempt $attempt), trying again in 10 s"
+            sleep 10
+          done
+          if [ "$pulled" != yes ]; then
+            echo "::error::Could not pull $KEYCLOAK_IMAGE"
+            exit 1
+          fi
+
+          # Nothing signs in as the admin, but Keycloak expects one: a throwaway password per run.
+          KC_BOOTSTRAP_ADMIN_PASSWORD="$(openssl rand -hex 16)"
+          export KC_BOOTSTRAP_ADMIN_PASSWORD
+
+          # KC_DB=dev-file: the default database, named explicitly because in production mode leaving
+          #   it to the default is deprecated (keycloak.org/server/db).
+          # KC_CACHE=local: a single node with no cluster to discover. Theme and template caching are
+          #   separate theme settings and stay on, as in production.
+          # --hostname-strict=false: production mode refuses to start without either a hostname or this
+          #   (keycloak.org/server/hostname); URLs then follow the request, here http://127.0.0.1:8080.
+          # --http-enabled=true: plain HTTP, no certificate. The management port (health) follows it.
+          # Realm files are mounted one by one; --import-realm reads every .json in data/import.
+          docker run --detach --name keycloak \
+            --publish 127.0.0.1:8080:8080 \
+            --publish 127.0.0.1:9000:9000 \
+            --env KC_BOOTSTRAP_ADMIN_USERNAME=admin \
+            --env KC_BOOTSTRAP_ADMIN_PASSWORD \
+            --env KC_HEALTH_ENABLED=true \
+            --env KC_DB=dev-file \
+            --env KC_CACHE=local \
+            --volume "$GITHUB_WORKSPACE/$THEME_JAR:/opt/keycloak/providers/keycloak-theme.jar:ro" \
+            --volume "$GITHUB_WORKSPACE/$PROVIDER_JAR:/opt/keycloak/providers/regtransfers-keycloak-provider.jar:ro" \
+            --volume "$GITHUB_WORKSPACE/e2e/keycloak/e2e-realm.json:/opt/keycloak/data/import/e2e-realm.json:ro" \
+            --volume "$GITHUB_WORKSPACE/e2e/keycloak/e2e-dark-realm.json:/opt/keycloak/data/import/e2e-dark-realm.json:ro" \
+            "$KEYCLOAK_IMAGE" \
+            start --http-enabled=true --hostname-strict=false --import-realm
+
+      - name: Wait for Keycloak
+        id: keycloak-ready
+        if: ${{ !cancelled() && steps.keycloak-start.outcome == 'success' }}
+        run: |
+          # `start` first rebuilds the server for the mounted providers, then imports the realms.
+          deadline=$(( $(date +%s) + 180 ))
+          until curl --silent --fail --output /dev/null --max-time 5 http://127.0.0.1:9000/health/ready; do
+            if [ "$(docker inspect --format '{{.State.Running}}' keycloak 2>/dev/null)" != "true" ]; then
+              echo "::error::Keycloak stopped during start-up"
+              docker logs keycloak
+              exit 1
+            fi
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "::error::Keycloak was not ready after 180 s"
+              docker logs keycloak
+              exit 1
+            fi
+            sleep 3
+          done
+          for realm in e2e e2e-dark; do
+            discovery="http://127.0.0.1:8080/realms/$realm/.well-known/openid-configuration"
+            if ! curl --silent --fail --output /dev/null --max-time 10 "$discovery"; then
+              echo "::error::Realm $realm was not imported"
+              docker logs keycloak
+              exit 1
+            fi
+          done
+          # The provider jar is loaded and answers. Without it Keycloak has no /verify-email and says
+          # 404; with it, and no cookies, the answer is 200 {"verified":false,"source":"none"}.
+          status="http://127.0.0.1:8080/realms/e2e/verify-email/status?client_id=e2e-client&tab_id=ci"
+          if ! curl --silent --fail --output /dev/null --max-time 10 "$status"; then
+            echo "::error::The provider jar did not answer at /realms/e2e/verify-email/status"
+            docker logs keycloak
+            exit 1
+          fi
+          echo "Keycloak is ready"
+
+      - name: Browser tests against Keycloak
+        if: ${{ !cancelled() && steps.keycloak-ready.outcome == 'success' }}
+        env:
+          KC_BASE_URL: http://127.0.0.1:8080
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report/keycloak
+        run: npm run e2e -- --project=keycloak-chromium --output=test-results/keycloak
+
+      - name: Keycloak logs
+        if: ${{ failure() && steps.keycloak-ready.outcome == 'success' }}
+        # (when "Wait for Keycloak" itself fails it has already printed them)
+        run: docker logs keycloak
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      # The release job publishes these files as they are: never rebuilt after the tests above. The
+      # all-other-versions theme jar and the provider jar ran in the Keycloak above; the kc-22-to-25
+      # jar is only build-checked (check-build.mjs), and production does not use it.
+      # Default condition on purpose: these two steps run only if every step above passed.
+      - name: Collect the tested jars
+        run: |
+          mkdir -p theme-jars
+          cp "$THEME_JAR" "$THEME_JAR_KC_22_TO_25" "$PROVIDER_JAR" theme-jars/
+          sha256sum theme-jars/*.jar
+
+      - name: Upload the tested jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: theme-jars
+          path: theme-jars/
+          if-no-files-found: error
