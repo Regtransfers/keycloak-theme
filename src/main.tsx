@@ -15,12 +15,21 @@ if (import.meta.env.DEV) {
 }
 */
 
-createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        {!window.kcContext ? (
-            <h1>No Keycloak Context</h1>
-        ) : (
-            <KcPage kcContext={window.kcContext} />
-        )}
-    </StrictMode>
-);
+// src/loader/assetRetry.js reads this flag to know the page has started. It is also what stops a
+// second copy of this file, should one ever be loaded, from rendering a second time.
+if (!window.__rtThemeBooted) {
+    window.__rtThemeBooted = true;
+
+    // Present only when the loader's notice was put somewhere other than #root.
+    document.querySelector("[data-rt-asset-notice]")?.remove();
+
+    createRoot(document.getElementById("root")!).render(
+        <StrictMode>
+            {!window.kcContext ? (
+                <h1>No Keycloak Context</h1>
+            ) : (
+                <KcPage kcContext={window.kcContext} />
+            )}
+        </StrictMode>
+    );
+}

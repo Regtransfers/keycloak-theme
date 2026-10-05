@@ -1,0 +1,2 @@
+# Copied byte for byte into the page and compared with it by scripts/check-build.mjs.
+src/loader/assetRetry.js text eol=lf
