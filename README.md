@@ -112,9 +112,17 @@ CSS class names are available via the `ClassKey` type from `keycloakify/login`.
 
 ## Deployment
 
-Push to `master` to trigger GitHub Actions which:
-1. Builds the Storybook and deploys it to GitHub Pages
-2. Builds the Keycloak theme JAR and uploads it as a workflow artifact
+Pushing to `master` builds the Storybook and deploys it to GitHub Pages. (That workflow also uploads a
+JAR as a build artifact. It has not been through the checks below: deploy only JARs from a release.)
+
+A release is a tag. Bump `version` in `package.json` in its own commit, then push the tag `v<version>`
+(the workflow refuses a tag that does not match). GitHub Actions builds the theme, runs the unit tests,
+the build checks and the browser tests, including a run of the built JAR in real Keycloak, and
+publishes exactly the JARs it tested. Pull requests run the same checks.
+
+Rolling a release out safely, and why the page is built as one script and one stylesheet with an
+inline retry loader, is in [docs/asset-loading.md](docs/asset-loading.md). Read it before changing the
+build.
 
 To load the JAR into Keycloak:
 
