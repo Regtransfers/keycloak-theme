@@ -220,6 +220,12 @@ async function waitForStartAndSettle(page: Page, timeout = 10_000) {
  * Chromium keeps the cached 404 and the cached retries and uses them without asking. Firefox
  * revalidates a cached 404 on a normal load, and whether WebKit reuses a failed subresource
  * depends on timing, so for them the test only asks that the page starts once (checked above).
+ *
+ * The Chromium check is only deterministic because the simulator's 404 has no body, like
+ * production's. Blink cancels a script or stylesheet load the moment a 4xx status arrives, and a
+ * 404 with a body is kept in the cache only if all of it had been read by then: with a 66-byte body
+ * this check failed once on CI (run 37344236337), and with a 64 kB body 5 times in 25 locally, both
+ * in the Chromium 153 headless shell.
  */
 async function expectNoAssetRequests(sim: Simulator, browserName: string) {
     const assets = await sim.entries(isAsset);

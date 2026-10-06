@@ -36,7 +36,14 @@ Cloudflare" for `dist/`, on `http://127.0.0.1:47213` (`E2E_SIM_PORT` changes it)
   in `<head>`, `no-store`. The Google Fonts tags are removed so that nothing touches the internet.
   There is no `kcContext`, so the app renders `<h1>No Keycloak Context</h1>`.
 - Every asset answer, 200 or 404, carries `Cache-Control: max-age=31536000`, as Cloudflare did on
-  05-10-2026. That is what makes a browser keep a 404.
+  05-10-2026. That is what makes a browser keep a 404. The 404 has no body and no content type,
+  exactly as production answers for a file it does not have (probed 06-10-2026). That matters in
+  Chromium, where the strict checks run: Blink gives up on a failed script or stylesheet as soon as
+  it sees the status, and a 404 with a body is kept in its cache only if all of it had been read by
+  then. With a body, the "later visits ask the server for nothing" checks become timing-dependent
+  in the Chromium 153 headless shell: the old 66-byte body failed once in CI run 37344236337 (it
+  passed 25 in 25 locally), and a 64 kB body failed 5 times in 25 locally (Chrome 154 passed all
+  25).
 - Each test scripts the failures through a JSON control API (`/__sim/reset`, `/__sim/rules`,
   `/__sim/log`). The rules and their order are documented at the top of the file.
 

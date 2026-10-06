@@ -108,12 +108,15 @@ function memoryOf(url: URL): string {
     return `${url.pathname.split("/").pop()}|${url.searchParams.get("kcr")}`;
 }
 
-/** What Cloudflare served on 05-10-2026: a 404 that says it may be kept for a year. */
+/**
+ * A 404 shaped like production's for a missing file (probed 06-10-2026: empty, nosniff), with the
+ * one-year max-age Cloudflare stamped on the 05-10-2026 404s.
+ */
 function answerLikeTheEdge(route: Route): Promise<void> {
     return route.fulfill({
         status: 404,
-        headers: { "content-type": "text/html", "cache-control": "max-age=31536000" },
-        body: "<!doctype html><title>404 Not Found</title>"
+        headers: { "cache-control": "max-age=31536000", "x-content-type-options": "nosniff" },
+        body: ""
     });
 }
 

@@ -14,7 +14,12 @@
  *   GET /resources/abcde/login/keycloak-theme/dist/assets/<file>[?query]
  *       dist/assets/<file>. Every answer, 200 or 404, carries Cache-Control: max-age=31536000:
  *       that is what Cloudflare stamped on the 404 that left the sign-in page blank on 05-10-2026,
- *       and it is why a browser that received the 404 keeps it.
+ *       and it is why a browser that received the 404 keeps it. The 404 has no body and no content
+ *       type, exactly as auth.regtransfers.co.uk answers for a file it does not have (probed
+ *       06-10-2026). Keep it empty: Blink cancels a script or stylesheet load as soon as a 4xx
+ *       status arrives, and a 404 with a body stays in the browser's cache only if all of it had
+ *       been read by then. With a body the cached-404 tests are a race in the Chromium 153 headless
+ *       shell (lost once on CI with a 66-byte body, 5 times in 25 locally with a 64 kB one).
  *   Anything else: a plain 404 with no caching headers.
  *
  * Control API (JSON over HTTP, never logged)
@@ -64,7 +69,8 @@ const indexPath = path.join(distDir, "index.html");
 const loaderPath = path.join(repoRoot, "src", "loader", "assetRetry.js");
 
 const ONE_YEAR = "max-age=31536000";
-const NOT_FOUND_BODY = "<!doctype html><title>404 Not Found</title><h1>404 Not Found</h1>\n";
+// Production's answer for a missing file: this status and these headers, no body (see above).
+const NOT_FOUND_HEADERS = { "Cache-Control": ONE_YEAR, "X-Content-Type-Options": "nosniff" };
 const CONTENT_TYPES = {
     ".js": "text/javascript; charset=utf-8",
     ".mjs": "text/javascript; charset=utf-8",
@@ -403,7 +409,7 @@ async function handleAsset(req, res, url) {
         if (answer.status === 200) {
             send(res, 200, { "Content-Type": CONTENT_TYPES[ext], "Cache-Control": ONE_YEAR }, body, req.method);
         } else {
-            send(res, 404, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": ONE_YEAR }, NOT_FOUND_BODY, req.method);
+            send(res, 404, NOT_FOUND_HEADERS, "", req.method);
         }
     });
 }

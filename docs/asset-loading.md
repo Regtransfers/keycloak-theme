@@ -21,8 +21,12 @@ how a release reaches the browser:
 4. Cloudflare also adds `Cache-Control: max-age=31536000` to every `.js` and `.css` response, errors
    included. **A browser that received the 404 keeps it for a year.** Chrome then fails the file from
    its own cache on every later visit, with no request at all, until the file name changes. A reload
-   does not clear it. (Measured in Chrome 154. Firefox and Safari have not been measured here; from
-   their source, Firefox is expected to revalidate and Safari to vary.)
+   does not clear it. (Measured in Chrome 154, and in Chromium 153 by the browser tests. With
+   production's empty 404 it holds every time: Chrome abandons a script or stylesheet as soon as it
+   sees a 4xx, and keeps the 404 only if its body had been read to the end before that cancel took
+   effect. An empty body always has been; a 404 with a body is usually kept too, but not always.
+   Firefox and Safari have not been measured here; from their source, Firefox is expected to
+   revalidate and Safari to vary.)
 
 Measured on the day: three 404s at the origin during the restart; no sign-in form submissions for three
 minutes; the page recovered by itself when the edge entry expired.

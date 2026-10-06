@@ -36,13 +36,19 @@ test("the page is served as Keycloak serves it: not cached, <base> first, loader
     expect(sim.info.stylePath.startsWith(ASSETS_PATH)).toBe(true);
 });
 
-test("every asset answer carries a one-year max-age, a 404 included; anything else is a plain 404", async ({ request, sim }) => {
+test("every asset answer carries a one-year max-age; a 404 is the empty answer production gives; anything else is a plain 404", async ({ request, sim }) => {
     await sim.reset({ js: { plain: 404 } });
 
+    // As auth.regtransfers.co.uk answered for a file it does not have (06-10-2026): no body, no
+    // content type. The empty body is what keeps the cached-404 tests reliable in the Chromium
+    // headless shell (see the simulator).
     const plain404 = await request.get(sim.info.scriptPath);
     expect(plain404.status()).toBe(404);
     expect(plain404.headers()["cache-control"]).toBe(ONE_YEAR);
-    expect(plain404.headers()["content-type"]).toBe("text/html; charset=utf-8");
+    expect(plain404.headers()["content-type"]).toBeUndefined();
+    expect(plain404.headers()["content-length"]).toBe("0");
+    expect(plain404.headers()["x-content-type-options"]).toBe("nosniff");
+    expect(await plain404.text()).toBe("");
 
     const retried = await request.get(sim.info.scriptPath + "?kcr=1-abc");
     expect(retried.status()).toBe(200);
