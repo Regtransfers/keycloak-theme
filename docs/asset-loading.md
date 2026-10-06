@@ -107,8 +107,8 @@ Details that matter:
 
 - **An old page asking a new pod for an old file.** During a restart a not-yet-restarted pod can serve
   a page naming the previous release's files. If the edge no longer has them, the request can reach a
-  new pod and fail. Releases before 2.0.11 have no loader, so their pages go blank in that case. From
-  2.0.11 on, the loader retries, shows the notice after ten seconds, and **Try again** fetches the new
+  new pod and fail. Releases before 2.1.0 have no loader, so their pages go blank in that case. From
+  2.1.0 on, the loader retries, shows the notice after ten seconds, and **Try again** fetches the new
   page.
 - **Rolling back to 2.0.10 or earlier.** Those builds have no loader, and browsers hold cached 404s for
   some of their file names. Never redeploy them. If a release has to be undone, release the previous
@@ -120,8 +120,10 @@ Details that matter:
 ## Releasing
 
 1. Bump `version` in `package.json` in its own commit (`chore: bump version to X`). The release
-   workflow refuses a tag that does not match it. **The next version is 2.0.11**: the tag `v2.0.10`
-   exists (cut without a bump, so `package.json` stayed at 2.0.9) and must never be reused or moved.
+   workflow refuses a tag that does not match it. **Versions so far:** 2.1.0 (06-10-2026) was the first
+   release with the loader, 2.1.1 the first with the "Check your email" change. The tags `v2.0.10`
+   (cut without a bump, so `package.json` stayed at 2.0.9) and `v2.2.0` (cut, then renumbered as
+   2.1.1 before anything deployed it) exist and must never be reused or moved.
 2. Tag `vX`. The workflow builds, runs every check below, and publishes exactly the jars it built. The
    theme jar production uses and the provider jar are both started in a real Keycloak first; the
    kc-22-to-25 jar is only build-checked. It refuses to publish to a tag that already has a release.
