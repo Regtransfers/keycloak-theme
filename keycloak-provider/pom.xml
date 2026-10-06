@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Must match the running Keycloak image (quay.io/keycloak/keycloak:26.6.1). -->
-        <keycloak.version>26.6.1</keycloak.version>
+        <keycloak.version>26.7.3</keycloak.version>
         <!-- Keycloak 26 ships on JDK 17+; compile for 17 for the widest compatibility. -->
         <maven.compiler.release>17</maven.compiler.release>
     </properties>
