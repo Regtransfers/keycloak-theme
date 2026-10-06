@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import type { I18n } from "../i18n";
 import { Template } from "../components/Template";
-import { DEFAULT_SITE_ORIGIN, claimAutomaticRestartOnce, getRestartUrl, getSiteOrigin } from "../lib/signInAwareness";
 
 type ErrorKcContext = {
     pageId: "error.ftl";
@@ -24,45 +22,10 @@ type Props = {
 };
 
 export default function Error({ kcContext, i18n }: Props) {
-    const isCookieError = kcContext.message?.summary?.toLowerCase().includes("cookie") ?? false;
+    const isCookieError = kcContext.message?.summary?.toLowerCase().includes("cookie");
     const returnUrl = isCookieError
-        ? (getSiteOrigin(window.location.hostname) ?? DEFAULT_SITE_ORIGIN)
+        ? "https://www.regtransfers.co.uk"
         : (kcContext.url?.loginRestartFlowUrl ?? kcContext.url?.loginUrl ?? "/");
-
-    // Keycloak reports "cookie not found" when the sign-in attempt a page belonged to no longer exists.
-    // In practice that is nearly always an old "Check your email" tab being reloaded after the customer
-    // signed in elsewhere or the attempt timed out — not a cookie problem. Rather than a dead end, hand
-    // them to the website's sign-in entry point, which sends a signed-in customer straight on and gives
-    // anyone else a fresh sign-in page. Once per tab per cool-down, so a browser that really is blocking
-    // cookies still gets to see the message below.
-    const restartUrl = getRestartUrl(window.location.hostname);
-    const isRestarting = isCookieError && restartUrl !== null && claimAutomaticRestartOnce();
-
-    useEffect(() => {
-        if (isRestarting && restartUrl !== null) {
-            window.location.replace(restartUrl);
-        }
-    }, [isRestarting, restartUrl]);
-
-    if (isRestarting && restartUrl !== null) {
-        return (
-            <Template
-                kcContext={kcContext as never}
-                i18n={i18n}
-                headerNode={<p className="kc-display-heading font-bold font-[Roboto]">One moment</p>}
-                displayMessage={false}
-                displayInfo={false}
-            >
-                <p className="text-sm text-white/80 leading-6">Taking you back to sign in.</p>
-
-                <div className="border-t border-white/20 pt-4 text-center mt-6">
-                    <a href={restartUrl} className="text-sm text-white/70 underline underline-offset-4 hover:text-white">
-                        Continue
-                    </a>
-                </div>
-            </Template>
-        );
-    }
 
     return (
         <Template

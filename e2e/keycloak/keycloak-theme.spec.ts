@@ -535,8 +535,7 @@ test("another page (error.ftl, unknown client) starts and carries the loader", a
     const status = response?.status() ?? 0;
     expect(status >= 400 && status < 500, `error page status ${status}`).toBe(true);
 
-    // Error.tsx's own wording. The automatic hand-off to the website happens only on
-    // *.regtransfers.* hosts, so the page stays put here.
+    // Error.tsx's own wording.
     await expect(page.getByText("We are sorry, but an error has occurred.")).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole("link", { name: "Return to sign in" })).toBeVisible();
     expect(await hasBooted(page), "window.__rtThemeBooted").toBe(true);
