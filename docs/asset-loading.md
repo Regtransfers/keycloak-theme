@@ -121,8 +121,9 @@ Details that matter:
 
 1. Bump `version` in `package.json` in its own commit (`chore: bump version to X`). The release
    workflow refuses a tag that does not match it. **Versions so far:** 2.1.0 (06-10-2026) was the first
-   release with the loader, 2.2.0 the first with the "Check your email" change. The tag `v2.0.10`
-   exists (cut without a bump, so `package.json` stayed at 2.0.9) and must never be reused or moved.
+   release with the loader, 2.1.1 the first with the "Check your email" change. The tags `v2.0.10`
+   (cut without a bump, so `package.json` stayed at 2.0.9) and `v2.2.0` (cut, then renumbered as
+   2.1.1 before anything deployed it) exist and must never be reused or moved.
 2. Tag `vX`. The workflow builds, runs every check below, and publishes exactly the jars it built. The
    theme jar production uses and the provider jar are both started in a real Keycloak first; the
    kc-22-to-25 jar is only build-checked. It refuses to publish to a tag that already has a release.
