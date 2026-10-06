@@ -1,0 +1,54 @@
+name: PR checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to the same pull request (or branch, for a manual run) cancels the run in progress.
+# verify.yml sets no concurrency of its own: a called workflow sharing this group would cancel its caller.
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    uses: ./.github/workflows/verify.yml
+
+  storybook:
+    name: Storybook build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        env:
+          STORYBOOK_DISABLE_TELEMETRY: "1"
+        run: npm run build-storybook
+
+      # The asset loader belongs in the Keycloak pages only (vite.config.ts skips Storybook's iframe.html).
+      - name: Check the asset loader stayed out of Storybook
+        run: |
+          if [ ! -f storybook-static/iframe.html ]; then
+            echo "::error::storybook-static/iframe.html was not built"
+            exit 1
+          fi
+          if grep -q "data-rt-asset-loader" storybook-static/iframe.html; then
+            echo "::error::storybook-static/iframe.html contains the asset loader (data-rt-asset-loader)"
+            exit 1
+          fi
+          echo "No asset loader in storybook-static/iframe.html"

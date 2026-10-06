@@ -6,48 +6,70 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
+  # The theme reports the version in package.json to the page, so a tag cut without a version bump
+  # (as v2.0.10 was) would ship jars that claim to be the previous release.
+  guard:
+    name: Tag matches package.json
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - name: Install Maven
+      - name: Check the tag against package.json
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
-          sudo apt-get update -q
-          sudo apt-get install -y maven
+          version="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::Tag $TAG does not match package.json version $version. Bump the version in its own commit, then tag v$version."
+            exit 1
+          fi
+          echo "Tag $TAG matches package.json version $version"
 
-      - name: Install dependencies
-        run: npm ci
+  verify:
+    name: Verify
+    needs: guard
+    permissions:
+      contents: read
+    uses: ./.github/workflows/verify.yml
 
-      - name: Run unit tests
-        run: npm test
-
-      - name: Build Keycloak theme JAR
-        run: npm run build-keycloak-theme
-
-      - name: Build Keycloak provider JAR
-        run: mvn -B -f keycloak-provider/pom.xml clean package
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+  # Publishes the jars verify.yml built and tested, byte for byte. Nothing is rebuilt here.
+  release:
+    name: Publish the tested jars
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download the tested jars
+        uses: actions/download-artifact@v4
         with:
-          files: |
-            dist_keycloak/*.jar
-            keycloak-provider/target/regtransfers-keycloak-provider.jar
-          generate_release_notes: true
+          name: theme-jars
+          path: theme-jars
+
+      - name: Checksums
+        run: sha256sum theme-jars/*.jar
+
+      # flux downloads keycloak-theme-for-kc-all-other-versions.jar and regtransfers-keycloak-provider.jar
+      # from the release by these exact names. Do not rename them.
+      #
+      # GitHub's own CLI, not a third-party action: this is the only step that holds a write token.
+      # `gh release create` refuses a tag that already has a release, so a re-run or a moved tag can
+      # never replace jars that staging or production already downloads. To publish again, cut a new
+      # version.
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            theme-jars/keycloak-theme-for-kc-all-other-versions.jar \
+            theme-jars/keycloak-theme-for-kc-22-to-25.jar \
+            theme-jars/regtransfers-keycloak-provider.jar \
+            --verify-tag --generate-notes --title "$TAG"

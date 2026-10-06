@@ -2,6 +2,14 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Tailwind builds a class for every class-like word it finds in any file git does not ignore. Keep
+   it out of the loader, the tests, the scripts and docs/, so wording there cannot change the
+   stylesheet. (Other files outside src/, such as README.md and the workflows, are still scanned.) */
+@source not "../loader";
+@source not "../../e2e";
+@source not "../../scripts";
+@source not "../../docs";
+
 @custom-variant dark (&:is(.dark *));
 
 /* Responsive gap for OTP segmented input - scales from 8px on mobile to 32px on wide screens */

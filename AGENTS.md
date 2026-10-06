@@ -23,7 +23,8 @@ Deploys into the Keycloak instance (flux: `infrastructure/base/controllers/keycl
 ## Build / Dev
 
 - `npm test` — Vitest unit tests (`src/**/*.test.ts`, node environment, config in
-  `vitest.config.ts`). Pure logic only; pages are previewed in Storybook, not unit-tested.
+  `vitest.config.ts`). Pure logic, plus the asset loader evaluated in jsdom; pages are previewed in
+  Storybook, not unit-tested.
 - `npm run dev` — Vite dev server. (Uncomment the mock context block in
   `src/main.tsx` to preview a specific page.)
 - `npm run storybook` — Storybook on port **6006**; preview login/account pages
@@ -72,6 +73,27 @@ inbox:
 
 Nothing redirects by itself unless the page is served from a `*.regtransfers.*` Keycloak host, so
 Storybook stays put. A sign-in completed in a different browser or device cannot be seen from the page.
+
+## Asset loading (read before touching the build)
+
+**`docs/asset-loading.md` is required reading** before changing `vite.config.ts`, `index.html`,
+`src/main.tsx`, `src/loader/` or the workflows. In brief:
+
+- The build emits **one JavaScript file and one stylesheet** (`inlineDynamicImports`, English-only
+  locales). `src/loader/assetRetry.js` is copied verbatim into a script tag at the top of `<head>` and
+  asks for either file again, at a new address (`?kcr=`), if it fails to load. This exists because a
+  rolling restart of the Keycloak pods plus Cloudflare caching a 404 (with a one-year browser lifetime)
+  blanked the sign-in page on 29-09-2026 and 05-10-2026.
+- Do not split the bundle, import images or fonts, or add `url()` / `@import` to the stylesheet: a file
+  the page does not name in a tag cannot be retried. `npm run check-build` enforces the shape.
+- Every page module runs at start-up now. No side effects at module top level.
+- The loader file is ES5 and ends up inside a FreeMarker template; its header lists what it must not
+  contain, and `src/loader/assetRetry.test.ts` enforces it.
+- Never redeploy 2.0.10 or earlier: they have no loader and browsers hold cached 404s for their files.
+
+Tests: `npm test` (unit, includes the loader in jsdom), `npm run check-build` (after a build),
+`PW_CHANNEL=chrome npm run e2e -- --project=static-chromium` (real browser, local), and the
+real-Keycloak run in CI (`.github/workflows/verify.yml`), which also gates every release tag.
 
 ## Terminology
 
