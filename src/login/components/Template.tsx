@@ -121,7 +121,7 @@ export function Template({
                 {/* Footer legal text - in normal flow, pushed to bottom */}
                 <div className="relative z-10 w-full bg-[#212529]">
                     <div className="max-w-6xl mx-auto px-6 py-4 text-white/60 text-[12px] leading-relaxed space-y-1">
-                        <p>© 1982 - 2026 Registration Transfers Limited. All rights reserved. Registered in England. Company registration number 03933658. 'Regtransfers', 'Reg transfers' and the Regtransfers logo are registered trademarks of Registration Transfers Limited.</p>
+                        <p>© 1982 - 2026 Reg Transfers Limited. All rights reserved. Registered in England and Wales. Company registration number 12142971. 'Regtransfers', 'Reg transfers' and the Regtransfers logo are registered trademarks of Registration Transfers Limited.</p>
                         <p>Credit subject to status and affordability. Terms &amp; Conditions apply (<a href="https://www.regtransfers.co.uk/company/terms#finance" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/90">details</a>). Registration Transfers Limited trading as Regtransfers.co.uk is authorised and regulated by the Financial Conduct Authority and is the broker and not the lender. Our registration number is 683825. Registration Transfers Limited offers credit products from Secure Trust Bank PLC trading as V12 Retail Finance. Credit is provided subject to affordability, age and status. Minimum spend applies. Not all products offered by Secure Trust Bank PLC are regulated by the Financial Conduct Authority.</p>
                     </div>
                 </div>
